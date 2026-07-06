@@ -6,8 +6,8 @@
   --amber:#f2872f; --cream:#fff6ef; --ink:#3a2b35; --ink-soft:#6a5560;
   --panel:rgba(255,252,250,.94); --panel-dark:rgba(38,26,40,.82);
   --shadow:0 14px 40px rgba(120,40,80,.22);
-  --font:'Sarabun','Noto Sans Thai','Segoe UI',system-ui,sans-serif;
-  --serif:'Mali','Sarabun',cursive,sans-serif;
+  --font:'Sarabun','Noto Sans Thai','Leelawadee UI','Segoe UI',system-ui,sans-serif;
+  --serif:'Mali','Sarabun','Noto Sans Thai','Leelawadee UI',system-ui,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}

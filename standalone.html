@@ -1,0 +1,3268 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#e14e7f">
+<title>รักแรกผลิบาน · Blooming Hearts</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%97%3C/text%3E%3C/svg%3E">
+<style>
+/* =============================================================
+   style.css — Blooming Hearts BL Visual Novel
+   ============================================================= */
+:root{
+  --pink:#ff6f9c; --pink-deep:#e14e7f; --purple:#9b6bd6; --blue:#3f6cd0;
+  --amber:#f2872f; --cream:#fff6ef; --ink:#3a2b35; --ink-soft:#6a5560;
+  --panel:rgba(255,252,250,.94); --panel-dark:rgba(38,26,40,.82);
+  --shadow:0 14px 40px rgba(120,40,80,.22);
+  --font:'Sarabun','Noto Sans Thai','Leelawadee UI','Segoe UI',system-ui,sans-serif;
+  --serif:'Mali','Sarabun','Noto Sans Thai','Leelawadee UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{
+  font-family:var(--font); color:var(--ink); overflow:hidden;
+  background:#1a1220;
+}
+#app{
+  position:relative; width:100vw; height:100vh; height:100dvh;
+  max-width:1100px; margin:0 auto; overflow:hidden;
+  box-shadow:0 0 60px rgba(0,0,0,.5);
+}
+
+/* ---------- screens ---------- */
+.screen{position:absolute; inset:0; display:none; animation:fade .5s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* ---------- title ---------- */
+#title-screen{
+  background:
+    radial-gradient(120% 90% at 80% -10%, #ffd9e6 0%, transparent 55%),
+    radial-gradient(110% 90% at 10% 110%, #d7c4f5 0%, transparent 55%),
+    linear-gradient(160deg,#ffe8f0 0%,#ffeede 45%,#eaddfb 100%);
+}
+.title-petals{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.petal{position:absolute;top:-30px;font-size:22px;animation:fall linear infinite;opacity:.8}
+@keyframes fall{
+  0%{transform:translateY(-40px) rotate(0);opacity:0}
+  10%{opacity:.85}
+  100%{transform:translateY(110vh) rotate(360deg);opacity:.3}
+}
+.title-inner{
+  position:relative; height:100%; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; text-align:center; padding:24px; z-index:2;
+}
+.title-badge{
+  font-size:13px; letter-spacing:4px; color:var(--pink-deep); font-weight:700;
+  background:rgba(255,255,255,.6); padding:6px 16px; border-radius:20px; margin-bottom:20px;
+  text-transform:uppercase;
+}
+.title-main{
+  font-family:var(--serif); font-size:clamp(42px,9vw,86px); line-height:1; margin:0;
+  color:var(--pink-deep);
+  text-shadow:0 4px 0 #fff,0 8px 24px rgba(225,78,127,.35);
+  font-weight:800;
+}
+.title-sub{
+  font-size:clamp(15px,2.6vw,20px); color:var(--purple); margin:14px 0 4px; letter-spacing:1px; font-weight:600;
+}
+.title-en{font-size:13px;letter-spacing:6px;color:var(--ink-soft);text-transform:uppercase;margin-bottom:34px;opacity:.75}
+.title-menu{display:flex;flex-direction:column;gap:13px;width:min(320px,80%)}
+.menu-btn{
+  font-family:var(--font); font-size:17px; font-weight:700; color:#fff;
+  border:none; border-radius:16px; padding:15px; cursor:pointer;
+  background:linear-gradient(135deg,var(--pink),var(--pink-deep));
+  box-shadow:0 6px 18px rgba(225,78,127,.4); transition:.18s; letter-spacing:.5px;
+}
+.menu-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(225,78,127,.5)}
+.menu-btn:active{transform:translateY(0)}
+.menu-btn.ghost{background:rgba(255,255,255,.72);color:var(--pink-deep);box-shadow:0 4px 12px rgba(150,80,110,.2)}
+.menu-btn.ghost:hover{background:#fff}
+.menu-btn.disabled{opacity:.45;pointer-events:none;filter:grayscale(.4)}
+.title-foot{position:absolute;bottom:14px;font-size:11px;color:var(--ink-soft);opacity:.65;z-index:2}
+
+/* ---------- name entry ---------- */
+#name-screen{background:linear-gradient(160deg,#fff2f6,#f0e6fb)}
+.center-card{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;
+}
+.name-title{font-family:var(--serif);font-size:30px;color:var(--pink-deep);margin-bottom:6px}
+.name-desc{color:var(--ink-soft);margin-bottom:26px}
+#name-input{
+  font-family:var(--font);font-size:22px;text-align:center;padding:14px 20px;border:3px solid #ffc2d6;
+  border-radius:16px;width:min(320px,84%);outline:none;background:#fff;color:var(--ink);transition:.2s;
+}
+#name-input:focus{border-color:var(--pink)}
+.name-suggests{margin:16px 0 26px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.name-suggest{background:#fff;border:1.5px solid #eecfe0;border-radius:14px;padding:7px 14px;cursor:pointer;font-family:var(--font);color:var(--ink-soft);font-size:14px;transition:.15s}
+.name-suggest:hover{border-color:var(--pink);color:var(--pink-deep)}
+
+/* ---------- cast / about ---------- */
+#cast-screen,#about-screen{background:linear-gradient(160deg,#fff4f7,#efe6fb);overflow-y:auto}
+.sub-head{display:flex;align-items:center;gap:14px;padding:20px 22px 6px}
+.sub-head h2{font-family:var(--serif);color:var(--pink-deep);margin:0;font-size:26px}
+.back-btn{background:#fff;border:none;border-radius:12px;padding:9px 16px;cursor:pointer;font-family:var(--font);font-weight:700;color:var(--pink-deep);box-shadow:0 3px 10px rgba(150,80,110,.18)}
+.back-btn:hover{background:#fff0f5}
+#cast-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;padding:16px 22px 40px}
+.cast-card{background:var(--panel);border-radius:20px;padding:18px;box-shadow:var(--shadow);border-top:5px solid var(--c);text-align:center}
+.cast-face{width:120px;height:150px;margin:0 auto 6px;background:linear-gradient(160deg,var(--cs),#fff);border-radius:16px;overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
+.cast-face svg{width:100%;height:135%}
+.cast-name{font-family:var(--serif);font-size:22px;color:var(--c);font-weight:800}
+.cast-en{font-size:12px;color:var(--ink-soft);letter-spacing:2px}
+.cast-role{font-size:12px;color:var(--ink-soft);margin:2px 0 8px}
+.cast-tag{font-style:italic;color:var(--c);font-size:14px;margin-bottom:8px}
+.cast-blurb{font-size:13px;color:var(--ink-soft);line-height:1.55;margin-bottom:10px}
+.cast-ends{font-size:12px;color:var(--ink-soft)}
+.end-badge-mini{display:inline-flex;width:22px;height:22px;align-items:center;justify-content:center;border-radius:50%;background:#e6dde6;color:#b0a2ac;font-size:12px;margin:0 2px}
+.end-badge-mini.on{background:var(--c);color:#fff}
+.about-body{max-width:640px;margin:0 auto;padding:10px 26px 50px;color:var(--ink-soft);line-height:1.8}
+.about-body h3{color:var(--pink-deep);font-family:var(--serif);margin-top:26px}
+.about-body kbd{background:#fff;border:1px solid #e0cdd8;border-radius:6px;padding:2px 8px;font-size:12px;color:var(--ink);box-shadow:0 2px 0 #e0cdd8}
+
+/* ---------- game screen ---------- */
+#game-screen{background:#0e0a12}
+#bg-layer{position:absolute;inset:0;overflow:hidden}
+#bg-layer .bg-svg{width:100%;height:100%;object-fit:cover;display:block}
+.bg-fade{animation:bgFade .6s ease}
+@keyframes bgFade{from{opacity:.2;transform:scale(1.04)}to{opacity:1;transform:scale(1)}}
+#loc-tag{position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(20,14,24,.55);color:#fff;font-size:12px;padding:5px 16px;border-radius:14px;letter-spacing:1px;backdrop-filter:blur(4px);transition:opacity .4s;z-index:5}
+
+/* sprites */
+.sprite-layer{position:absolute;inset:0;pointer-events:none}
+.sprite{position:absolute;bottom:0;height:82%;width:38%;display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .35s,transform .35s,filter .35s;transform:translateY(18px)}
+.sprite.shown{opacity:1;transform:translateY(0)}
+.sprite.dim{filter:brightness(.62) saturate(.8)}
+.sprite svg{height:100%;filter:drop-shadow(0 12px 20px rgba(0,0,0,.35))}
+#sprite-left{left:-2%;justify-content:flex-start}
+#sprite-center{left:50%;transform:translateX(-50%) translateY(18px);width:44%}
+#sprite-center.shown{transform:translateX(-50%) translateY(0)}
+#sprite-right{right:-2%;justify-content:flex-end}
+
+/* top controls */
+.top-bar{position:absolute;top:12px;right:12px;display:flex;gap:8px;z-index:12}
+.ctrl{background:rgba(20,14,24,.5);color:#fff;border:none;width:40px;height:40px;border-radius:12px;cursor:pointer;font-size:15px;font-weight:700;backdrop-filter:blur(5px);transition:.15s;display:flex;align-items:center;justify-content:center}
+.ctrl:hover{background:rgba(225,78,127,.75)}
+.ctrl.on{background:var(--pink);box-shadow:0 0 0 2px rgba(255,255,255,.5)}
+
+/* dialogue */
+#dialogue-box{
+  position:absolute;left:50%;bottom:20px;transform:translateX(-50%);
+  width:min(920px,94%);min-height:150px;background:var(--panel-dark);
+  border-radius:22px;padding:26px 30px 24px;color:#fff;backdrop-filter:blur(12px);
+  box-shadow:0 12px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.1);z-index:10;transition:opacity .3s;
+}
+#dialogue-box.narration{background:rgba(24,18,28,.72);font-style:italic}
+#name-tab{
+  position:absolute;top:-18px;left:26px;padding:6px 20px;border-radius:12px;color:#fff;
+  font-weight:800;font-size:17px;box-shadow:0 4px 12px rgba(0,0,0,.35);letter-spacing:.5px;
+}
+#dialogue-text{font-size:19px;line-height:1.75;min-height:56px;white-space:pre-wrap}
+.narration #dialogue-text{opacity:.92}
+#next-hint{position:absolute;right:22px;bottom:14px;font-size:13px;opacity:0;transition:opacity .3s;animation:bob 1.1s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+#advance-area{position:absolute;inset:0;z-index:8;cursor:pointer}
+
+/* choices */
+#choice-layer{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:11;padding:20px;background:rgba(14,10,18,.35)}
+#choice-layer.active{display:flex}
+.choice-btn{
+  font-family:var(--font);font-size:17px;font-weight:600;color:var(--ink);
+  background:linear-gradient(135deg,#fff,#fff2f7);border:2px solid rgba(255,255,255,.8);
+  border-radius:16px;padding:16px 26px;width:min(620px,92%);cursor:pointer;
+  box-shadow:0 8px 22px rgba(0,0,0,.3);transition:.16s;animation:choiceIn .35s both;
+}
+.choice-btn:hover{transform:translateY(-2px) scale(1.01);border-color:var(--pink);color:var(--pink-deep);background:linear-gradient(135deg,#fff,#ffe6ef)}
+@keyframes choiceIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* heart pop */
+.heart-pop{position:absolute;left:50%;bottom:200px;transform:translateX(-50%);font-weight:800;font-size:20px;z-index:20;pointer-events:none;animation:heartUp 1.6s ease-out forwards;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+@keyframes heartUp{0%{opacity:0;transform:translateX(-50%) translateY(10px) scale(.7)}20%{opacity:1;transform:translateX(-50%) translateY(0) scale(1.1)}100%{opacity:0;transform:translateX(-50%) translateY(-70px) scale(1)}}
+
+/* ---------- overlays (menu/log) ---------- */
+.overlay{position:absolute;inset:0;display:none;z-index:30;background:rgba(20,12,24,.6);backdrop-filter:blur(6px);animation:fade .25s}
+.overlay.active{display:flex}
+.menu-card{margin:auto;width:min(720px,94%);max-height:90%;background:var(--panel);border-radius:24px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.menu-head{display:flex;align-items:center;gap:6px;padding:14px 16px;border-bottom:1px solid #f0e0e8;background:linear-gradient(135deg,#fff,#fff5f9)}
+.menu-tab{flex:1;background:none;border:none;padding:10px;border-radius:12px;cursor:pointer;font-family:var(--font);font-weight:700;color:var(--ink-soft);font-size:15px;transition:.15s}
+.menu-tab.active{background:var(--pink);color:#fff}
+.menu-x{background:none;border:none;font-size:22px;cursor:pointer;color:var(--ink-soft);padding:0 10px}
+.menu-body{padding:18px;overflow-y:auto}
+.menu-panel{display:none}
+.menu-panel.active{display:block}
+.slots-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.save-slot{background:#fff;border:2px solid #f0e0e8;border-radius:14px;padding:14px;cursor:pointer;transition:.15s;min-height:88px}
+.save-slot.filled:hover{border-color:var(--pink);transform:translateY(-2px);box-shadow:0 6px 16px rgba(225,78,127,.2)}
+.save-slot.empty{opacity:.7;border-style:dashed}
+.save-slot.auto{background:linear-gradient(135deg,#fff,#fef0f5)}
+.save-slot.locked{cursor:default}
+.slot-title{font-weight:800;color:var(--pink-deep);font-size:14px;margin-bottom:5px}
+.slot-loc{font-size:13px;color:var(--ink);font-weight:600}
+.slot-prev{font-size:12px;color:var(--ink-soft);margin-top:3px;line-height:1.4}
+.slot-empty{color:#c0aeb8;text-align:center;padding:14px 0}
+.menu-foot{padding:12px 18px;border-top:1px solid #f0e0e8;display:flex;justify-content:space-between;align-items:center}
+.link-btn{background:none;border:none;color:var(--ink-soft);cursor:pointer;font-family:var(--font);font-size:14px;text-decoration:underline}
+.link-btn:hover{color:var(--pink-deep)}
+
+/* status panel */
+.status-row{display:flex;gap:14px;align-items:center;background:#fff;border-radius:16px;padding:12px;margin-bottom:12px;box-shadow:0 3px 10px rgba(150,80,110,.1)}
+.status-face{width:56px;height:66px;border-radius:12px;overflow:hidden;background:#f6eef4;flex-shrink:0;display:flex;align-items:flex-end}
+.status-face svg{width:100%;height:120%}
+.status-name{font-family:var(--serif);font-size:19px;font-weight:800}
+.status-role{font-size:11px;color:var(--ink-soft);margin-bottom:4px}
+.mini-heart{font-size:18px;color:#ddd;opacity:.35;margin-right:1px}
+.mini-heart.on{opacity:1}
+.mini-heart.half{opacity:.6}
+
+/* settings */
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #f2e6ec}
+.set-row label{font-weight:700;color:var(--ink)}
+input[type=range]{accent-color:var(--pink)}
+
+/* log */
+.log-card{margin:auto;width:min(680px,92%);max-height:82%;background:var(--panel);border-radius:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
+.log-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #f0e0e8}
+.log-head h3{margin:0;font-family:var(--serif);color:var(--pink-deep)}
+#log-body{padding:18px;overflow-y:auto}
+.log-line{padding:9px 0;border-bottom:1px dashed #f0e2ea;color:var(--ink);line-height:1.6;font-size:15px}
+.log-line b{color:var(--pink-deep)}
+
+/* ending */
+#ending-overlay{position:absolute;inset:0;display:none;z-index:40;align-items:center;justify-content:center;
+  background:radial-gradient(120% 100% at 50% 0%,rgba(255,150,190,.25),rgba(14,8,18,.94));backdrop-filter:blur(8px);animation:fade .8s}
+#ending-overlay.active{display:flex}
+.ending-card{text-align:center;color:#fff;padding:34px;max-width:640px}
+.ending-badge{display:inline-block;font-size:15px;font-weight:800;letter-spacing:3px;padding:8px 24px;border-radius:20px;margin-bottom:22px}
+.ending-badge.good{background:linear-gradient(135deg,#ff6f9c,#e14e7f)}
+.ending-badge.normal{background:linear-gradient(135deg,#9b6bd6,#7a4fc0)}
+.ending-badge.bad{background:linear-gradient(135deg,#5b6b7a,#3a4652)}
+.ending-badge.friend{background:linear-gradient(135deg,#f2872f,#d96a1e)}
+#ending-title{font-family:var(--serif);font-size:clamp(30px,6vw,52px);margin:0 0 18px;text-shadow:0 4px 20px rgba(255,120,160,.5)}
+#ending-text{font-size:18px;line-height:1.9;opacity:.94;margin-bottom:30px}
+#ending-continue{font-family:var(--font);font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--pink),var(--pink-deep));border:none;border-radius:16px;padding:14px 40px;cursor:pointer;box-shadow:0 8px 22px rgba(225,78,127,.5)}
+#ending-continue:hover{transform:translateY(-2px)}
+
+/* toast */
+#toast{position:absolute;bottom:190px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(20,14,24,.9);color:#fff;padding:10px 22px;border-radius:20px;z-index:50;opacity:0;transition:.3s;pointer-events:none;font-weight:600}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* responsive */
+@media (max-width:560px){
+  #dialogue-text{font-size:17px}
+  .sprite{height:72%}
+  #dialogue-box{bottom:12px;padding:22px 20px 20px;min-height:132px}
+  .slots-grid{grid-template-columns:1fr}
+  .top-bar .ctrl{width:36px;height:36px}
+}
+
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ TITLE ============ -->
+  <section id="title-screen" class="screen active">
+    <div class="title-petals" id="petals"></div>
+    <div class="title-inner">
+      <div class="title-badge">Boys' Love Visual Novel</div>
+      <h1 class="title-main">รักแรกผลิบาน</h1>
+      <div class="title-sub">เกมจีบหนุ่มในรั้วมหาวิทยาลัย</div>
+      <div class="title-en">Blooming Hearts</div>
+      <div class="title-menu">
+        <button class="menu-btn" id="btn-new">เริ่มเรื่องราวใหม่ 💗</button>
+        <button class="menu-btn ghost" id="btn-continue">เล่นต่อ</button>
+        <button class="menu-btn ghost" id="btn-cast">แนะนำหนุ่มๆ</button>
+        <button class="menu-btn ghost" id="btn-about">วิธีเล่น &amp; เครดิต</button>
+      </div>
+    </div>
+    <div class="title-foot">เลือกเส้นทางของหัวใจคุณ · จีบใครดี?</div>
+  </section>
+
+  <!-- ============ NAME ============ -->
+  <section id="name-screen" class="screen">
+    <div class="center-card">
+      <div class="name-title">ก่อนเริ่มต้น...</div>
+      <div class="name-desc">อยากให้หนุ่มๆ เรียกคุณว่าอะไรดี?</div>
+      <input id="name-input" maxlength="12" placeholder="ใส่ชื่อของคุณ" autocomplete="off">
+      <div class="name-suggests">
+        <button class="name-suggest">ข้าวปั้น</button>
+        <button class="name-suggest">พีท</button>
+        <button class="name-suggest">ต้นน้ำ</button>
+        <button class="name-suggest">ไอซ์</button>
+      </div>
+      <button class="menu-btn" id="name-confirm" style="width:min(320px,84%)">เริ่มเลย!</button>
+      <button class="back-btn to-title" style="margin-top:16px">← กลับ</button>
+    </div>
+  </section>
+
+  <!-- ============ CAST ============ -->
+  <section id="cast-screen" class="screen">
+    <div class="sub-head">
+      <button class="back-btn to-title">← กลับ</button>
+      <h2>แนะนำหนุ่มๆ</h2>
+    </div>
+    <div id="cast-body"></div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about-screen" class="screen">
+    <div class="sub-head">
+      <button class="back-btn to-title">← กลับ</button>
+      <h2>วิธีเล่น &amp; เครดิต</h2>
+    </div>
+    <div class="about-body">
+      <p><b>รักแรกผลิบาน</b> คือเกม Visual Novel แนวจีบหนุ่ม (Boys' Love) ที่คุณจะได้สวมบทเป็นนักศึกษาปี 1
+      ผู้เพิ่งก้าวเข้าสู่รั้วมหาวิทยาลัย และได้พบกับหนุ่มๆ สามคนที่มีเสน่ห์ต่างกันไป</p>
+      <h3>วิธีเล่น</h3>
+      <p>• คลิก/แตะที่หน้าจอ หรือกด <kbd>Space</kbd> / <kbd>Enter</kbd> เพื่อเดินเรื่องต่อ<br>
+      • เมื่อมี <b>ตัวเลือก</b> ปรากฏ ให้เลือกคำตอบที่ใจคุณอยากตอบ — แต่ละคำตอบมีผลต่อ<b>คะแนนหัวใจ ♥</b> ของหนุ่มแต่ละคน<br>
+      • คะแนนหัวใจจะกำหนดว่าคุณจะได้ตอนจบแบบไหน (สมหวัง / ค่อยเป็นค่อยไป / พลาดโอกาส)<br>
+      • มีทั้งหมด <b>3 เส้นทางรัก × 3 ตอนจบ = 9 ตอนจบ</b> ให้ตามเก็บ!</p>
+      <h3>ปุ่มลัด</h3>
+      <p>
+      <kbd>A</kbd> เล่นอัตโนมัติ (Auto) · <kbd>L</kbd> ย้อนดูบทสนทนา (Log) · <kbd>Esc</kbd> เมนู/บันทึก<br>
+      ในเกมมีปุ่ม <b>≡</b> เมนู, <b>♥</b> ดูคะแนนหัวใจ, <b>▷</b> Auto, <b>≫</b> Skip, <b>❐</b> Log</p>
+      <h3>บันทึกเกม</h3>
+      <p>เกมจะ <b>ออโต้เซฟ</b> ให้อัตโนมัติทุกฉาก และมีช่องเซฟด้วยตนเองอีก 4 ช่อง (บันทึกในเครื่องของคุณ)</p>
+      <h3>เครดิต</h3>
+      <p>ออกแบบและพัฒนาเป็นเกมเว็บแบบ self-contained ด้วย HTML/CSS/JavaScript ล้วน — ตัวละคร ฉาก และภาพทั้งหมดวาดด้วย SVG ไม่ต้องโหลดไฟล์ภาพจากภายนอก 🎨<br>
+      สร้างด้วย 💗 เพื่อคนรักซีรีส์วาย</p>
+    </div>
+  </section>
+
+  <!-- ============ GAME ============ -->
+  <section id="game-screen" class="screen">
+    <div id="bg-layer"></div>
+    <div id="loc-tag"></div>
+    <div class="sprite-layer">
+      <div class="sprite" id="sprite-left"></div>
+      <div class="sprite" id="sprite-center"></div>
+      <div class="sprite" id="sprite-right"></div>
+    </div>
+    <div id="advance-area"></div>
+
+    <div class="top-bar">
+      <button class="ctrl" id="btn-status" title="คะแนนหัวใจ">♥</button>
+      <button class="ctrl" id="btn-auto" title="เล่นอัตโนมัติ (A)">▷</button>
+      <button class="ctrl" id="btn-skip" title="ข้ามเร็ว">≫</button>
+      <button class="ctrl" id="btn-log" title="บทสนทนาย้อนหลัง (L)">❐</button>
+      <button class="ctrl" id="btn-menu" title="เมนู (Esc)">≡</button>
+    </div>
+
+    <div id="dialogue-box">
+      <span id="name-tab"></span>
+      <div id="dialogue-text"></div>
+      <div id="next-hint">▼</div>
+    </div>
+
+    <div id="choice-layer"></div>
+    <div id="toast"></div>
+  </section>
+
+  <!-- ============ MENU OVERLAY ============ -->
+  <div id="menu-overlay" class="overlay">
+    <div class="menu-card">
+      <div class="menu-head">
+        <button class="menu-tab active" data-tab="save">บันทึก</button>
+        <button class="menu-tab" data-tab="load">โหลด</button>
+        <button class="menu-tab" data-tab="status">หัวใจ</button>
+        <button class="menu-tab" data-tab="settings">ตั้งค่า</button>
+        <button class="menu-x" id="menu-close">✕</button>
+      </div>
+      <div class="menu-body">
+        <div class="menu-panel active" data-panel="save"><div class="slots-grid" id="save-slots"></div></div>
+        <div class="menu-panel" data-panel="load"><div class="slots-grid" id="load-slots"></div></div>
+        <div class="menu-panel" data-panel="status"><div id="status-body"></div></div>
+        <div class="menu-panel" data-panel="settings">
+          <div class="set-row"><label>ความเร็วข้อความ</label><input type="range" id="set-speed" min="4" max="55" value="30"></div>
+          <div class="set-row"><label>เสียงประกอบ</label><button class="back-btn" id="set-mute">🔊 เปิดเสียง</button></div>
+          <div class="set-row"><label>ล้างข้อมูลทั้งหมด</label><button class="back-btn" id="set-clear">ล้างเซฟ &amp; ตอนจบ</button></div>
+          <p style="color:var(--ink-soft);font-size:13px;margin-top:14px;line-height:1.7">เกมนี้เก็บข้อมูลไว้ในเบราว์เซอร์ของคุณเท่านั้น (localStorage) ไม่มีการส่งข้อมูลออกไปที่ใด</p>
+        </div>
+      </div>
+      <div class="menu-foot">
+        <button class="link-btn" id="menu-title">← กลับหน้าหลัก</button>
+        <span style="font-size:12px;color:var(--ink-soft)">รักแรกผลิบาน</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ LOG OVERLAY ============ -->
+  <div id="log-overlay" class="overlay">
+    <div class="log-card">
+      <div class="log-head"><h3>บทสนทนาย้อนหลัง</h3><button class="menu-x" id="log-close">✕</button></div>
+      <div id="log-body"></div>
+    </div>
+  </div>
+
+  <!-- ============ ENDING OVERLAY ============ -->
+  <div id="ending-overlay">
+    <div class="ending-card">
+      <div class="ending-badge" id="ending-badge">END</div>
+      <h1 id="ending-title"></h1>
+      <p id="ending-text"></p>
+      <button id="ending-continue">กลับหน้าหลัก</button>
+    </div>
+  </div>
+
+</div>
+<script>
+/* ===== art.js ===== */
+/* =============================================================
+   art.js — Hand-drawn SVG character portraits
+   Anime-lite flat illustration style. Each character is a bust
+   portrait generated from a small set of parameters plus an
+   expression, so we get many faces from compact code and no
+   external image assets (everything works offline).
+   ============================================================= */
+
+/* ---- Per-character visual identity -------------------------- */
+const CHAR_ART = {
+  phakin: {
+    skin: '#f4d2b4', skinShade: '#e6b892',
+    hair: '#2a2d3a', hairShade: '#1c1e29', hairLight: '#3d4152',
+    brow: '#20222c',
+    eye: '#3a5a8c', eyeDark: '#24406b',
+    shirt: '#20304f', shirtShade: '#182741', collar: '#dfe6f2',
+    accent: '#3f6cd0',
+    blushCol: '#ef9a9a',
+    // neat, side-swept clean hair
+    hairBack: 'M60 150 Q52 60 150 44 Q248 60 240 150 L240 220 Q236 150 210 130 L90 130 Q64 150 60 220 Z',
+    hairFront: 'M74 132 Q78 66 150 58 Q222 66 226 132 Q210 96 150 92 Q150 118 132 128 Q112 118 108 96 Q86 104 74 132 Z',
+    accessory: 'camera',
+  },
+  tawan: {
+    skin: '#e9b98d', skinShade: '#d69f72',
+    hair: '#5a3a1e', hairShade: '#432a13', hairLight: '#7a5230',
+    brow: '#432a13',
+    eye: '#8a5122', eyeDark: '#5f360f',
+    shirt: '#e8823a', shirtShade: '#cf6a26', collar: '#ffffff',
+    accent: '#ff9f43',
+    blushCol: '#f28b82',
+    // spiky energetic hair
+    hairBack: 'M62 148 Q54 62 150 46 Q246 62 238 148 L238 210 Q232 150 208 132 L92 132 Q68 150 62 210 Z',
+    hairFront: 'M70 130 L86 84 L100 118 L112 74 L128 116 L150 70 L172 116 L188 74 L200 118 L214 84 L230 130 Q210 98 150 96 Q90 98 70 130 Z',
+    accessory: 'headband',
+  },
+  nil: {
+    skin: '#f2dcc6', skinShade: '#e2c3a6',
+    hair: '#3a2f4d', hairShade: '#2a2138', hairLight: '#54456f',
+    brow: '#2a2138',
+    eye: '#7d5aa8', eyeDark: '#553a78',
+    shirt: '#3b2f52', shirtShade: '#2c2340', collar: '#c9b8e0',
+    accent: '#9b6bd6',
+    blushCol: '#e79bbf',
+    // soft wavy bangs, one side longer
+    hairBack: 'M58 156 Q50 60 150 44 Q250 60 242 156 L242 240 Q236 160 214 138 L86 138 Q64 160 58 240 Z',
+    hairFront: 'M72 150 Q70 74 150 60 Q230 74 228 140 Q216 100 176 100 Q170 128 150 138 Q120 130 116 100 Q86 110 72 150 Z',
+    accessory: 'earring',
+  },
+  fern: {
+    skin: '#f6d9c0', skinShade: '#e8bfa0',
+    hair: '#6d4b6e', hairShade: '#523953', hairLight: '#8a6390',
+    brow: '#523953',
+    eye: '#b0587f', eyeDark: '#8a3e60',
+    shirt: '#f4a6c0', shirtShade: '#e087a6', collar: '#ffffff',
+    accent: '#ff8fb3',
+    blushCol: '#f28b82',
+    hairBack: 'M50 160 Q46 58 150 42 Q254 58 250 160 Q256 250 232 300 L228 210 Q232 150 206 132 L94 132 Q68 150 72 210 L68 300 Q44 250 50 160 Z',
+    hairFront: 'M74 138 Q76 70 150 60 Q224 70 226 138 Q212 100 150 98 Q150 122 134 130 Q110 120 108 100 Q88 108 74 138 Z',
+    accessory: 'clip',
+  },
+};
+
+/* ---- Expression table: eyes, brows, mouth, blush ------------ */
+/* returns descriptors consumed by the eye/brow/mouth builders   */
+const EXPR = {
+  neutral:  { eye: 'open',   brow: 'flat',  mouth: 'soft',   blush: 0 },
+  smile:    { eye: 'open',   brow: 'up',    mouth: 'smile',  blush: 0 },
+  happy:    { eye: 'open',   brow: 'up',    mouth: 'grin',   blush: 0.3 },
+  laugh:    { eye: 'closed', brow: 'up',    mouth: 'grin',   blush: 0.2 },
+  blush:    { eye: 'open',   brow: 'worry', mouth: 'small',  blush: 1 },
+  shy:      { eye: 'half',   brow: 'worry', mouth: 'small',  blush: 1 },
+  sad:      { eye: 'sad',    brow: 'sad',   mouth: 'frown',  blush: 0 },
+  surprised:{ eye: 'wide',   brow: 'up',    mouth: 'o',      blush: 0.2 },
+  serious:  { eye: 'sharp',  brow: 'down',  mouth: 'flat',   blush: 0 },
+  sulk:     { eye: 'half',   brow: 'down',  mouth: 'pout',   blush: 0.2 },
+  wink:     { eye: 'wink',   brow: 'up',    mouth: 'smirk',  blush: 0.2 },
+};
+
+function eyePair(cfg, kind) {
+  const { eye, eyeDark } = cfg;
+  // draws left+right eye; centered around x=118 and x=182, y=176
+  const one = (cx, flip) => {
+    const s = flip ? -1 : 1;
+    switch (kind) {
+      case 'closed':
+        return `<path d="M${cx-15} 178 Q${cx} 188 ${cx+15} 178" fill="none" stroke="#5a4636" stroke-width="3.2" stroke-linecap="round"/>`;
+      case 'wink':
+        // one eye (right side, flip=true) closed, left open
+        if (flip) return `<path d="M${cx-15} 178 Q${cx} 188 ${cx+15} 178" fill="none" stroke="#5a4636" stroke-width="3.2" stroke-linecap="round"/>`;
+        return eyeOpen(cx, eye, eyeDark, 1);
+      case 'half':
+        return eyeOpen(cx, eye, eyeDark, 0.6);
+      case 'sad':
+        return eyeOpen(cx, eye, eyeDark, 0.85, 3*s);
+      case 'wide':
+        return eyeOpen(cx, eye, eyeDark, 1.25);
+      case 'sharp':
+        return eyeOpen(cx, eye, eyeDark, 0.75, 0, true);
+      default:
+        return eyeOpen(cx, eye, eyeDark, 1);
+    }
+  };
+  return one(118, false) + one(182, true);
+}
+
+function eyeOpen(cx, eye, eyeDark, open, tilt = 0, sharp = false) {
+  const cy = 176;
+  const rx = 12, ry = 14 * open;
+  const irisR = 8.5, pupilR = 4.2;
+  const lidTop = sharp
+    ? `M${cx-14} ${cy-2} L${cx+14} ${cy-6}`
+    : `M${cx-14} ${cy-6} Q${cx} ${cy-16} ${cx+14} ${cy-6}`;
+  return `
+    <g>
+      <ellipse cx="${cx}" cy="${cy+tilt}" rx="${rx}" ry="${ry}" fill="#ffffff"/>
+      <clipPath id="c${cx}"><ellipse cx="${cx}" cy="${cy+tilt}" rx="${rx}" ry="${ry}"/></clipPath>
+      <g clip-path="url(#c${cx})">
+        <circle cx="${cx}" cy="${cy+tilt-1}" r="${irisR}" fill="${eye}"/>
+        <circle cx="${cx}" cy="${cy+tilt-1}" r="${pupilR}" fill="${eyeDark}"/>
+        <circle cx="${cx}" cy="${cy+tilt-1}" r="9" fill="none" stroke="${eyeDark}" stroke-width="1" opacity="0.5"/>
+        <circle cx="${cx-3}" cy="${cy+tilt-5}" r="2.6" fill="#ffffff"/>
+        <circle cx="${cx+3}" cy="${cy+tilt+3}" r="1.4" fill="#ffffff" opacity="0.8"/>
+      </g>
+      <path d="${lidTop}" fill="none" stroke="#4a3a2c" stroke-width="2.6" stroke-linecap="round"/>
+    </g>`;
+}
+
+function brows(cfg, kind) {
+  const c = cfg.brow;
+  const w = 3.4;
+  const L = (d) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+  switch (kind) {
+    case 'up':    return L('M104 150 Q118 144 132 149') + L('M168 149 Q182 144 196 150');
+    case 'down':  return L('M104 146 Q118 152 132 152') + L('M168 152 Q182 152 196 146');
+    case 'worry': return L('M104 152 Q118 146 132 150') + L('M168 150 Q182 146 196 152');
+    case 'sad':   return L('M104 148 Q118 156 132 156') + L('M168 156 Q182 156 196 148');
+    default:      return L('M104 149 Q118 146 132 149') + L('M168 149 Q182 146 196 149');
+  }
+}
+
+function mouth(kind) {
+  const s = '#b5654a';
+  switch (kind) {
+    case 'smile': return `<path d="M138 212 Q150 222 162 212" fill="none" stroke="${s}" stroke-width="3" stroke-linecap="round"/>`;
+    case 'grin':  return `<path d="M134 210 Q150 228 166 210 Q150 216 134 210 Z" fill="#9c3d2f"/><path d="M136 212 Q150 218 164 212" fill="#ffffff" opacity="0.85"/>`;
+    case 'small': return `<path d="M143 214 Q150 219 157 214" fill="none" stroke="${s}" stroke-width="2.6" stroke-linecap="round"/>`;
+    case 'frown': return `<path d="M139 218 Q150 210 161 218" fill="none" stroke="${s}" stroke-width="2.8" stroke-linecap="round"/>`;
+    case 'flat':  return `<path d="M140 214 L160 214" fill="none" stroke="${s}" stroke-width="2.8" stroke-linecap="round"/>`;
+    case 'o':     return `<ellipse cx="150" cy="215" rx="6" ry="8" fill="#9c3d2f"/>`;
+    case 'pout':  return `<path d="M142 216 Q150 210 158 216 Q150 220 142 216 Z" fill="${s}"/>`;
+    case 'smirk': return `<path d="M138 213 Q150 220 164 210" fill="none" stroke="${s}" stroke-width="3" stroke-linecap="round"/>`;
+    default:      return `<path d="M141 213 Q150 218 159 213" fill="none" stroke="${s}" stroke-width="2.6" stroke-linecap="round"/>`;
+  }
+}
+
+function blushMarks(cfg, amt) {
+  if (!amt) return '';
+  const o = amt;
+  const m = (cx) => `<g opacity="${o}"><ellipse cx="${cx}" cy="196" rx="13" ry="7" fill="${cfg.blushCol}" opacity="0.55"/>
+     <line x1="${cx-8}" y1="192" x2="${cx-8}" y2="202" stroke="${cfg.blushCol}" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/>
+     <line x1="${cx}" y1="190" x2="${cx}" y2="203" stroke="${cfg.blushCol}" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/>
+     <line x1="${cx+8}" y1="192" x2="${cx+8}" y2="202" stroke="${cfg.blushCol}" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/></g>`;
+  return m(104) + m(196);
+}
+
+function accessory(cfg) {
+  switch (cfg.accessory) {
+    case 'camera':
+      return `<g>
+        <path d="M96 300 Q150 330 204 300" fill="none" stroke="#101418" stroke-width="7"/>
+        <rect x="176" y="300" width="70" height="46" rx="8" fill="#15181e"/>
+        <circle cx="211" cy="323" r="16" fill="#2a2f38"/><circle cx="211" cy="323" r="9" fill="#4a5568"/>
+        <circle cx="211" cy="323" r="4" fill="#8fa4c8"/><rect x="182" y="304" width="12" height="6" rx="2" fill="#3a4150"/>
+      </g>`;
+    case 'headband':
+      return `<path d="M66 128 Q150 108 234 128 L232 140 Q150 122 68 140 Z" fill="${cfg.accent}"/>
+        <path d="M66 132 L234 132" stroke="#ffffff" stroke-width="3" opacity="0.7"/>`;
+    case 'earring':
+      return `<circle cx="96" cy="214" r="3.4" fill="${cfg.accent}"/><circle cx="96" cy="222" r="4.6" fill="none" stroke="${cfg.accent}" stroke-width="2.2"/>`;
+    case 'clip':
+      return `<g><rect x="196" y="96" width="20" height="8" rx="4" fill="${cfg.accent}"/><circle cx="200" cy="100" r="3" fill="#fff"/><circle cx="212" cy="100" r="3" fill="#fff"/></g>`;
+    default: return '';
+  }
+}
+
+/**
+ * Build an SVG bust portrait string for a character in a given expression.
+ * @param {string} charKey  phakin | tawan | nil | fern
+ * @param {string} exprKey  see EXPR keys
+ */
+function characterSVG(charKey, exprKey = 'neutral') {
+  const cfg = CHAR_ART[charKey];
+  if (!cfg) return '';
+  const e = EXPR[exprKey] || EXPR.neutral;
+
+  return `<svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" class="char-svg" preserveAspectRatio="xMidYMax meet">
+    <defs>
+      <linearGradient id="sh_${charKey}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="${cfg.shirt}"/><stop offset="1" stop-color="${cfg.shirtShade}"/>
+      </linearGradient>
+    </defs>
+
+    <!-- shoulders / shirt -->
+    <path d="M40 400 Q44 316 108 296 L108 292 Q150 312 192 292 L192 296 Q256 316 260 400 Z" fill="url(#sh_${charKey})"/>
+    <path d="M108 296 Q150 322 192 296 L192 306 Q150 330 108 306 Z" fill="${cfg.collar}" opacity="0.9"/>
+    ${accessory(cfg)}
+
+    <!-- neck -->
+    <path d="M126 268 Q126 300 150 306 Q174 300 174 268 L174 250 L126 250 Z" fill="${cfg.skinShade}"/>
+    <path d="M126 268 Q126 292 150 298 Q174 292 174 268 L174 258 L126 258 Z" fill="${cfg.skin}"/>
+
+    <!-- hair back -->
+    <path d="${cfg.hairBack}" fill="${cfg.hairShade}"/>
+
+    <!-- ears -->
+    <ellipse cx="80" cy="192" rx="11" ry="16" fill="${cfg.skin}"/>
+    <ellipse cx="220" cy="192" rx="11" ry="16" fill="${cfg.skin}"/>
+    <path d="M78 186 Q84 192 80 200" fill="none" stroke="${cfg.skinShade}" stroke-width="2"/>
+    <path d="M222 186 Q216 192 220 200" fill="none" stroke="${cfg.skinShade}" stroke-width="2"/>
+
+    <!-- face -->
+    <path d="M86 168 Q86 118 150 112 Q214 118 214 168 Q214 224 176 248 Q150 262 124 248 Q86 224 86 168 Z" fill="${cfg.skin}"/>
+    <path d="M96 208 Q100 236 130 250 Q112 244 100 224 Z" fill="${cfg.skinShade}" opacity="0.5"/>
+
+    <!-- blush -->
+    ${blushMarks(cfg, e.blush)}
+
+    <!-- brows -->
+    ${brows(cfg, e.brow)}
+
+    <!-- eyes -->
+    ${eyePair(cfg, e.eye)}
+
+    <!-- nose -->
+    <path d="M150 192 Q147 200 151 202" fill="none" stroke="${cfg.skinShade}" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- mouth -->
+    ${mouth(e.mouth)}
+
+    <!-- hair front (over forehead) -->
+    <path d="${cfg.hairFront}" fill="${cfg.hair}"/>
+    <path d="${cfg.hairFront}" fill="none" stroke="${cfg.hairLight}" stroke-width="1.5" opacity="0.4"/>
+  </svg>`;
+}
+
+if (typeof module !== 'undefined') module.exports = { characterSVG, CHAR_ART, EXPR };
+
+
+/* ===== backgrounds.js ===== */
+/* =============================================================
+   backgrounds.js — Atmospheric SVG scene backgrounds
+   Each location key maps to a layered gradient scene. Kept
+   abstract/painterly so it reads as a mood, not clip-art.
+   ============================================================= */
+
+const BG = {
+  campus_gate:  { sky: ['#aee1f9', '#e8f6ff', '#fff6e6'], ground: '#cdb98f', kind: 'day',   tag: 'หน้าประตูมหาวิทยาลัย' },
+  courtyard:    { sky: ['#bfe6fb', '#eafaf0', '#fdfbe8'], ground: '#bcd39a', kind: 'day',   tag: 'ลานกิจกรรม' },
+  classroom:    { sky: ['#dfeaf5', '#eef3f8'],            ground: '#c8b89a', kind: 'indoor',tag: 'ห้องเรียน' },
+  library:      { sky: ['#efe3d0', '#f6eede'],            ground: '#a9855e', kind: 'indoor',tag: 'ห้องสมุด' },
+  cafeteria:    { sky: ['#ffe9cf', '#fff5e6'],            ground: '#d8b98f', kind: 'indoor',tag: 'โรงอาหาร' },
+  club_room:    { sky: ['#e6dcf2', '#f2ecf9'],            ground: '#b39ecb', kind: 'indoor',tag: 'ห้องชมรม' },
+  photo_studio: { sky: ['#2a2f3a', '#3b4152'],            ground: '#20242e', kind: 'dark',  tag: 'สตูดิโอถ่ายภาพ' },
+  rooftop:      { sky: ['#8fc7f2', '#cfe9fb', '#ffe9c9'], ground: '#9aa6b4', kind: 'day',   tag: 'ดาดฟ้า' },
+  park:         { sky: ['#a9ddf7', '#dff5e4', '#f6fbdf'], ground: '#a7cf82', kind: 'day',   tag: 'สวนสาธารณะ' },
+  riverside:    { sky: ['#ffb27a', '#ffd9a0', '#ffeccb'], ground: '#7a8fa0', kind: 'sunset',tag: 'ริมน้ำยามเย็น' },
+  festival_night:{ sky:['#241a4a', '#3d2a6b', '#5a3a7a'], ground: '#1c1636', kind: 'night', tag: 'งานเทศกาลกลางคืน' },
+  art_room:     { sky: ['#f0e6dc', '#f8f1e9'],            ground: '#b89a78', kind: 'indoor',tag: 'ห้องศิลปะ' },
+  music_room:   { sky: ['#e3dcef', '#efeaf7'],            ground: '#9a86b8', kind: 'indoor',tag: 'ห้องดนตรี' },
+  football_field:{ sky:['#8fd0f5', '#cdeefb', '#eafbe6'], ground: '#5fae54', kind: 'day',   tag: 'สนามฟุตบอล' },
+  rain_street:  { sky: ['#5b6b7a', '#7d8b98', '#9aa8b4'], ground: '#4a5560', kind: 'rain',  tag: 'ถนนกลางสายฝน' },
+  city_night:   { sky: ['#141833', '#26203f', '#3a2a4a'], ground: '#0e1020', kind: 'night', tag: 'เมืองยามค่ำ' },
+  hallway:      { sky: ['#e2e8ee', '#eef2f6'],            ground: '#b6a988', kind: 'indoor',tag: 'ทางเดินตึกเรียน' },
+  coffee_shop:  { sky: ['#e6d3bc', '#f2e4d2'],            ground: '#8a6a4a', kind: 'indoor',tag: 'ร้านกาแฟ' },
+  beach:        { sky: ['#7fd0f0', '#bfeefb', '#fdf3d6'], ground: '#ecd9a8', kind: 'day',   tag: 'ชายทะเล' },
+  home_room:    { sky: ['#f0dbe6', '#f7e8f0'],            ground: '#c9a6b8', kind: 'indoor',tag: 'ห้องพัก' },
+};
+
+function bgDecor(key, cfg) {
+  const bits = [];
+  if (cfg.kind === 'day' || cfg.kind === 'sunset') {
+    // sun / clouds
+    const sunY = cfg.kind === 'sunset' ? 300 : 150;
+    const sunC = cfg.kind === 'sunset' ? '#ffdfa0' : '#fff6d8';
+    bits.push(`<circle cx="740" cy="${sunY}" r="70" fill="${sunC}" opacity="0.75"/>`);
+    bits.push(`<circle cx="740" cy="${sunY}" r="110" fill="${sunC}" opacity="0.25"/>`);
+    bits.push(`<ellipse cx="220" cy="140" rx="90" ry="34" fill="#ffffff" opacity="0.55"/>`);
+    bits.push(`<ellipse cx="320" cy="120" rx="70" ry="28" fill="#ffffff" opacity="0.45"/>`);
+    bits.push(`<ellipse cx="560" cy="200" rx="80" ry="30" fill="#ffffff" opacity="0.4"/>`);
+  }
+  if (cfg.kind === 'night' || cfg.kind === 'dark' || cfg.kind === 'city_night') {
+    for (let i = 0; i < 60; i++) {
+      const x = (i * 137) % 960, y = (i * 71) % 360, r = (i % 3) * 0.6 + 0.6;
+      bits.push(`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity="${0.3 + (i % 4) * 0.15}"/>`);
+    }
+  }
+  if (key === 'festival_night') {
+    // paper lanterns
+    ['#ff8a5c', '#ffd166', '#ff6b9d', '#c792ea'].forEach((c, i) => {
+      const x = 140 + i * 210;
+      bits.push(`<line x1="${x}" y1="0" x2="${x}" y2="120" stroke="#5a4a6a" stroke-width="2"/>`);
+      bits.push(`<ellipse cx="${x}" cy="150" rx="26" ry="34" fill="${c}" opacity="0.9"/><ellipse cx="${x}" cy="150" rx="26" ry="34" fill="none" stroke="#00000030" stroke-width="1"/>`);
+      bits.push(`<circle cx="${x}" cy="150" r="60" fill="${c}" opacity="0.18"/>`);
+    });
+  }
+  if (key === 'city_night') {
+    for (let i = 0; i < 7; i++) {
+      const x = i * 140, h = 180 + ((i * 53) % 160), w = 110;
+      bits.push(`<rect x="${x}" y="${540 - h}" width="${w}" height="${h}" fill="#1a1730" opacity="0.85"/>`);
+      for (let wy = 0; wy < 6; wy++) for (let wx = 0; wx < 3; wx++) {
+        if ((i + wx + wy) % 2 === 0) bits.push(`<rect x="${x + 14 + wx * 30}" y="${540 - h + 20 + wy * 26}" width="10" height="14" fill="#ffd98a" opacity="0.75"/>`);
+      }
+    }
+  }
+  if (key === 'library' || key === 'art_room' || key === 'club_room' || key === 'music_room' || key === 'coffee_shop') {
+    // window light + shelf/frame hints
+    bits.push(`<rect x="600" y="60" width="280" height="300" rx="10" fill="#ffffff" opacity="0.18"/>`);
+    bits.push(`<line x1="740" y1="60" x2="740" y2="360" stroke="#ffffff" stroke-width="3" opacity="0.2"/>`);
+    bits.push(`<line x1="600" y1="210" x2="880" y2="210" stroke="#ffffff" stroke-width="3" opacity="0.2"/>`);
+  }
+  if (key === 'photo_studio') {
+    bits.push(`<circle cx="480" cy="120" r="180" fill="#ffffff" opacity="0.10"/>`);
+    bits.push(`<polygon points="150,540 260,180 320,180 240,540" fill="#ffffff" opacity="0.06"/>`);
+  }
+  if (key === 'football_field') {
+    bits.push(`<ellipse cx="480" cy="560" rx="520" ry="120" fill="#ffffff" opacity="0.12"/>`);
+    bits.push(`<line x1="480" y1="380" x2="480" y2="560" stroke="#ffffff" stroke-width="3" opacity="0.5"/>`);
+    bits.push(`<circle cx="480" cy="470" r="60" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.5"/>`);
+  }
+  if (key === 'beach') {
+    bits.push(`<path d="M0 400 Q240 380 480 400 T960 400 L960 540 L0 540 Z" fill="#4fb8d8" opacity="0.55"/>`);
+    bits.push(`<path d="M0 430 Q240 415 480 430 T960 430" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.5"/>`);
+  }
+  if (key === 'rain_street') {
+    for (let i = 0; i < 70; i++) {
+      const x = (i * 89) % 960, y = (i * 53) % 540;
+      bits.push(`<line x1="${x}" y1="${y}" x2="${x - 8}" y2="${y + 26}" stroke="#cdd9e4" stroke-width="1.4" opacity="0.5"/>`);
+    }
+  }
+  if (key === 'riverside') {
+    bits.push(`<path d="M0 400 L960 400 L960 540 L0 540 Z" fill="#ffb27a" opacity="0.35"/>`);
+    bits.push(`<ellipse cx="740" cy="440" rx="120" ry="16" fill="#fff2d0" opacity="0.5"/>`);
+  }
+  return bits.join('');
+}
+
+function backgroundSVG(key) {
+  const cfg = BG[key] || BG.courtyard;
+  const stops = cfg.sky.map((c, i) => `<stop offset="${i / (cfg.sky.length - 1)}" stop-color="${c}"/>`).join('');
+  const groundY = 380;
+  return `<svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" class="bg-svg">
+    <defs><linearGradient id="sky_${key}" x1="0" y1="0" x2="0" y2="1">${stops}</linearGradient></defs>
+    <rect width="960" height="540" fill="url(#sky_${key})"/>
+    ${bgDecor(key, cfg)}
+    <rect x="0" y="${groundY}" width="960" height="${540 - groundY}" fill="${cfg.ground}"/>
+    <rect x="0" y="${groundY}" width="960" height="14" fill="#ffffff" opacity="0.12"/>
+    <rect x="0" y="0" width="960" height="540" fill="url(#vig_${key})"/>
+    <radialGradient id="vig_${key}" cx="0.5" cy="0.45" r="0.75">
+      <stop offset="0.6" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.28"/>
+    </radialGradient>
+  </svg>`;
+}
+
+function bgTag(key) { return (BG[key] || {}).tag || ''; }
+
+if (typeof module !== 'undefined') module.exports = { backgroundSVG, bgTag, BG };
+
+
+/* ===== characters.js ===== */
+/* =============================================================
+   characters.js — Cast metadata (names, theme colours, blurbs)
+   ============================================================= */
+
+const CHARACTERS = {
+  phakin: {
+    name: 'ภาคิน',
+    en: 'Phakin',
+    color: '#3f6cd0',
+    colorSoft: '#e3ecfb',
+    role: 'รุ่นพี่ปี 3 · ประธานชมรมถ่ายภาพ',
+    tagline: '"ยืนตรงนั้นแหละ...แสงกำลังสวย"',
+    blurb: 'รุ่นพี่สุขุมเย็นชาที่มองโลกผ่านเลนส์กล้อง ภายนอกดูห่างเหิน แต่ซ่อนความอ่อนโยนและใส่ใจไว้เบื้องหลัง',
+  },
+  tawan: {
+    name: 'ตะวัน',
+    en: 'Tawan',
+    color: '#f2872f',
+    colorSoft: '#fdead2',
+    role: 'เพื่อนร่วมรุ่น · นักฟุตบอลทีมมหาลัย',
+    tagline: '"เฮ้! วิ่งไปเป็นเพื่อนกันมั้ย?"',
+    blurb: 'เพื่อนซี้สุดสดใสพลังล้น ยิ้มแล้วเหมือนแดดออก ตรงไปตรงมาและอบอุ่น...แต่แอบมีบางอย่างในใจ',
+  },
+  nil: {
+    name: 'นิล',
+    en: 'Nil',
+    color: '#9b6bd6',
+    colorSoft: '#ece0f8',
+    role: 'รุ่นพี่ปี 2 · คณะศิลปกรรม',
+    tagline: '"บางความรู้สึก...วาดออกมาง่ายกว่าพูด"',
+    blurb: 'ศิลปินเงียบขรึมลึกลับที่สื่อสารผ่านสีและเสียงดนตรี อ่อนโยนและช่างสังเกตเกินกว่าที่ใครจะรู้',
+  },
+  fern: {
+    name: 'ใบเฟิร์น',
+    en: 'Fern',
+    color: '#ff8fb3',
+    colorSoft: '#ffe3ee',
+    role: 'เพื่อนสาวคนสนิท',
+    tagline: '"เอาน่า สู้ๆ! เดี๋ยวเฟิร์นเชียร์ให้เอง"',
+    blurb: 'เพื่อนสาวจอมแซวที่คอยเป็นกองเชียร์เรื่องหัวใจให้เสมอ',
+  },
+  player: { name: '{{PLAYER}}', en: 'You', color: '#4a4a5a', colorSoft: '#eceef2' },
+  narrator: { name: '', en: '', color: '#8a8a9a', colorSoft: '#f0f0f4' },
+};
+
+const ROMANCEABLE = ['phakin', 'tawan', 'nil'];
+
+if (typeof module !== 'undefined') module.exports = { CHARACTERS, ROMANCEABLE };
+
+
+/* ===== sound.js ===== */
+/* =============================================================
+   sound.js — Lightweight generated sound effects (Web Audio).
+   No audio files: every sound is synthesised, so the game stays
+   fully self-contained. Respects the mute setting; the audio
+   context is created lazily on the first user gesture.
+   ============================================================= */
+const Sound = {
+  ctx: null,
+  muted: false,
+  _lastBlip: 0,
+
+  ensure() {
+    if (!this.ctx) {
+      try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { this.ctx = null; }
+    }
+    if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+    return this.ctx;
+  },
+
+  _tone(freq, dur, type = 'sine', gain = 0.06, when = 0) {
+    if (this.muted) return;
+    const ctx = this.ensure(); if (!ctx) return;
+    const t = ctx.currentTime + when;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(gain, t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(t); osc.stop(t + dur + 0.02);
+  },
+
+  // soft typewriter tick (throttled so it never machine-guns)
+  blip() {
+    if (this.muted) return;
+    const now = performance.now ? performance.now() : Date.now();
+    if (now - this._lastBlip < 45) return;
+    this._lastBlip = now;
+    this._tone(1400 + Math.sin(now / 200) * 120, 0.03, 'triangle', 0.018);
+  },
+
+  // pleasant rising two-note on affection gain
+  pop() {
+    this._tone(660, 0.14, 'sine', 0.05, 0);
+    this._tone(990, 0.20, 'sine', 0.045, 0.08);
+  },
+
+  // choice selected
+  pick() {
+    this._tone(523, 0.10, 'triangle', 0.05, 0);
+    this._tone(784, 0.14, 'triangle', 0.045, 0.06);
+  },
+
+  // gentle page-advance
+  advance() { this._tone(420, 0.05, 'sine', 0.02); },
+
+  // soft chime on reaching an ending
+  chime() {
+    [523, 659, 784, 1047].forEach((f, i) => this._tone(f, 0.5, 'sine', 0.05, i * 0.12));
+  },
+
+  toggle() { this.muted = !this.muted; return this.muted; },
+};
+
+if (typeof module !== 'undefined') module.exports = { Sound };
+
+
+/* ===== story.js ===== */
+/* =============================================================
+   story.js — เนื้อเรื่อง "รักแรกผลิบาน"
+   Common route + 3 love routes (phakin / tawan / nil), 9 endings.
+   Auto-assembled & validated. Each scene: see README for schema.
+   ============================================================= */
+const STORY_SCENES = [
+ {
+  "id": "start",
+  "bg": "campus_gate",
+  "who": "narrator",
+  "location": "หน้าประตูมหาวิทยาลัยบูรพาลัย · เช้าวันปฐมนิเทศ",
+  "text": "เช้าวันปฐมนิเทศ แสงแดดอ่อนๆ ทอดผ่านซุ้มประตูใหญ่ของมหาวิทยาลัยบูรพาลัย ป้ายต้อนรับนักศึกษาใหม่ปลิวไสวรับลมต้นเทอม วันนี้คือวันแรกที่ {{PLAYER}} จะได้เป็นนักศึกษาปี 1 คณะนิเทศศาสตร์อย่างเต็มตัว หัวใจเต้นตึกตักปนความตื่นเต้นและประหม่า",
+  "next": "s2"
+ },
+ {
+  "id": "s2",
+  "bg": "campus_gate",
+  "who": "fern",
+  "location": "หน้าประตูมหาวิทยาลัย",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "fern",
+    "expr": "happy"
+   }
+  ],
+  "text": "\"{{PLAYER}}! ทางนี้ๆ!\" เสียงใสๆ ดังลอยมา ใบเฟิร์นโบกมือกวักเรียกอยู่ริมทางเดิน \"โอ๊ยเดินช้าเป็นเต่าเลย รีบหน่อยสิ เดี๋ยวก็ตกขบวนพิธีเปิดพอดี!\"",
+  "next": "s3"
+ },
+ {
+  "id": "s3",
+  "bg": "campus_gate",
+  "who": "fern",
+  "location": "หน้าประตูมหาวิทยาลัย",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "fern",
+    "expr": "wink"
+   }
+  ],
+  "text": "เธอเดินมาเกาะแขนพลางมองหน้าเพื่อนอย่างขบขัน \"ดูหน้าสิ เกร็งซะขนาดนี้ วันนี้วันแรกนะเธอ ยิ้มหน่อยๆ\" แล้วเอียงคอถามยิ้มแก้มปริ \"ว่าแต่ตอนนี้รู้สึกยังไงบ้างล่ะ ตื่นเต้นมั้ย\"",
+  "choices": [
+   {
+    "text": "\"ตื่นเต้นสิ! อยากเจอเพื่อนใหม่ อยากลองอะไรใหม่ๆ ไปเลย\"",
+    "next": "s4"
+   },
+   {
+    "text": "\"บอกตรงๆ ว่าใจสั่นไปหมดเลยอะ เฟิร์นอยู่ข้างๆ นะ\"",
+    "next": "s4"
+   },
+   {
+    "text": "\"ก็แค่มหาลัยเอง...มีอะไรให้ตื่นเต้น\" (แกล้งทำเท่ ทั้งที่มือเย็นเฉียบ)",
+    "next": "s4"
+   }
+  ]
+ },
+ {
+  "id": "s4",
+  "bg": "courtyard",
+  "who": "narrator",
+  "location": "ลานกิจกรรมกลางคณะ",
+  "text": "หลังพิธีเปิดจบลง ลานกิจกรรมกลางคณะก็คึกคักไปด้วยซุ้มชมรมสารพัดสี เสียงเชิญชวนดังระงมเต็มไปหมด ใบเฟิร์นตาลุกวาวก่อนลากแขน {{PLAYER}} ตรงดิ่งไปที่ซุ้มชมรมถ่ายภาพ ที่มีคนมุงดูภาพถ่ายติดบอร์ดกันแน่นเป็นพิเศษ",
+  "next": "s5"
+ },
+ {
+  "id": "s5",
+  "bg": "courtyard",
+  "who": "narrator",
+  "location": "ซุ้มชมรมถ่ายภาพ",
+  "text": "ท่ามกลางฝูงคนที่เบียดเสียด {{PLAYER}} เผลอสะดุดขาตั้งกล้องเข้าเต็มแรง ขาตั้งเอียงวูบ กองภาพถ่ายที่วางเรียงอยู่ปลิวว่อนกระจายกลางอากาศ! ก่อนที่มือเรียวยาวข้างหนึ่งจะยื่นเข้ามาคว้าตัวกล้องเอาไว้ได้ทันอย่างนิ่มนวลราวกับรู้ล่วงหน้า",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "neutral"
+   }
+  ],
+  "next": "s6"
+ },
+ {
+  "id": "s6",
+  "bg": "courtyard",
+  "who": "phakin",
+  "location": "ซุ้มชมรมถ่ายภาพ",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "serious"
+   }
+  ],
+  "text": "\"ระวังหน่อยนะ ของพวกนี้มันเปราะ\" ชายหนุ่มร่างสูงในเสื้อเชิ้ตสีน้ำเงินเข้มพูดเรียบๆ แต่แววตากลับไม่ได้มีความโกรธเจือปน เขาก้มเก็บภาพที่ร่วงขึ้นมาทีละใบอย่างใจเย็น ก่อนเงยหน้ามองน้องใหม่ตรงหน้า \"...พี่ภาคิน ปี 3 ประธานชมรมถ่ายภาพ น้องปี 1 สินะ\"",
+  "next": "s7"
+ },
+ {
+  "id": "s7",
+  "bg": "courtyard",
+  "who": "phakin",
+  "location": "ซุ้มชมรมถ่ายภาพ",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "neutral"
+   }
+  ],
+  "text": "{{PLAYER}} รีบก้มช่วยเก็บภาพพลางขอโทษพัลวัน พี่ภาคินคัดภาพขึ้นมาใบหนึ่ง เป็นภาพซุ้มประตูมหาลัยยามเช้าที่แสงสวยจับใจ แล้วยื่นส่งให้ \"เก็บไว้ก็ได้ ภาพนี้มุมมันสวยดี...เผื่อวันแรกของน้องจะน่าจดจำขึ้นอีกหน่อย\" น้ำเสียงเรียบนิ่ง แต่บางอย่างในนั้นกลับอบอุ่นจนใจเต้น",
+  "choices": [
+   {
+    "text": "\"ขอบคุณมากครับพี่ ผม...ผมจะเก็บไว้อย่างดีเลย\" (ยิ้มเขินๆ รับภาพด้วยสองมือ)",
+    "p": 3,
+    "next": "s8"
+   },
+   {
+    "text": "\"พี่ถ่ายรูปเก่งจังเลยครับ ไว้พี่สอนผมได้มั้ย\"",
+    "p": 2,
+    "next": "s8"
+   },
+   {
+    "text": "\"เอ่อ...ผมถือกล้องไม่เป็นเลยอะครับ กลัวทำพี่พังอีก\" (เกาหัวแหะๆ)",
+    "p": 0,
+    "next": "s8"
+   }
+  ]
+ },
+ {
+  "id": "s8",
+  "bg": "courtyard",
+  "who": "phakin",
+  "location": "ซุ้มชมรมถ่ายภาพ",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "smile"
+   }
+  ],
+  "text": "มุมปากของพี่ภาคินยกขึ้นเพียงเล็กน้อย ก่อนจะกลบด้วยสีหน้านิ่งเช่นเดิมอย่างรวดเร็ว \"งั้น...ไว้เจอกันใหม่นะ ถ้าสนใจชมรม แวะมาได้ทุกเมื่อ\" เขาพยักหน้าเบาๆ แล้วหันหลังเดินหายไปในฝูงคน ทิ้งไว้แต่ความรู้สึกแปลกๆ อบอุ่นๆ ค้างอยู่กลางอกของ {{PLAYER}}",
+  "next": "s9"
+ },
+ {
+  "id": "s9",
+  "bg": "courtyard",
+  "who": "fern",
+  "location": "ลานกิจกรรม",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "fern",
+    "expr": "wink"
+   }
+  ],
+  "text": "\"โห...หน้าแดงเชียวนะเธอ\" ใบเฟิร์นกระซิบข้างหูพลางหัวเราะคิกคักอย่างรู้ทัน \"พี่คนนั้นเท่จริงแหละ นิ่งๆ แต่ดูใจดี\" เธอสะกิดแขนเบาๆ \"เอาน่า เดี๋ยวค่อยตามไปจีบ ตอนนี้ไปหาอะไรกินก่อน หิวจะแย่แล้ว!\"",
+  "next": "s10"
+ },
+ {
+  "id": "s10",
+  "bg": "football_field",
+  "who": "narrator",
+  "location": "ทางลัดข้างสนามฟุตบอล",
+  "text": "ทางลัดไปโรงอาหารตัดเลียบผ่านสนามฟุตบอลที่กำลังมีการซ้อมกันอยู่ ทันใดนั้นเอง ลูกฟุตบอลก็หลุดจากวงซ้อมพุ่งตรงมาที่ใบหน้าของ {{PLAYER}} ด้วยความเร็วปานสายฟ้าแลบ!",
+  "next": "s11"
+ },
+ {
+  "id": "s11",
+  "bg": "football_field",
+  "who": "narrator",
+  "location": "สนามฟุตบอล",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "surprised"
+   }
+  ],
+  "text": "\"ระวัง!\" ร่างหนึ่งพุ่งปราดเข้ามาขวางหน้า กระโดดโหม่งลูกบอลเบี่ยงออกไปได้อย่างหวุดหวิด หนุ่มผิวแทนในชุดวอร์มสีส้มอำพันยืนขึ้น สะบัดเหงื่อที่หน้าผาก แล้วหันมายิ้มกว้างจนเห็นฟันขาว สดใสราวกับแดดกลางวัน",
+  "next": "s12"
+ },
+ {
+  "id": "s12",
+  "bg": "football_field",
+  "who": "tawan",
+  "location": "สนามฟุตบอล",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "laugh"
+   }
+  ],
+  "text": "\"โอ๊ยเกือบไป! เป็นไรมั้ยแก โดนเข้าหน้าเละแน่\" เขาวิ่งเข้ามาตบไหล่เบาๆ อย่างเป็นกันเองราวกับรู้จักกันมาเป็นสิบปี \"เราตะวัน ปี 1 วิทย์กีฬา นะ แกล่ะ ปีไหน คณะอะไร ดูหน้าใหม่ๆ แฮะ\"",
+  "choices": [
+   {
+    "text": "\"เจ๋งอะแก! โหม่งเท่มาก เราปี 1 นิเทศฯ นะ ยินดีที่ได้รู้จัก!\" (ยิ้มรับพลังทันที)",
+    "t": 3,
+    "next": "s13"
+   },
+   {
+    "text": "\"ขอบคุณมากนะที่ช่วยไว้ เราปี 1 นิเทศฯ เหมือนกัน\"",
+    "t": 2,
+    "next": "s13"
+   },
+   {
+    "text": "\"เกือบหน้าพังเพราะบอลนายเลยนะเนี่ย รับผิดชอบด้วย\" (บ่นกวนๆ)",
+    "t": 0,
+    "next": "s13"
+   }
+  ]
+ },
+ {
+  "id": "s13",
+  "bg": "football_field",
+  "who": "tawan",
+  "location": "สนามฟุตบอล",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "happy"
+   }
+  ],
+  "text": "\"นิเทศฯ เหรอ! งั้นตึกก็อยู่ไม่ไกลกันเลยดิ เจ๋งไปเลย!\" ตะวันหัวเราะร่วนอย่างอารมณ์ดี ก่อนได้ยินเสียงเพื่อนร่วมทีมตะโกนเรียกกลับไปซ้อมต่อ \"โอ๊ย เราต้องไปก่อนละ แต่ไว้เจอกันใหม่นะแก อย่าลืมเราล่ะ!\" เขาโบกมือทิ้งท้ายด้วยรอยยิ้มอบอุ่นเหมือนแสงแดดยามบ่าย",
+  "next": "s14"
+ },
+ {
+  "id": "s14",
+  "bg": "cafeteria",
+  "who": "fern",
+  "location": "โรงอาหาร",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "fern",
+    "expr": "smile"
+   }
+  ],
+  "text": "หลังมื้อกลางวันอิ่มหนำ โทรศัพท์ของใบเฟิร์นก็ดังขึ้น เป็นรุ่นพี่ตามตัวไปช่วยงานปฐมนิเทศต่อ \"อุ๊ย ฉันต้องไปช่วยพี่เขาแป๊บนึงนะ\" เธอลุกพรวด \"{{PLAYER}} รออยู่แถวนี้ก่อนได้ปะ เดี๋ยวฉันรีบมา อย่าเพิ่งไปไหนไกลล่ะ!\" แล้ววิ่งหายไป ทิ้งให้ {{PLAYER}} อยู่ลำพังในตึกที่ยังไม่คุ้นเคย",
+  "next": "s15"
+ },
+ {
+  "id": "s15",
+  "bg": "hallway",
+  "who": "narrator",
+  "location": "ทางเดินตึกเรียน",
+  "text": "ระหว่างเดินเล่นฆ่าเวลาไปตามทางเดินเงียบๆ เสียงเปียโนแผ่วเบาก็ลอยแทรกมาตามสายลม ท่วงทำนองหวานปนเศร้าจับใจจนเท้าก้าวตามไปเองโดยไม่รู้ตัว ปลายทางคือห้องดนตรีที่ประตูแง้มอยู่ แสงบ่ายลอดผ่านม่านสีจางเข้ามาต้องร่างของใครคนหนึ่งที่นั่งอยู่หน้าเปียโน",
+  "next": "s16"
+ },
+ {
+  "id": "s16",
+  "bg": "music_room",
+  "who": "nil",
+  "location": "ห้องดนตรี",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "neutral"
+   }
+  ],
+  "text": "เสียงเพลงหยุดลงกลางคัน ชายหนุ่มผมสีเข้มในเสื้อคลุมสีม่วงหม่นค่อยๆ เงยหน้าขึ้นมองอย่างช้าๆ ดวงตาลึกราวกับซ่อนเรื่องราวไว้มากมายเกินกว่าอายุ \"...เสียงเพลงมันพาคุณมาที่นี่สินะ\" เขาเอ่ยเบาๆ ราวกับกลัวจะทำลายความเงียบงามในห้อง \"ผมนิล ปี 2 คณะศิลปกรรม\"",
+  "next": "s17"
+ },
+ {
+  "id": "s17",
+  "bg": "music_room",
+  "who": "nil",
+  "location": "ห้องดนตรี",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "smile"
+   }
+  ],
+  "text": "เขาลูบคีย์เปียโนด้วยปลายนิ้วอย่างแผ่วเบา สายตาทอดมองออกไปนอกหน้าต่าง \"บางครั้ง...เสียงเพลงก็พูดในสิ่งที่คำพูดพูดไม่ได้ เหมือนสีที่ระบายความรู้สึกที่ไม่มีชื่อเรียก\" ริมฝีปากบางเผยอยิ้มจางๆ ที่อ่อนโยนจนใจเต้นไม่เป็นจังหวะ \"...คุณว่าจริงมั้ย\"",
+  "choices": [
+   {
+    "text": "\"จริงครับ...เมื่อกี้ผมรู้สึกเหมือนเพลงมันกำลังเล่าอะไรบางอย่างเลย\" (สบตาเขา)",
+    "n": 3,
+    "next": "s18"
+   },
+   {
+    "text": "\"พี่เล่นเพราะมากเลยครับ ผมยืนฟังเพลินจนลืมเวลาเลย\"",
+    "n": 2,
+    "next": "s18"
+   },
+   {
+    "text": "\"เอ่อ...ผมฟังเพลงไม่ค่อยรู้เรื่องอะครับ แต่ก็เพราะดีนะ\" (ยิ้มแหยๆ)",
+    "n": 0,
+    "next": "s18"
+   }
+  ]
+ },
+ {
+  "id": "s18",
+  "bg": "music_room",
+  "who": "nil",
+  "location": "ห้องดนตรี",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "shy"
+   }
+  ],
+  "text": "นิลมองนิ่งอยู่ครู่หนึ่ง ก่อนรอยยิ้มบางๆ จะค่อยๆ ปรากฏขึ้นบนใบหน้า \"น่าสนใจ...คุณมองเห็นในสิ่งที่หลายคนมองข้ามไป\" เขาหยิบสมุดสเก็ตช์ขึ้นมาขีดเขียนบางอย่างเบาๆ ก่อนเงยหน้ามองอีกครั้ง \"ไว้ถ้าคุณอยากฟังอีก...ห้องนี้มักจะมีผมอยู่เสมอ\" น้ำเสียงนุ่มนวลนั้นตามหลอน {{PLAYER}} ไปอีกนาน",
+  "next": "s19"
+ },
+ {
+  "id": "s19",
+  "bg": "courtyard",
+  "who": "fern",
+  "location": "ลานกิจกรรม · ยามเย็น",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "fern",
+    "expr": "laugh"
+   }
+  ],
+  "text": "ตะวันเริ่มคล้อยต่ำ ทาบแสงสีทองลงบนลานกิจกรรม ใบเฟิร์นกลับมาพร้อมสีหน้าตื่นเต้นเหมือนจับได้คาหนังคาเขา \"นี่ๆ! ได้ข่าวว่าวันนี้เธอไปป่วนหนุ่มๆ ทั่วมหาลัยเลยนี่นา ทั้งพี่ประธานชมรมถ่ายภาพ ทั้งนักบอลทีมมหาลัย ทั้งพี่ศิลปกรรมคนนั้นอีก!\" เธอเลิกคิ้วยิ้มเจ้าเล่ห์ \"สารภาพมาดีๆ คนไหนโดนใจเธอที่สุด ฮึ?\"",
+  "next": "hub"
+ },
+ {
+  "id": "hub",
+  "bg": "courtyard",
+  "who": "narrator",
+  "location": "ทางกลับหอพัก · วันแรกกำลังจะจบลง",
+  "text": "ระหว่างทางกลับหอพัก ภาพของทั้งสามคนก็ยังวนเวียนอยู่ในหัวของ {{PLAYER}} ไม่ยอมจางหาย...รอยยิ้มบางๆ ที่ซ่อนความอบอุ่นของพี่ภาคิน เสียงหัวเราะสดใสไร้เดียงสาของตะวัน และแววตาลึกลับอ่อนโยนของนิล หัวใจดวงน้อยเต้นไม่เป็นจังหวะ ถ้าจะมีสักคนที่อยากทำความรู้จักให้มากกว่านี้...คนคนนั้นจะเป็นใครกันนะ",
+  "choices": [
+   {
+    "text": "อยากรู้จัก \"พี่ภาคิน\" รุ่นพี่แสนเท่คนนั้นให้มากกว่านี้",
+    "p": 2,
+    "next": "phakin_1"
+   },
+   {
+    "text": "อยากสนิทกับ \"ตะวัน\" เพื่อนซี้สุดสดใสคนนี้ให้มากขึ้น",
+    "t": 2,
+    "next": "tawan_1"
+   },
+   {
+    "text": "อยากเข้าใจ \"นิล\" รุ่นพี่ลึกลับอ่อนโยนคนนั้นให้ลึกซึ้ง",
+    "n": 2,
+    "next": "nil_1"
+   }
+  ]
+ },
+ {
+  "id": "phakin_1",
+  "bg": "hallway",
+  "location": "ตึกกิจกรรม",
+  "who": "narrator",
+  "text": "สัปดาห์แรกของเทอมใหม่ ตึกกิจกรรมคึกคักไปด้วยรุ่นพี่แจกใบปลิวรับสมัครชมรม {{PLAYER}} เดินเลาะไปตามทางเดิน จนได้ยินเสียง 'แชะ' ของชัตเตอร์กล้องดังลอดออกมาจากห้องปลายทาง เหมือนมีอะไรบางอย่างดึงให้ก้าวเข้าไป",
+  "next": "phakin_2"
+ },
+ {
+  "id": "phakin_2",
+  "bg": "club_room",
+  "location": "ห้องชมรมถ่ายภาพ",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "neutral"
+   }
+  ],
+  "text": "รุ่นพี่ท่าทางนิ่งๆ ในเสื้อเชิ้ตสีน้ำเงินเข้มเงยหน้าขึ้นจากกล้อง สายตาคมกริบมองมาที่ {{PLAYER}} ... 'ชมรมถ่ายภาพ สนใจสมัครเหรอ' น้ำเสียงเรียบ แต่ไม่ได้เย็นชา",
+  "choices": [
+   {
+    "text": "ครับพี่ ผมชอบเก็บภาพความทรงจำมาตั้งแต่เด็ก อยากเรียนรู้ให้จริงจังครับ",
+    "p": 3,
+    "next": "phakin_3"
+   },
+   {
+    "text": "เอ่อ... จริงๆ ผมแค่เดินตามเสียงชัตเตอร์เข้ามาครับ",
+    "p": 1,
+    "next": "phakin_3"
+   },
+   {
+    "text": "ห้องนี้แอร์เย็นดีครับ เลยแวะเข้ามาหลบร้อน",
+    "p": -1,
+    "next": "phakin_3"
+   }
+  ]
+ },
+ {
+  "id": "phakin_3",
+  "bg": "club_room",
+  "location": "ห้องชมรมถ่ายภาพ",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "smile"
+   }
+  ],
+  "text": "เขาลุกขึ้นหยิบกล้องตัวหนึ่งยื่นให้ 'ลองถือดู... กล้องไม่กัดหรอก' มุมปากยกขึ้นนิดเดียว เหมือนยิ้มแต่ก็ไม่ยิ้ม 'พี่ภาคิน ประธานชมรม ถ้าจะอยู่ ก็ต้องถ่ายให้เป็นก่อน'",
+  "next": "phakin_4"
+ },
+ {
+  "id": "phakin_4",
+  "bg": "club_room",
+  "location": "ห้องชมรมถ่ายภาพ",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "neutral"
+   }
+  ],
+  "text": "'ภารกิจแรกของสมาชิกใหม่...' ภาคินพูดพลางปรับโฟกัสกล้องให้ 'ไปถ่ายอะไรก็ได้ที่ทำให้ {{PLAYER}} รู้สึกอะไรบางอย่าง แล้วเอากลับมาเล่าให้พี่ฟัง' เขาหยุดนิด 'อยากถ่ายอะไรล่ะ'",
+  "choices": [
+   {
+    "text": "ผมอยากถ่ายผู้คนครับ รอยยิ้มของคนแปลกหน้ามันสวยดี",
+    "p": 2,
+    "next": "phakin_5"
+   },
+   {
+    "text": "แสงยามเย็นริมน้ำครับ มันอบอุ่นแปลกๆ",
+    "p": 2,
+    "next": "phakin_5"
+   },
+   {
+    "text": "อะไรก็ได้ที่ถ่ายง่ายๆ ให้ผ่านๆ ไปครับ",
+    "p": -1,
+    "next": "phakin_5"
+   }
+  ]
+ },
+ {
+  "id": "phakin_5",
+  "bg": "park",
+  "location": "สวนริมมหาลัย",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "neutral"
+   }
+  ],
+  "text": "เย็นวันนั้น ภาคินอาสาพา {{PLAYER}} ออกไปฝึกถ่ายที่สวนริมมหาลัย ลมพัดใบไม้ร่วงพรู เขาเดินนำอยู่ข้างหน้าเงียบๆ แต่คอยชะลอฝีเท้าให้ {{PLAYER}} ตามทัน โดยไม่บอกสักคำ",
+  "next": "phakin_6"
+ },
+ {
+  "id": "phakin_6",
+  "bg": "park",
+  "location": "สวนริมมหาลัย",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "blush"
+   }
+  ],
+  "text": "'มือถือกล้องยังไม่นิ่งเลย' ภาคินก้าวมาข้างหลัง มืออุ่นๆ ของเขาประคองมือ {{PLAYER}} ที่กำลังถือกล้อง ปรับองศาเบาๆ ลมหายใจรำไรอยู่ข้างหู 'แบบนี้... เห็นไหม แสงมันเข้าพอดี'",
+  "choices": [
+   {
+    "text": "(หันไปยิ้มให้เขา) 'ขอบคุณครับพี่ ใกล้ๆ แบบนี้สอนเข้าใจกว่าเยอะเลย'",
+    "p": 3,
+    "next": "phakin_7"
+   },
+   {
+    "text": "(เขินจนพูดไม่ออก ก้มหน้าแอบยิ้ม)",
+    "p": 2,
+    "next": "phakin_7"
+   },
+   {
+    "text": "(รีบถอยออกมา) 'ผม...ผมถือเองได้ครับ'",
+    "p": -1,
+    "next": "phakin_7"
+   }
+  ]
+ },
+ {
+  "id": "phakin_7",
+  "bg": "rain_street",
+  "location": "ทางเดินกลับหอ",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "neutral"
+   }
+  ],
+  "text": "ระหว่างเดินกลับ ฝนเทลงมาไม่ทันตั้งตัว ภาคินกางร่มคันเดียวที่มี แล้วเอียงมาทาง {{PLAYER}} จนไหล่ข้างหนึ่งของเขาเปียกโชก 'เดินชิดๆ หน่อย' เขาพูดสั้นๆ สายตามองตรงไปข้างหน้า ไม่ยอมสบตา",
+  "next": "phakin_8"
+ },
+ {
+  "id": "phakin_8",
+  "bg": "coffee_shop",
+  "location": "ร้านกาแฟหลบฝน",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "neutral"
+   }
+  ],
+  "text": "หลบฝนในร้านกาแฟเล็กๆ ภาคินถือแก้วโกโก้ร้อนมาวางตรงหน้า {{PLAYER}} 'สั่งให้ ไม่ต้องเกรงใจ' เขานั่งลงมองสายฝนนอกหน้าต่าง 'พี่เริ่มถ่ายรูปตอนคุณย่าป่วย... อยากเก็บภาพท่านไว้ให้นานที่สุด' เป็นครั้งแรกที่น้ำเสียงเขาอ่อนลง",
+  "choices": [
+   {
+    "text": "'ขอบคุณที่เล่าให้ฟังนะครับพี่ ภาพที่พี่ถ่ายเลยอบอุ่นแบบนี้นี่เอง'",
+    "p": 2,
+    "next": "phakin_9"
+   },
+   {
+    "text": "'พี่คงรักคุณย่ามากเลยนะครับ'",
+    "p": 2,
+    "next": "phakin_9"
+   },
+   {
+    "text": "'อ๋อ ครับ' (ดื่มโกโก้เงียบๆ ไม่รู้จะพูดอะไร)",
+    "p": 0,
+    "next": "phakin_9"
+   }
+  ]
+ },
+ {
+  "id": "phakin_9",
+  "bg": "photo_studio",
+  "location": "สตูดิโอชมรม",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "blush"
+   }
+  ],
+  "text": "อาทิตย์ถัดมา ชมรมต้องถ่ายภาพพอร์ตเทรตส่งประกวด แต่ภาคินขาดแบบ เขาลังเลอยู่นาน ก่อนจะเอ่ยเบาๆ 'ขอ... ถ่าย {{PLAYER}} ได้ไหม' พอ {{PLAYER}} พยักหน้า ปลายหูของเขาก็แดงขึ้นทันทีที่มองผ่านช่องมองภาพ 'อย่า...อย่ายิ้มแบบนั้นสิ พี่กดชัตเตอร์ไม่ลง'",
+  "next": "phakin_9b"
+ },
+ {
+  "id": "phakin_9b",
+  "bg": "photo_studio",
+  "location": "สตูดิโอชมรม",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "shy"
+   }
+  ],
+  "text": "ภาคินหันจอกล้องมาให้ดู ในภาพคือ {{PLAYER}} ที่กำลังหัวเราะอย่างเป็นธรรมชาติ เขาจ้องภาพนั้นนานผิดปกติ ก่อนจะพึมพำเบาจน {{PLAYER}} เกือบไม่ได้ยิน 'สวยดี... ภาพน่ะ' แล้วรีบหันหน้าหนี",
+  "next": "phakin_10"
+ },
+ {
+  "id": "phakin_10",
+  "bg": "club_room",
+  "location": "ห้องชมรม (ดึกแล้ว)",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "neutral"
+   }
+  ],
+  "text": "คืนก่อนงานนิทรรศการชมรม ทุกคนกลับกันหมดแล้ว เหลือแค่ {{PLAYER}} กับภาคินที่ยังนั่งคัดรูปติดบอร์ด เข็มนาฬิกาเลยสี่ทุ่ม เขาเงยหน้ามามอง 'ดึกแล้ว {{PLAYER}} กลับก่อนได้นะ เดี๋ยวพี่ทำต่อเอง'",
+  "choices": [
+   {
+    "text": "'ผมอยู่เป็นเพื่อนพี่จนเสร็จครับ งานของเราสองคนนี่นา'",
+    "p": 2,
+    "next": "phakin_10b"
+   },
+   {
+    "text": "'ถ้าพี่ยังอยู่ ผมก็อยู่ครับ'",
+    "p": 2,
+    "next": "phakin_10b"
+   },
+   {
+    "text": "'งั้นผมกลับก่อนนะครับ ง่วงแล้ว' (เก็บของกลับ)",
+    "p": -2,
+    "next": "phakin_10b"
+   }
+  ]
+ },
+ {
+  "id": "phakin_10b",
+  "bg": "city_night",
+  "location": "ถนนหน้าหอ",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "smile"
+   }
+  ],
+  "text": "กว่าจะเสร็จก็เกือบเที่ยงคืน ภาคินยืนกรานเดินไปส่ง {{PLAYER}} ที่หอ ถนนเงียบ มีแค่แสงไฟสีส้มกับเงาสองคนทอดยาว 'ขอบใจนะ... ที่ไม่ทิ้งพี่ไว้คนเดียว' เขาพูดพลางมองท้องฟ้า พร้อมรอยยิ้มจางๆ ที่ไม่ค่อยยอมให้ใครเห็น",
+  "next": "phakin_11"
+ },
+ {
+  "id": "phakin_11",
+  "bg": "courtyard",
+  "location": "ลานหน้าตึก (เช้าวันงาน)",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "left",
+    "char": "phakin",
+    "expr": "neutral"
+   }
+  ],
+  "text": "เช้าวันงาน {{PLAYER}} เห็นภาคินยืนใกล้ชิดกับรุ่นน้องผู้หญิงคนหนึ่ง เธอยิ้มหวานยื่นกล่องของขวัญให้เขา แล้วภาคินก็รับไว้พร้อมพยักหน้า... ใจของ {{PLAYER}} แอบวูบลงไปเฉยๆ โดยไม่รู้ว่าทำไม",
+  "next": "phakin_12"
+ },
+ {
+  "id": "phakin_12",
+  "bg": "courtyard",
+  "location": "ลานหน้าตึก",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "neutral"
+   }
+  ],
+  "text": "ภาคินเดินเข้ามาหาตามปกติ 'มาแล้วเหรอ' แต่ {{PLAYER}} ยังติดภาพเมื่อกี้อยู่ในหัว... จะทำยังไงดี",
+  "choices": [
+   {
+    "text": "'พี่ครับ เมื่อกี้คนที่ให้ของขวัญพี่คือใครเหรอครับ' (ถามตรงๆ พร้อมรอยยิ้ม)",
+    "p": 3,
+    "next": "phakin_13a"
+   },
+   {
+    "text": "'...เปล่าครับ' (ทำหน้ายิ้มๆ แต่ถอยห่างออกมาเงียบๆ)",
+    "p": -2,
+    "next": "phakin_13b"
+   }
+  ]
+ },
+ {
+  "id": "phakin_13a",
+  "bg": "courtyard",
+  "location": "ลานหน้าตึก",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "laugh"
+   }
+  ],
+  "text": "ภาคินหยุดคิดแป๊บ ก่อนจะหลุดยิ้มบางๆ ที่หาดูยาก 'อ๋อ... รุ่นน้องที่พี่เคยติวกล้องให้ตอนปีก่อนน่ะ เขามาขอบคุณ แล้วก็ฝากขนมมาให้ทั้งชมรม' เขามองหน้า {{PLAYER}} นิ่งๆ 'ทำไม... หึงเหรอ' คำถามเบาๆ ที่ทำเอาหัวใจเต้นแรงทั้งคู่",
+  "next": "phakin_14"
+ },
+ {
+  "id": "phakin_13b",
+  "bg": "hallway",
+  "location": "ทางเดินหน้าห้องจัดงาน",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "sad"
+   }
+  ],
+  "text": "ทั้งวันนั้น {{PLAYER}} เอาแต่หลบสายตาภาคิน วางระยะห่างโดยไม่อธิบาย ภาคินสังเกตเห็น แต่เขาเป็นคนที่ไม่เก่งเรื่องไล่ตามใคร ได้แต่ยืนมองอยู่ไกลๆ ด้วยแววตาที่อ่านไม่ออก ความเงียบก่อตัวเป็นกำแพงบางๆ ระหว่างสองคน",
+  "next": "phakin_14"
+ },
+ {
+  "id": "phakin_14",
+  "bg": "rooftop",
+  "location": "ดาดฟ้าตึกกิจกรรม",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "serious"
+   }
+  ],
+  "text": "ค่ำนั้นบนดาดฟ้าตึกกิจกรรม ภาคินตามมาเจอ {{PLAYER}} ที่หลบมาอยู่คนเดียว เขายื่นนมกล่องให้ แล้วนั่งลงข้างๆ เงียบไปพักใหญ่ก่อนเอ่ย 'พี่ไม่เก่งเรื่องพูด... แต่ถ้ามีอะไรค้างคาใจ บอกพี่ตรงๆ ได้นะ พี่ไม่อยากเดาความรู้สึก {{PLAYER}} ผิด'",
+  "next": "phakin_15"
+ },
+ {
+  "id": "phakin_15",
+  "bg": "festival_night",
+  "location": "งานนิทรรศการชมรม",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "neutral"
+   }
+  ],
+  "text": "งานนิทรรศการเปิดฉากท่ามกลางแสงไฟระยิบระยับ ผู้คนมามุงดูภาพที่ตั้งเด่นอยู่กลางห้อง เป็นภาพ {{PLAYER}} หัวเราะกลางแสงยามเย็น ใต้ภาพเขียนชื่อไว้ว่า 'แสงที่ทำให้ผมอยากกดชัตเตอร์ทุกวัน' ด้วยลายมือของภาคินเอง",
+  "next": "phakin_16"
+ },
+ {
+  "id": "phakin_16",
+  "bg": "festival_night",
+  "location": "งานนิทรรศการชมรม",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "blush"
+   }
+  ],
+  "text": "ภาคินยืนอยู่ข้างๆ ปลายหูแดงก่ำ ไม่กล้าสบตา 'พี่...ตั้งใจให้ {{PLAYER}} เห็นเป็นคนแรก' เขากำมือแน่นเหมือนรวบรวมความกล้าที่สะสมมานาน 'ไปเดินเล่นกันหน่อยไหม พี่มีอะไรอยากบอก'",
+  "next": "phakin_17"
+ },
+ {
+  "id": "phakin_17",
+  "bg": "riverside",
+  "location": "ริมน้ำหลังงาน",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "serious"
+   }
+  ],
+  "text": "สองคนเดินเลียบริมน้ำ แสงไฟจากงานสะท้อนผิวน้ำเป็นประกาย ภาคินหยุดเดิน หันมาสบตา {{PLAYER}} เต็มๆ เป็นครั้งแรกที่ความ cool ของเขาหลุดล่อนจนหมด เหลือแค่ชายหนุ่มที่หัวใจเต้นแรงพอๆ กัน",
+  "next": "phakin_18"
+ },
+ {
+  "id": "phakin_18",
+  "bg": "riverside",
+  "location": "ริมน้ำหลังงาน",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "blush"
+   }
+  ],
+  "text": "'ตั้งแต่วันที่ {{PLAYER}} เดินเข้ามาในห้องชมรม พี่ก็ถ่ายภาพอื่นไม่ลงเลย เพราะสายตาพี่มองหาแต่ {{PLAYER}} คนเดียว' เขาสูดหายใจลึก 'พี่ชอบ {{PLAYER}} นะ... ไม่ใช่แบบรุ่นพี่รุ่นน้อง คำตอบของ {{PLAYER}} คืออะไร'",
+  "choices": [
+   {
+    "text": "'ผมก็ชอบพี่ครับ ชอบมานานแล้วด้วย' (จับมือเขาไว้แน่น)",
+    "p": 3,
+    "next": "phakin_19"
+   },
+   {
+    "text": "(เขินจนหน้าแดง พยักหน้าแล้วซบเข้าไปที่อกเขาเบาๆ)",
+    "p": 2,
+    "next": "phakin_19"
+   },
+   {
+    "text": "'ผม...ขอเวลาคิดดูก่อนนะครับพี่'",
+    "p": -1,
+    "next": "phakin_19"
+   }
+  ]
+ },
+ {
+  "id": "phakin_19",
+  "bg": "riverside",
+  "location": "ริมน้ำหลังงาน",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "smile"
+   }
+  ],
+  "text": "ลมริมน้ำพัดเอื่อย ภาคินมองหน้า {{PLAYER}} นานพอจะจดจำช่วงเวลานี้ไว้ตลอดไป ไม่ว่าคำตอบในใจจะเป็นอย่างไร คืนนี้ก็ได้กลายเป็นภาพถ่ายที่ชัดที่สุดในความทรงจำของทั้งสองคนไปแล้ว",
+  "next": "phakin_resolve"
+ },
+ {
+  "id": "phakin_good",
+  "bg": "riverside",
+  "location": "ริมน้ำ",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "happy"
+   }
+  ],
+  "endType": "good",
+  "endTitle": "แสงที่กดชัตเตอร์ทุกวัน",
+  "text": "ภาคินโอบ {{PLAYER}} เข้ามากอด ก้มลงหอมแก้มเบาๆ จนทั้งคู่เขินไปตามๆ กัน 'ต่อจากนี้... เป็นแบบให้พี่ถ่ายทุกวันเลยนะ แฟนของพี่' เขากระซิบพร้อมรอยยิ้มที่สดใสที่สุดเท่าที่ {{PLAYER}} เคยเห็น ตั้งแต่วันนี้ ทุกภาพในกล้องของภาคินจะมี {{PLAYER}} อยู่ในนั้นเสมอ"
+ },
+ {
+  "id": "phakin_normal",
+  "bg": "coffee_shop",
+  "location": "ร้านกาแฟเดิม",
+  "who": "phakin",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "smile"
+   }
+  ],
+  "endType": "normal",
+  "endTitle": "ระยะที่พอดีของเราสองคน",
+  "text": "ภาคินไม่ได้ให้คำตอบที่ชัดเจนในคืนนั้น แต่เขาก็ไม่ได้ปล่อยมือ {{PLAYER}} เช่นกัน 'ค่อยๆ ไปด้วยกันก็ได้ พี่ไม่รีบ' เขายิ้มบางๆ ความสัมพันธ์ของทั้งคู่ยังไม่มีชื่อเรียก แต่ทุกเย็นหลังเลิกเรียนก็ยังมีคนสองคนเดินถ่ายรูปด้วยกันเสมอ และนั่นอาจเป็นจุดเริ่มต้นของอะไรบางอย่างในสักวัน"
+ },
+ {
+  "id": "phakin_bad",
+  "bg": "rain_street",
+  "location": "ทางเดินในสายฝน",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "phakin",
+    "expr": "sad"
+   }
+  ],
+  "endType": "bad",
+  "endTitle": "ภาพที่ไม่ได้กดชัตเตอร์",
+  "text": "ความลังเลและระยะห่างที่ {{PLAYER}} สร้างขึ้น ทำให้ภาคินค่อยๆ ถอยกลับไปเป็นรุ่นพี่ที่สุขุมเหมือนเดิม 'ไม่เป็นไรนะ... บางภาพก็ไม่ได้ถูกกดชัตเตอร์ในจังหวะที่ใช่' เขายิ้มให้แบบรุ่นพี่ ก่อนเดินจากไป {{PLAYER}} เพิ่งเข้าใจว่าบางความรู้สึกถ้าไม่กล้าบอกออกไป มันก็จะกลายเป็นแค่ภาพเบลอๆ ในความทรงจำ... แต่ก็ยังมีเทอมหน้า และโอกาสใหม่ๆ รออยู่เสมอ"
+ },
+ {
+  "id": "tawan_1",
+  "bg": "courtyard",
+  "location": "ลานกลางมหาวิทยาลัย",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "laugh"
+   }
+  ],
+  "text": "เสียงตะโกนดังลั่นมาจากอีกฝั่งของลาน ก่อนที่ร่างสูงในชุดวอร์มสีส้มจะวิ่งฝ่าฝูงคนตรงมาหา{{PLAYER}}อย่างไม่สนใจสายตาใคร — ตะวัน เพื่อนซี้ที่รู้จักกันตั้งแต่วันปฐมนิเทศ ยิ้มกว้างจนเหมือนแดดเที่ยงวันออกมาเดินได้",
+  "next": "tawan_2"
+ },
+ {
+  "id": "tawan_2",
+  "bg": "courtyard",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "happy"
+   }
+  ],
+  "text": "เฮ้ {{PLAYER}}! หาตั้งนาน! วันนี้ทีมเราซ้อมใหญ่ตอนเย็น เสาร์นี้ก็มีแข่งนัดเปิดฤดูกาลด้วยนะ... ไปดูเราซ้อมหน่อยดิ๊ เป็นเพื่อนกันหน่อยน่า ไปนะๆ",
+  "choices": [
+   {
+    "text": "ไปสิ! เดี๋ยวไปนั่งเชียร์ให้เสียงดังสุดในสนามเลย",
+    "t": 3,
+    "next": "tawan_3"
+   },
+   {
+    "text": "เราไม่ค่อยรู้เรื่องบอลเท่าไหร่หรอก แต่ถ้าแกอยากให้ไปก็ไป",
+    "t": 1,
+    "next": "tawan_3"
+   },
+   {
+    "text": "เย็นนี้เหรอ... เดี๋ยวดูก่อนนะ ไม่รับปาก",
+    "t": -1,
+    "next": "tawan_3"
+   }
+  ]
+ },
+ {
+  "id": "tawan_3",
+  "bg": "football_field",
+  "location": "สนามฟุตบอล",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "happy"
+   }
+  ],
+  "text": "สนามฟุตบอลยามเย็นอบอวลด้วยกลิ่นหญ้ากับแดดอ่อน ตะวันวิ่งไล่บอลอย่างมีชีวิตชีวา เหงื่อกับแสงสุดท้ายของวันทำให้เขาดูเปล่งประกาย จังหวะสุดท้ายเขาซัดบอลเข้าประตูอย่างสวยงาม แล้วหันมาชี้นิ้วตรงมาทางที่{{PLAYER}}นั่งอยู่ พร้อมยิ้มกว้างเหมือนคนได้รางวัล",
+  "next": "tawan_4"
+ },
+ {
+  "id": "tawan_4",
+  "bg": "football_field",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "smile"
+   }
+  ],
+  "text": "เฮ่อ~ เหนื่อยชะมัด ตะวันทิ้งตัวลงนั่งข้างๆ แล้วยื่นขวดน้ำที่เหลือครึ่งขวดให้ เอ้า กินมั้ย ไม่รังเกียจกันเนอะ... รู้มั้ย พอเห็นแกมานั่งดู เราวิ่งมีแรงขึ้นเป็นเท่าตัวเลยว่ะ แปลกดีเนอะ",
+  "next": "tawan_5"
+ },
+ {
+  "id": "tawan_5",
+  "bg": "cafeteria",
+  "location": "โรงอาหาร",
+  "who": "fern",
+  "sprites": [
+   {
+    "pos": "left",
+    "char": "tawan",
+    "expr": "surprised"
+   },
+   {
+    "pos": "center",
+    "char": "fern",
+    "expr": "wink"
+   }
+  ],
+  "text": "ที่โรงอาหาร ใบเฟิร์นวางถาดลงตรงข้ามแล้วยิ้มกริ่ม กวาดตามองสองคนสลับไปมา โห~ ช่วงนี้เจอกันทีไรก็ติดกันเป็นแฝดตลอดเลยนะ นี่มันเพื่อนซี้หรือว่า...อะไรกันแน่เอ่ย?",
+  "next": "tawan_6"
+ },
+ {
+  "id": "tawan_6",
+  "bg": "cafeteria",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "sulk"
+   }
+  ],
+  "text": "ก็-ก็เพื่อนกันเว้ยเฟิร์น! คิดมากไปได้ ตะวันสำลักน้ำ หูแดงนิดๆ พอใบเฟิร์นเดินไปเข้าแถวซื้อของหวาน เขาก็เอนตัวมากระซิบเบาๆ นี่... จะบอกอะไรให้ ปกติไม่เคยบอกใครนะ วิชาภาษาอังกฤษเราจะสอบตกแล้วอะ ถ้าเกรดตกโดนตัดออกจากทีมแน่ๆ แกเก่งอังกฤษนี่นา... ช่วยติวให้หน่อยได้ป่ะ",
+  "choices": [
+   {
+    "text": "ได้เลย! เดี๋ยวเราติวให้เอง ไม่ต้องห่วง เชื่อเรา",
+    "t": 3,
+    "next": "tawan_7"
+   },
+   {
+    "text": "ก็ได้ แต่แกต้องตั้งใจนะ ห้ามหลับกลางคัน",
+    "t": 2,
+    "next": "tawan_7"
+   },
+   {
+    "text": "เอ่อ...เราก็ไม่ได้เก่งขนาดนั้น ไปหาติวเตอร์ดีกว่ามั้ย",
+    "t": -1,
+    "next": "tawan_7"
+   }
+  ]
+ },
+ {
+  "id": "tawan_7",
+  "bg": "library",
+  "location": "ห้องสมุด",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "neutral"
+   }
+  ],
+  "text": "ห้องสมุดเงียบสงบ ตะวันขมวดคิ้วจ้องตำราราวกับมันเป็นคู่แข่งในสนาม ปากขยับอ่านศัพท์ตะกุกตะกักจนน่าขำ พอทำข้อสอบถูกทีก็ยิ้มดีใจเหมือนเด็ก แอบสะกิดข้อศอก{{PLAYER}}เบาๆ เพื่ออวดทุกครั้งไป",
+  "next": "tawan_8"
+ },
+ {
+  "id": "tawan_8",
+  "bg": "library",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "laugh"
+   }
+  ],
+  "text": "เฮ้ย เข้าใจขึ้นเยอะเลย! แกสอนดีกว่าอาจารย์อีก ตะวันยิ้มกว้างจนตาหยี เอางี้นะ ขอบคุณที่ช่วยติว เสาร์นี้มีงานวัดริมน้ำ ไปด้วยกันดิ เราเลี้ยงเอง ถือว่าตอบแทน... ไปนะ ไปนะ ห้ามปฏิเสธ",
+  "next": "tawan_9"
+ },
+ {
+  "id": "tawan_9",
+  "bg": "festival_night",
+  "location": "งานวัดริมน้ำ",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "laugh"
+   }
+  ],
+  "text": "งานวัดริมน้ำเต็มไปด้วยแสงไฟและเสียงหัวเราะ ตะวันลากมือ{{PLAYER}}ไปเล่นซุ้มปาเป้าอย่างตื่นเต้น ดูนะ! เดี๋ยวปาให้ดู เอาตุ๊กตาตัวใหญ่สุดมาให้เลย เขาเล็งอยู่นาน...แล้วก็ปาไม่โดนสักอัน จนหน้าแดงเถียงว่าลมแรง",
+  "choices": [
+   {
+    "text": "ไม่เป็นไรน่า มาลองด้วยกันสิ (จับมือเขาช่วยเล็ง)",
+    "t": 3,
+    "next": "tawan_10"
+   },
+   {
+    "text": "ปาห่วยจังฮ่าๆ แต่ก็น่ารักดีเวลาตั้งใจ",
+    "t": 2,
+    "next": "tawan_10"
+   },
+   {
+    "text": "จะเอาตุ๊กตาไปทำไม เปลืองเงินเปล่าๆ",
+    "t": -2,
+    "next": "tawan_10"
+   }
+  ]
+ },
+ {
+  "id": "tawan_10",
+  "bg": "festival_night",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "blush"
+   }
+  ],
+  "text": "จู่ๆ พลุก็ระเบิดขึ้นเต็มท้องฟ้า แสงสีสะท้อนในดวงตาของตะวัน เขาเงียบไปครู่หนึ่ง — ซึ่งไม่ใช่ตะวันที่{{PLAYER}}รู้จักเลยสักนิด ...รู้มั้ย เขาพูดเบาๆ อยู่กับแกแล้วสนุกทุกทีเลยว่ะ ไม่รู้ทำไมเหมือนกัน แล้วรีบหันหน้าหนีเหมือนเผลอพูดอะไรออกไป",
+  "next": "tawan_11"
+ },
+ {
+  "id": "tawan_11",
+  "bg": "riverside",
+  "location": "ทางเดินริมน้ำ",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "smile"
+   }
+  ],
+  "text": "ทางเดินริมน้ำเงียบกว่าในงานมาก ตะวันเดินเตะก้อนกรวดไปเรื่อยๆ เราไม่ค่อยพูดเรื่องนี้กับใครนะ... แต่บางทีเวลาอยู่ในสนาม คนดูเป็นพัน เรากลับแอบมองหาแค่คนเดียว เขาหยุดพูดกลางประโยค แล้วหัวเราะกลบเกลื่อน เอ๊ะ พูดอะไรของเราเนี่ย ลืมๆ ไปละกันนะ",
+  "next": "tawan_12"
+ },
+ {
+  "id": "tawan_12",
+  "bg": "rain_street",
+  "location": "ริมถนนหน้าร้าน",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "surprised"
+   }
+  ],
+  "text": "ยังไม่ทันถึงหอ ฝนก็เทลงมาอย่างไม่ทันตั้งตัว ทั้งสองวิ่งหลบเข้าใต้ชายคาร้านที่ปิดไปแล้ว ตะวันถอดแจ็คเก็ตของตัวเองออกอย่างรวดเร็ว แล้วยื่นมาให้{{PLAYER}}โดยไม่ลังเลเลยสักวินาที",
+  "choices": [
+   {
+    "text": "งั้นเรากางคลุมหัวด้วยกันเลยดีกว่า (ขยับเข้าไปใกล้)",
+    "t": 3,
+    "next": "tawan_13"
+   },
+   {
+    "text": "ขอบใจนะ... (รับแจ็คเก็ตมาคลุมไหล่)",
+    "t": 2,
+    "next": "tawan_13"
+   },
+   {
+    "text": "ไม่ต้องหรอก เดี๋ยวแกก็หนาวเอง เก็บไว้เถอะ",
+    "t": 0,
+    "next": "tawan_13"
+   }
+  ]
+ },
+ {
+  "id": "tawan_13",
+  "bg": "rain_street",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "blush"
+   }
+  ],
+  "text": "ใต้ชายคาแคบๆ ไหล่ของทั้งสองแนบชิดกัน เสียงฝนดังกลบทุกอย่าง เหลือไว้แค่เสียงหัวใจที่เต้นแรงผิดจังหวะ ตะวันที่ปกติพูดไม่หยุดกลับเงียบผิดปกติ หูสองข้างแดงก่ำ ...เฮ้ย ทำไมเงียบจังวะเรา เขาบ่นกับตัวเองเบาๆ แทบไม่กล้าขยับ",
+  "next": "tawan_14"
+ },
+ {
+  "id": "tawan_14",
+  "bg": "courtyard",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "shy"
+   }
+  ],
+  "text": "หลังคืนฝนตก อะไรบางอย่างระหว่างสองคนก็เปลี่ยนไปเงียบๆ ตะวันยังทักทายเสียงดังเหมือนเดิม แต่พอสายตาบังเอิญสบกันทีไร เขากลับเป็นฝ่ายหลบก่อนทุกครั้ง ราวกับมีความลับบางอย่างที่ยังพูดไม่ออกจากปาก",
+  "next": "tawan_15"
+ },
+ {
+  "id": "tawan_15",
+  "bg": "football_field",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "smile"
+   }
+  ],
+  "text": "บ่ายวันนั้น {{PLAYER}}แวะไปสนามฟุตบอล...แล้วก็เห็นตะวันกำลังหัวเราะอย่างสนิทสนมกับรุ่นพี่ผู้หญิงคนหนึ่ง เธอเอามือแตะแขนเขาเบาๆ เขาก็ยิ้มให้อย่างเป็นกันเอง ภาพตรงหน้าทำให้อะไรบางอย่างในอกจุกขึ้นมาแบบไม่มีเหตุผล",
+  "next": "tawan_16"
+ },
+ {
+  "id": "tawan_16",
+  "bg": "hallway",
+  "location": "ทางเดินหอพัก",
+  "who": "narrator",
+  "text": "ตลอดทั้งเย็น ภาพเมื่อกี้ก็วนเวียนอยู่ในหัวไม่ยอมหาย ทั้งที่บอกตัวเองว่าเป็นแค่เพื่อน...แล้วทำไมถึงรู้สึกแบบนี้ล่ะ พอตะวันส่งข้อความมาชวนไปกินข้าว {{PLAYER}}ก็ได้แต่จ้องหน้าจอค้างอยู่นาน",
+  "choices": [
+   {
+    "text": "ตอบตรงๆ ว่ารู้สึกไม่ค่อยดี แล้วชวนเขาเปิดใจคุยกัน",
+    "t": 3,
+    "next": "tawan_17"
+   },
+   {
+    "text": "ไปเจอเขาตามปกติ เก็บความรู้สึกนี้ไว้ก่อน",
+    "t": 1,
+    "next": "tawan_17"
+   },
+   {
+    "text": "พิมพ์ว่า 'ไม่ว่าง' แล้วเก็บตัวเงียบใส่ไปเลย",
+    "t": -2,
+    "next": "tawan_16b"
+   }
+  ]
+ },
+ {
+  "id": "tawan_16b",
+  "bg": "home_room",
+  "location": "ห้องพัก",
+  "who": "narrator",
+  "text": "{{PLAYER}}เลือกที่จะเงียบใส่ ปิดโทรศัพท์แล้วนอนจมอยู่กับความคิดของตัวเอง เช้าวันต่อมา ตะวันส่งข้อความมาอีกครั้ง เราทำอะไรผิดรึเปล่า? ถ้าผิดก็บอกกันตรงๆ นะ เราไม่ชอบเดาใจใครเลย อ่านแล้วก็รู้สึกผิดขึ้นมาจับใจ...บางที การหนีอาจไม่เคยเป็นคำตอบเลยก็ได้",
+  "next": "tawan_17"
+ },
+ {
+  "id": "tawan_17",
+  "bg": "coffee_shop",
+  "location": "ร้านกาแฟ",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "laugh"
+   }
+  ],
+  "text": "ที่ร้านกาแฟ ตะวันฟัง{{PLAYER}}เล่าจนจบ แล้วก็หัวเราะออกมาอย่างโล่งอก โอ๊ย! พี่เขาเป็นผู้จัดการทีม แถมมีแฟนอยู่แล้วด้วยนะเว้ย วันนั้นแก...แอบหึงเราเหรอเนี่ย เขายิ้มกว้าง แต่แก้มก็แดงขึ้นมาเอง ...แต่ก็ดีใจนะ ที่รู้ว่าแกแคร์เราขนาดนั้น",
+  "next": "tawan_18"
+ },
+ {
+  "id": "tawan_18",
+  "bg": "coffee_shop",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "blush"
+   }
+  ],
+  "text": "บรรยากาศอึดอัดเมื่อกี้ละลายหายไปหมด เหลือไว้แค่ความอบอุ่นแปลกๆ ตะวันกำแก้วกาแฟแน่น มองออกไปนอกหน้าต่าง รู้มั้ย... เราว่าเราคงไม่ได้คิดว่าแกเป็นแค่เพื่อนมานานแล้วล่ะ แค่ยังไม่กล้าพูดออกไปเองแหละ",
+  "next": "tawan_19"
+ },
+ {
+  "id": "tawan_19",
+  "bg": "courtyard",
+  "who": "fern",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "fern",
+    "expr": "smile"
+   }
+  ],
+  "text": "ใบเฟิร์นฟังเรื่องทั้งหมดแล้วส่ายหน้าอย่างเอ็นดู จะรอให้ถึงเมื่อไหร่ล่ะเธอ~ เห็นๆ กันอยู่ว่าใจตะวันน่ะไปอยู่ที่เธอหมดแล้ว เหลือแค่เธอนี่แหละที่ต้องกล้าสักที ไม่ต้องกลัวนะ เฟิร์นเชียร์อยู่ข้างๆ เสมอ สู้ๆ!",
+  "next": "tawan_20"
+ },
+ {
+  "id": "tawan_20",
+  "bg": "rooftop",
+  "location": "ดาดฟ้าตึกคณะ",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "neutral"
+   }
+  ],
+  "text": "เย็นวันนั้น ตะวันนัด{{PLAYER}}ขึ้นมาบนดาดฟ้า ท้องฟ้ากำลังเปลี่ยนเป็นสีส้มอมชมพู เขายืนกำราวเหล็กแน่น ไม่ยอมหันหน้ามา เอ่อ... ที่เรียกขึ้นมาเนี่ย เรามีเรื่องอยากบอก คือมันไม่ใช่เรื่องเล่นๆ นะ เพราะงั้น...ฟังให้จบก่อนนะ ขอร้อง",
+  "choices": [
+   {
+    "text": "เราฟังอยู่นะ พูดมาเลย (ยิ้มให้กำลังใจ)",
+    "t": 3,
+    "next": "tawan_21"
+   },
+   {
+    "text": "ทำหน้าจริงจังขนาดนี้ ไม่เหมือนแกเลยนะ",
+    "t": 1,
+    "next": "tawan_21"
+   },
+   {
+    "text": "มีเรื่องอะไรก็รีบพูดสิ เดี๋ยวฟ้ามืดพอดี",
+    "t": -1,
+    "next": "tawan_21"
+   }
+  ]
+ },
+ {
+  "id": "tawan_21",
+  "bg": "rooftop",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "blush"
+   }
+  ],
+  "text": "ตะวันสูดหายใจเข้าลึก แล้วหันมาสบตา{{PLAYER}}ตรงๆ เป็นครั้งแรกในรอบหลายวัน เราชอบแก... ไม่ใช่แบบเพื่อนซี้ แต่แบบที่อยากอยู่ข้างๆ แกไปนานๆ อยากเป็นคนที่แกวิ่งเข้าหาเป็นคนแรก เราคิดมาตั้งนานว่าจะพูดยังไงไม่ให้มิตรภาพมันพัง...แต่สุดท้ายก็ทนไม่ไหว เสียงเขาสั่นนิดๆ แกจะ...ลองคบกับเราดูมั้ย",
+  "next": "tawan_22"
+ },
+ {
+  "id": "tawan_22",
+  "bg": "rooftop",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "shy"
+   }
+  ],
+  "text": "ลมเย็นพัดผ่านดาดฟ้า ตะวันยืนรอคำตอบด้วยสายตาที่ทั้งกล้าและกลัวในเวลาเดียวกัน มือที่ซ่อนอยู่ข้างหลังกำแน่นจนขาว หัวใจของ{{PLAYER}}เต้นแรงจนแทบได้ยิน...ถึงเวลาแล้วที่ต้องตอบให้ชัดว่า รู้สึกยังไงกับเพื่อนซี้คนนี้จริงๆ",
+  "next": "tawan_resolve"
+ },
+ {
+  "id": "tawan_good",
+  "bg": "rooftop",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "happy"
+   }
+  ],
+  "endType": "good",
+  "endTitle": "แดดกับหัวใจที่วิ่งไปหากัน",
+  "text": "{{PLAYER}}ตอบว่า 'ตกลง' พร้อมรอยยิ้ม — แล้วตะวันก็โผเข้ากอดแน่นจนตัวลอย หัวเราะเสียงดังลั่นดาดฟ้าด้วยความดีใจสุดหัวใจ โอ้โห! เราจะเป็นแฟนที่ดีที่สุดเลยนะ สัญญา! เขากระซิบข้างหูเบาๆ ก่อนจูบลงที่แก้มอย่างนุ่มนวล ตั้งแต่วันนั้น ทุกครั้งที่เขาทำประตูได้ เขาจะวิ่งมาหาคนสำคัญเป็นคนแรกเสมอ...เพื่อนซี้ที่กลายเป็นคนรักที่อบอุ่นที่สุดในโลก",
+  "next": "tawan_1"
+ },
+ {
+  "id": "tawan_normal",
+  "bg": "rooftop",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "smile"
+   }
+  ],
+  "endType": "normal",
+  "endTitle": "ก้าวช้าๆ ไปด้วยกัน",
+  "text": "{{PLAYER}}ยังไม่พร้อมจะให้คำตอบในทันที...และตะวันก็ยิ้มอย่างเข้าใจ ไม่เป็นไรน่า เราไม่รีบหรอก ขอแค่ได้อยู่ข้างๆ แกก็พอแล้ว ความสัมพันธ์ของทั้งสองยังคงอบอุ่นเหมือนเดิม เพียงแต่มีบางอย่างเปลี่ยนไป — มือที่จับกันแน่นขึ้น รอยยิ้มที่พิเศษขึ้นกว่าเก่า บางที ความรักที่ดีอาจไม่จำเป็นต้องรีบร้อน แค่ค่อยๆ วิ่งไปด้วยกันทีละก้าวก็พอ",
+  "next": "tawan_1"
+ },
+ {
+  "id": "tawan_bad",
+  "bg": "rooftop",
+  "who": "tawan",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "tawan",
+    "expr": "sad"
+   }
+  ],
+  "endType": "bad",
+  "endTitle": "คำที่พูดช้าไปหนึ่งฤดูกาล",
+  "text": "ความลังเลและกำแพงที่{{PLAYER}}ค่อยๆ ก่อขึ้น ทำให้ตะวันถอยห่างออกไปทีละนิด คงเป็นเราเองแหละที่คิดไปเอง...ขอโทษนะ เขายิ้มแห้งๆ แล้วกลับไปเป็นเพื่อนซี้เหมือนเดิม เสียงหัวเราะยังดังเหมือนเคย แต่มีระยะห่างบางอย่างที่ไม่มีวันกลับมาเท่าเดิม บางความรู้สึก ถ้าไม่กล้าคว้าไว้ในตอนที่ยังทัน มันก็อาจวิ่งเลยผ่านไปตลอดกาล...แต่อย่างน้อยมิตรภาพก็ยังอยู่ และบางทีนั่นก็คงต้องพอ",
+  "next": "tawan_1"
+ },
+ {
+  "id": "nil_1",
+  "bg": "art_room",
+  "who": "narrator",
+  "location": "ห้องศิลปะ",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "neutral"
+   }
+  ],
+  "text": "เสียงเปียโนแผ่วเบาลอยมาตามทางเดินตึกศิลปกรรม จับหูของ {{PLAYER}} ไว้เบาๆ {{PLAYER}} เดินตามเสียงนั้นไปจนสุดทาง แล้วพบประตูห้องศิลปะที่แง้มอยู่ ข้างในมีรุ่นพี่คนหนึ่งยืนนิ่งอยู่หน้าผืนผ้าใบ ราวกับเป็นส่วนหนึ่งของภาพเสียเอง",
+  "next": "nil_2"
+ },
+ {
+  "id": "nil_2",
+  "bg": "art_room",
+  "who": "nil",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "neutral"
+   }
+  ],
+  "text": "...เข้ามาได้นะครับ ผมได้ยินเสียงฝีเท้ามาสักพักแล้ว ไม่ต้องแอบยืนอยู่ตรงนั้นหรอก",
+  "next": "nil_3"
+ },
+ {
+  "id": "nil_3",
+  "bg": "art_room",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "neutral"
+   }
+  ],
+  "text": "เขาหันมา ดวงตาสีเข้มนิ่งสงบราวกับผิวน้ำยามค่ำ บนผ้าใบเบื้องหลังคือภาพคนคนหนึ่งยืนเดียวดายอยู่ใต้ท้องฟ้าสีม่วง นิลรอฟังปฏิกิริยาของ {{PLAYER}} อย่างเงียบงัน",
+  "choices": [
+   {
+    "text": "ภาพนี้สวยจังครับ...เหงาๆ แต่ก็อบอุ่นแปลกๆ",
+    "n": 3,
+    "next": "nil_4"
+   },
+   {
+    "text": "ขอโทษครับ ผมไม่ได้ตั้งใจจะแอบดูงานพี่",
+    "n": 1,
+    "next": "nil_4"
+   },
+   {
+    "text": "อ๋อ นั่งวาดรูปฆ่าเวลาเล่นๆ อยู่เหรอครับ",
+    "n": -2,
+    "next": "nil_4"
+   }
+  ]
+ },
+ {
+  "id": "nil_4",
+  "bg": "art_room",
+  "who": "nil",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "smile"
+   }
+  ],
+  "text": "...ไม่ค่อยมีคนเดินตามเสียงเปียโนมาถึงห้องนี้หรอกนะครับ ผมชื่อนิล ปีสอง คณะศิลปกรรม แล้วน้องล่ะ",
+  "next": "nil_5"
+ },
+ {
+  "id": "nil_5",
+  "bg": "art_room",
+  "who": "player",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "smile"
+   }
+  ],
+  "text": "ผมชื่อ {{PLAYER}} ครับ ปีหนึ่ง นิเทศฯ ปกติผมไม่ค่อยเข้าใจงานศิลปะเท่าไหร่หรอก...แต่ภาพของพี่มันเหมือนกำลังพูดอะไรบางอย่างกับผมจริงๆ",
+  "next": "nil_6"
+ },
+ {
+  "id": "nil_6",
+  "bg": "art_room",
+  "who": "nil",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "neutral"
+   }
+  ],
+  "text": "สำหรับผม...สีแต่ละสีมันคือความรู้สึกที่พูดออกมาเป็นคำไม่ได้ครับ สีม่วงคือคืนที่เงียบเหงา แต่ก็ยังมีดาวสักดวงอยู่ปลายฟ้า ถ้าน้องได้ยินสิ่งที่ภาพมันพูด...แปลว่าน้องฟังเป็นครับ",
+  "next": "nil_7"
+ },
+ {
+  "id": "nil_7",
+  "bg": "courtyard",
+  "who": "fern",
+  "location": "ลานกิจกรรม",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "fern",
+    "expr": "wink"
+   }
+  ],
+  "text": "โอ้โห~ {{PLAYER}} ไปเจอรุ่นพี่ลึกลับแห่งห้องศิลปะมาเหรอ! เฟิร์นได้ยินว่าพี่นิลไม่ค่อยคุยกับใครนะ เงียบสุดๆ แต่นี่คุยกับเธอตั้งนาน...น่าสนใจ๊ น่าสนใจ ว่าไง สนใจพี่เขาป่ะล่ะ",
+  "choices": [
+   {
+    "text": "อยากรู้จักพี่เขาให้มากกว่านี้จริงๆ นั่นแหละ",
+    "n": 2,
+    "next": "nil_8"
+   },
+   {
+    "text": "ก็แค่บังเอิญเดินไปเจอน่ะ เฟิร์นอย่าคิดมาก",
+    "n": 0,
+    "next": "nil_8"
+   },
+   {
+    "text": "ก็แค่รุ่นพี่แปลกๆ เงียบๆ คนนึงแหละ",
+    "n": -1,
+    "next": "nil_8"
+   }
+  ]
+ },
+ {
+  "id": "nil_8",
+  "bg": "music_room",
+  "who": "narrator",
+  "location": "ห้องดนตรี",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "serious"
+   }
+  ],
+  "text": "หลายวันจากนั้น {{PLAYER}} แวะเวียนไปตึกศิลปกรรมบ่อยขึ้นโดยไม่รู้ตัว เย็นวันหนึ่ง แทนที่จะเป็นเสียงเปียโน กลับเป็นเสียงกีตาร์โปร่งเศร้าๆ ดังลอยออกมาจากห้องดนตรี",
+  "next": "nil_9"
+ },
+ {
+  "id": "nil_9",
+  "bg": "music_room",
+  "who": "nil",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "sad"
+   }
+  ],
+  "text": "...มาอีกแล้วนะครับ นิลไม่เงยหน้า นิ้วยังเกากีตาร์เบาๆ เพลงนี้ผมแต่งเองครับ ยังไม่มีชื่อ...เหมือนกับอีกหลายอย่างในชีวิตผมที่ยังไม่รู้จะเรียกมันว่าอะไร",
+  "next": "nil_10"
+ },
+ {
+  "id": "nil_10",
+  "bg": "music_room",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "serious"
+   }
+  ],
+  "text": "ท่วงทำนองมันเศร้าจับใจจนอกของ {{PLAYER}} แน่นไปหมด นิลเล่นจนโน้ตสุดท้ายจางหาย แล้วเงยหน้าขึ้นมอง ราวกับกำลังรอคำตอบบางอย่างจาก {{PLAYER}}",
+  "choices": [
+   {
+    "text": "เพลงพี่มันเศร้านะครับ...พี่โอเครึเปล่า",
+    "n": 3,
+    "next": "nil_11"
+   },
+   {
+    "text": "เพราะมากเลยครับ พี่เล่นเก่งจัง",
+    "n": 1,
+    "next": "nil_11"
+   },
+   {
+    "text": "ผมฟังเพลงพวกนี้ไม่ค่อยเป็นหรอกครับ",
+    "n": -1,
+    "next": "nil_11"
+   }
+  ]
+ },
+ {
+  "id": "nil_11",
+  "bg": "music_room",
+  "who": "nil",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "smile"
+   }
+  ],
+  "text": "เสียงดนตรีมันพูดแทนผมได้ในวันที่ปากไม่ยอมพูดครับ นิลยิ้มบางๆ เป็นครั้งแรกที่ {{PLAYER}} ได้เห็น ขอบคุณนะ...ที่ยอมนั่งฟังจนจบ ไม่ค่อยมีใครอยู่ฟังผมจนจบเพลงหรอก",
+  "next": "nil_12"
+ },
+ {
+  "id": "nil_12",
+  "bg": "riverside",
+  "who": "narrator",
+  "location": "ริมน้ำยามเย็น",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "neutral"
+   }
+  ],
+  "text": "ความสัมพันธ์ค่อยๆ ก่อตัวขึ้นเงียบๆ เหมือนสีน้ำที่ซึมลงบนกระดาษ เย็นวันหยุด นิลชวน {{PLAYER}} มานั่งริมน้ำ เขาบอกว่าแสงตอนพระอาทิตย์ตกที่นี่...เป็นสีที่เขาชอบที่สุดในโลก",
+  "next": "nil_13"
+ },
+ {
+  "id": "nil_13",
+  "bg": "riverside",
+  "who": "nil",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "neutral"
+   }
+  ],
+  "text": "อยู่นิ่งๆ แป๊บนึงนะครับ ดินสอในมือเขาขยับไปมาบนสมุดสเก็ตช์ สายตาสลับมองระหว่างใบหน้าของ {{PLAYER}} กับหน้ากระดาษไปมา",
+  "choices": [
+   {
+    "text": "พี่...แอบวาดผมอยู่เหรอครับ (ยิ้มเขินๆ) ขอดูหน่อยได้มั้ย",
+    "n": 2,
+    "next": "nil_14"
+   },
+   {
+    "text": "ทำไมต้องเป็นผมล่ะครับ มีอะไรน่าวาดด้วยเหรอ",
+    "n": 1,
+    "next": "nil_14"
+   },
+   {
+    "text": "อย่าวาดสิครับ เดี๋ยวออกมาไม่สวยเสียชื่อพี่หรอก",
+    "n": -1,
+    "next": "nil_14"
+   }
+  ]
+ },
+ {
+  "id": "nil_14",
+  "bg": "riverside",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "blush"
+   }
+  ],
+  "text": "นิลรีบปิดสมุดสเก็ตช์ลงเบาๆ แก้มแดงเรื่อ 'บางหน้ายังไม่พร้อมให้ใครดูครับ...แต่ผมสัญญาว่าสักวัน {{PLAYER}} จะเป็นคนแรกที่ได้เห็น' มือของทั้งสองเผลอแตะกันบนพื้นหญ้า และไม่มีใครรีบดึงมือกลับ",
+  "next": "nil_15"
+ },
+ {
+  "id": "nil_15",
+  "bg": "art_room",
+  "who": "narrator",
+  "location": "ห้องศิลปะ",
+  "text": "อีกไม่กี่วันต่อมา {{PLAYER}} ตั้งใจไปเซอร์ไพรส์นิลที่ห้องศิลปะ แต่เขากลับไม่อยู่ บนโต๊ะมีสมุดสเก็ตช์เล่มหนาเปิดค้างไว้ {{PLAYER}} เผลอเอื้อมไปพลิกดูด้วยความอยากรู้...แล้วก็ชะงัก",
+  "next": "nil_16"
+ },
+ {
+  "id": "nil_16",
+  "bg": "art_room",
+  "who": "narrator",
+  "text": "ทั้งเล่ม...เต็มไปด้วยภาพคนคนหนึ่งที่หันหลังให้เสมอ วาดซ้ำแล้วซ้ำเล่าเป็นสิบๆ หน้า ราวกับมีใครสักคนที่นิลคิดถึงจนวาดเท่าไรก็ไม่เคยพอ ใจของ {{PLAYER}} หวิวลงไปเฉยๆ",
+  "choices": [
+   {
+    "text": "(เขาคงมีคนที่รักอยู่แล้ว...ฉันมันก็แค่คนแปลกหน้า)",
+    "n": -2,
+    "next": "nil_17"
+   },
+   {
+    "text": "(ต้องมีเหตุผลแน่ๆ ไว้ถามพี่เขาตรงๆ ดีกว่า)",
+    "n": 2,
+    "next": "nil_17"
+   },
+   {
+    "text": "(ภาพพวกนี้มันเศร้าจัง...เหมือนคนที่กำลังคิดถึงอะไรบางอย่าง)",
+    "n": 1,
+    "next": "nil_17"
+   }
+  ]
+ },
+ {
+  "id": "nil_17",
+  "bg": "rain_street",
+  "who": "fern",
+  "location": "ถนนกลางสายฝน",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "fern",
+    "expr": "serious"
+   }
+  ],
+  "text": "เธอจะหนีพี่นิลไปแบบนี้จริงๆ เหรอ {{PLAYER}}? เฟิร์นว่าเธอยังไม่ได้ฟังอะไรจากปากเขาเลยสักคำนะ...บางทีสิ่งที่เราเห็น มันอาจไม่ใช่เรื่องราวทั้งหมดก็ได้",
+  "next": "nil_18"
+ },
+ {
+  "id": "nil_18",
+  "bg": "rain_street",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "sad"
+   }
+  ],
+  "text": "ก่อนที่ {{PLAYER}} จะตอบ เสียงฝ่าสายฝนก็ดังขึ้น นิลวิ่งตามมาจนตัวเปียกปอน หอบหายใจแรง 'ผมตามหา {{PLAYER}} ตั้งนาน...ทำไมถึงหายไปเฉยๆ ผมทำอะไรผิดไปรึเปล่าครับ'",
+  "next": "nil_19"
+ },
+ {
+  "id": "nil_19",
+  "bg": "rain_street",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "sad"
+   }
+  ],
+  "text": "สายฝนไหลอาบลงบนใบหน้าเขา จนแยกไม่ออกว่าเป็นน้ำฝนหรือไม่ นิลยืนรอคำตอบด้วยแววตาที่ {{PLAYER}} ไม่เคยเห็นมาก่อน—แววตาที่หวาดกลัวว่าจะสูญเสียบางอย่างไป",
+  "choices": [
+   {
+    "text": "บอกผมมาตรงๆ เถอะครับ ผมแค่อยากเข้าใจพี่จริงๆ",
+    "n": 3,
+    "next": "nil_20"
+   },
+   {
+    "text": "ผมเห็นสมุดสเก็ตช์...รูปคนที่พี่วาดซ้ำๆ พี่มีคนที่รักอยู่แล้วใช่มั้ยครับ",
+    "n": 1,
+    "next": "nil_20"
+   },
+   {
+    "text": "ไม่มีอะไรหรอกครับ พี่รีบกลับไปเถอะ เดี๋ยวไม่สบาย",
+    "n": -1,
+    "next": "nil_20"
+   }
+  ]
+ },
+ {
+  "id": "nil_20",
+  "bg": "art_room",
+  "who": "narrator",
+  "location": "ห้องศิลปะ",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "neutral"
+   }
+  ],
+  "text": "นิลพา {{PLAYER}} หลบฝนกลับมาที่ห้องศิลปะ เช็ดผมให้เบาๆ แล้วยื่นสมุดสเก็ตช์เล่มนั้นให้ด้วยมือที่สั่นเล็กน้อย 'พลิกไปหน้าท้ายๆ สิครับ...หน้าที่ {{PLAYER}} ยังไม่ทันได้เห็น'",
+  "next": "nil_21"
+ },
+ {
+  "id": "nil_21",
+  "bg": "art_room",
+  "who": "narrator",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "shy"
+   }
+  ],
+  "text": "หน้าหลังๆ ทั้งหมด...คือใบหน้าของ {{PLAYER}} เอง ที่ยิ้ม ที่หัวเราะ ที่ครุ่นคิด วาดด้วยความอ่อนโยนจนแทบจับต้องได้ ทุกเส้นสายเต็มไปด้วยความรู้สึกที่ไม่เคยเอ่ยเป็นคำ",
+  "next": "nil_22"
+ },
+ {
+  "id": "nil_22",
+  "bg": "art_room",
+  "who": "nil",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "sad"
+   }
+  ],
+  "text": "ปีที่แล้วผมวาดรูปไม่ได้เลยครับ...คุณยายที่สอนผมจับพู่กันจากไป ผมจับดินสอทีไรก็วาดได้แค่แผ่นหลังของคนที่ไม่ยอมหันมา จนวันเปิดเทอม ผมเห็น {{PLAYER}} หัวเราะอยู่กลางลาน แล้วมือของผมก็อยากวาด 'ใบหน้า' ของใครสักคนขึ้นมาอีกครั้ง เป็นครั้งแรกในรอบปี น้องไม่ใช่คนที่ผมคิดถึง...น้องคือคนที่ทำให้ผมกลับมามีสีอีกครั้งต่างหาก",
+  "next": "nil_23"
+ },
+ {
+  "id": "nil_23",
+  "bg": "festival_night",
+  "who": "narrator",
+  "location": "งานเทศกาลกลางคืน",
+  "text": "สองสัปดาห์ต่อมา คณะศิลปกรรมจัดนิทรรศการ กลางห้องจัดแสดง มีภาพสีน้ำมันภาพหนึ่งที่ผู้คนมุงดูไม่ขาด เป็นภาพใครบางคนที่เคยหันหลังให้ กำลังค่อยๆ หันหน้ากลับมายิ้มท่ามกลางแสงสีทองอบอุ่น ใต้ภาพเขียนชื่อไว้เพียงคำเดียวว่า 'แสง'",
+  "next": "nil_24"
+ },
+ {
+  "id": "nil_24",
+  "bg": "festival_night",
+  "who": "nil",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "blush"
+   }
+  ],
+  "text": "นิลมายืนข้างๆ {{PLAYER}} เงียบๆ 'ภาพนี้...ผมวาดจากคนที่ทำให้ผมกลับมารักการวาดรูปอีกครั้งครับ' เขาหันมาสบตา ดวงตาเป็นประกาย 'น้องรู้ใช่มั้ย...ว่าเป็นใคร'",
+  "choices": [
+   {
+    "text": "รู้สิครับ...เพราะผมก็มองพี่ด้วยสายตาแบบเดียวกัน",
+    "n": 3,
+    "next": "nil_25"
+   },
+   {
+    "text": "หวังว่าจะเป็นผมนะครับ (ยิ้มเขิน)",
+    "n": 2,
+    "next": "nil_25"
+   },
+   {
+    "text": "ไม่รู้สิครับ พี่บอกออกมาเองดีกว่ามั้ง",
+    "n": 0,
+    "next": "nil_25"
+   }
+  ]
+ },
+ {
+  "id": "nil_25",
+  "bg": "rooftop",
+  "who": "nil",
+  "location": "ดาดฟ้า",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "blush"
+   }
+  ],
+  "text": "คืนนั้นนิลชวน {{PLAYER}} ขึ้นมาบนดาดฟ้า ดาวเต็มฟ้าเหมือนหลุดออกมาจากภาพวาดของเขา 'ผมพูดเก่งสู้พู่กันไม่ได้หรอกครับ' เขากุมมือ {{PLAYER}} ไว้แน่น 'แต่ครั้งนี้ผมอยากพูดออกมาเอง...ผมชอบ {{PLAYER}} นะ ชอบมากจนอยากวาดน้องไปทั้งชีวิต จะยอมเป็นแสงให้ผมตลอดไปได้มั้ยครับ'",
+  "next": "nil_resolve"
+ },
+ {
+  "id": "nil_good",
+  "bg": "rooftop",
+  "who": "nil",
+  "endType": "good",
+  "endTitle": "แสงในภาพวาดของเรา",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "happy"
+   }
+  ],
+  "text": "'ครับ...ขอเป็นแสงของพี่ตลอดไป' รอยยิ้มของ {{PLAYER}} คือคำตอบทั้งหมด นิลค่อยๆ โน้มลงจูบที่หน้าผากเบาๆ อบอุ่นราวกับแสงแรกของวันใหม่ นับจากคืนนั้น สมุดสเก็ตช์ของเขาไม่มีวันขาดสีอีกเลย เพราะทุกหน้าเต็มไปด้วยรอยยิ้มของคนที่เขารัก และไม่ว่าท้องฟ้าจะเป็นสีไหน ทั้งสองก็จะได้ระบายมันไปด้วยกัน"
+ },
+ {
+  "id": "nil_normal",
+  "bg": "rooftop",
+  "who": "nil",
+  "endType": "normal",
+  "endTitle": "ภาพที่ยังวาดไม่เสร็จ",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "smile"
+   }
+  ],
+  "text": "นิลยิ้มบางๆ ยังไม่มีคำตอบที่ชัดเจนนัก แต่เขากุมมือ {{PLAYER}} ไว้เบาๆ 'ผมยังไม่เก่งเรื่องเปิดใจเท่าไรครับ...แต่ถ้าเป็น {{PLAYER}} ผมอยากลองค่อยๆ เรียนรู้ไปด้วยกัน' ความสัมพันธ์ของทั้งสองยังเหมือนภาพที่เพิ่งลงสีไปได้ครึ่งเดียว ยังไม่เสร็จ แต่ทุกเส้นที่เติมลงไปล้วนอบอุ่น และไม่มีใครรีบร้อนจะวาดให้จบ เพราะรู้ดีว่าปลายทางของภาพนี้...จะต้องสวยแน่ๆ"
+ },
+ {
+  "id": "nil_bad",
+  "bg": "art_room",
+  "who": "nil",
+  "endType": "bad",
+  "endTitle": "แสงที่จางหาย",
+  "sprites": [
+   {
+    "pos": "center",
+    "char": "nil",
+    "expr": "sad"
+   }
+  ],
+  "text": "แต่ {{PLAYER}} กลับเงียบไปนานเกินไป...นานจนแววตาของนิลค่อยๆ หรี่ลง เขายิ้มอย่างเข้าใจ แล้วถอยกลับเข้าไปในโลกเงียบๆ ของตัวเองอีกครั้ง ภาพวาดชื่อ 'แสง' ยังคงแขวนอยู่ที่เดิม แต่ไม่มีใครรู้ว่าแสงในนั้นเคยเป็นของใคร บางความรู้สึก ถ้าไม่รีบเอ่ยออกมาในวันที่มันยังสดใส สีของมันก็อาจจางหายไปกับกาลเวลา เหลือไว้เพียงคำว่า 'ถ้าตอนนั้น...ฉันกล้าพูดออกไป'"
+ }
+];
+
+const STORY_RESOLVE = {
+ "phakin": {
+  "char": "phakin",
+  "goodMin": 8,
+  "normalMin": 4,
+  "goodScene": "phakin_good",
+  "normalScene": "phakin_normal",
+  "badScene": "phakin_bad"
+ },
+ "tawan": {
+  "char": "tawan",
+  "goodMin": 8,
+  "normalMin": 4,
+  "goodScene": "tawan_good",
+  "normalScene": "tawan_normal",
+  "badScene": "tawan_bad"
+ },
+ "nil": {
+  "char": "nil",
+  "goodMin": 8,
+  "normalMin": 4,
+  "goodScene": "nil_good",
+  "normalScene": "nil_normal",
+  "badScene": "nil_bad"
+ }
+};
+
+
+/* ===== engine.js ===== */
+/* =============================================================
+   engine.js — Visual-novel runtime
+   Handles state, scene rendering, typewriter text, branching
+   choices, an affection system, save/load, backlog and endings.
+   Story data lives in story.js (SCENES, RESOLVE).
+   ============================================================= */
+
+const SAVE_KEY = 'blvn_saves_v1';
+const SET_KEY = 'blvn_settings_v1';
+const SEEN_KEY = 'blvn_seen_v1';
+
+/* Safe storage wrapper: uses localStorage when available, otherwise
+   falls back to an in-memory store (sandboxed iframes / private mode
+   may block localStorage — the game must still run and save within a
+   session even then). */
+const LS = (() => {
+  const mem = {};
+  let ok = false;
+  try { const k = '__blvn_t'; localStorage.setItem(k, '1'); localStorage.removeItem(k); ok = true; } catch (e) { ok = false; }
+  return {
+    available: ok,
+    get(k) { try { return ok ? localStorage.getItem(k) : (k in mem ? mem[k] : null); } catch (e) { return k in mem ? mem[k] : null; } },
+    set(k, v) { try { if (ok) localStorage.setItem(k, v); else mem[k] = v; } catch (e) { mem[k] = v; } },
+    remove(k) { try { if (ok) localStorage.removeItem(k); else delete mem[k]; } catch (e) { delete mem[k]; } },
+  };
+})();
+
+const Game = {
+  scenes: {},
+  resolve: {},
+  state: null,
+  settings: { speed: 30, autoDelay: 1600, mute: false },
+  typing: false,
+  typeTimer: null,
+  autoTimer: null,
+  _typedCount: 0,
+  auto: false,
+  skipping: false,
+  history: [],
+
+  /* ---------- boot ---------- */
+  init() {
+    // index scenes
+    STORY_SCENES.forEach(s => { this.scenes[s.id] = s; });
+    this.resolve = STORY_RESOLVE || {};
+    this.loadSettings();
+    this.bindUI();
+    this.showTitle();
+  },
+
+  loadSettings() {
+    try {
+      const s = JSON.parse(LS.get(SET_KEY));
+      if (s) this.settings = Object.assign(this.settings, s);
+    } catch (e) {}
+    const sp = document.getElementById('set-speed');
+    if (sp) sp.value = this.settings.speed;
+    Sound.muted = !!this.settings.mute;
+    const mb = document.getElementById('set-mute');
+    if (mb) mb.textContent = this.settings.mute ? '🔇 ปิดเสียง' : '🔊 เปิดเสียง';
+  },
+  saveSettings() { LS.set(SET_KEY, JSON.stringify(this.settings)); },
+
+  seen() { try { return JSON.parse(LS.get(SEEN_KEY)) || {}; } catch (e) { return {}; } },
+  markSeen(key) { const s = this.seen(); s[key] = true; LS.set(SEEN_KEY, JSON.stringify(s)); },
+
+  /* ---------- screens ---------- */
+  show(id) {
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  },
+  showTitle() {
+    this.stopAuto();
+    this.show('title-screen');
+    const cont = document.getElementById('btn-continue');
+    cont.classList.toggle('disabled', !this.hasSaves());
+  },
+
+  /* ---------- new game ---------- */
+  newGame() {
+    this.show('name-screen');
+    const inp = document.getElementById('name-input');
+    inp.value = '';
+    setTimeout(() => inp.focus(), 100);
+  },
+  confirmName() {
+    const inp = document.getElementById('name-input');
+    let name = (inp.value || '').trim();
+    if (!name) name = 'คุณ';
+    if (name.length > 12) name = name.slice(0, 12);
+    this.state = {
+      player: name,
+      scene: 'start',
+      affection: { phakin: 0, tawan: 0, nil: 0 },
+      flags: {},
+      time: 0,
+    };
+    this.history = [];
+    this.show('game-screen');
+    this.goTo('start');
+  },
+
+  /* ---------- text helpers ---------- */
+  fill(t) { return (t || '').replace(/\{\{PLAYER\}\}/g, this.state ? this.state.player : 'คุณ'); },
+
+  /* ---------- navigation ---------- */
+  goTo(id) {
+    if (!id) return;
+    // affection-resolved endings
+    if (id.endsWith('_resolve')) {
+      const char = id.replace('_resolve', '');
+      return this.resolveEnding(char);
+    }
+    const scene = this.scenes[id];
+    if (!scene) { console.warn('Missing scene:', id); return this.showTitle(); }
+    this.state.scene = id;
+    this.state.time++;
+    this.renderScene(scene);
+  },
+
+  resolveEnding(char) {
+    const cfg = this.resolve[char];
+    const val = this.state.affection[char] || 0;
+    let target;
+    if (cfg) {
+      if (val >= cfg.goodMin) target = cfg.goodScene;
+      else if (val >= cfg.normalMin) target = cfg.normalScene;
+      else target = cfg.badScene;
+    }
+    if (target && this.scenes[target]) this.goTo(target);
+    else this.showTitle();
+  },
+
+  /* ---------- rendering ---------- */
+  renderScene(scene) {
+    // background
+    if (scene.bg) {
+      const bgLayer = document.getElementById('bg-layer');
+      if (bgLayer.dataset.bg !== scene.bg) {
+        bgLayer.dataset.bg = scene.bg;
+        bgLayer.innerHTML = backgroundSVG(scene.bg);
+        bgLayer.classList.remove('bg-fade'); void bgLayer.offsetWidth; bgLayer.classList.add('bg-fade');
+      }
+      const loc = document.getElementById('loc-tag');
+      const tag = scene.location || bgTag(scene.bg);
+      loc.textContent = tag; loc.style.opacity = tag ? 1 : 0;
+    }
+
+    // sprites
+    this.renderSprites(scene);
+
+    // ending?
+    if (scene.endType) { this.renderEnding(scene); return; }
+
+    // dialogue
+    const who = scene.who || 'narrator';
+    const box = document.getElementById('dialogue-box');
+    const nameTab = document.getElementById('name-tab');
+    const meta = CHARACTERS[who] || CHARACTERS.narrator;
+    if (who === 'narrator' || !meta.name) {
+      nameTab.style.display = 'none';
+      box.classList.add('narration');
+    } else {
+      nameTab.style.display = 'inline-flex';
+      nameTab.textContent = this.fill(meta.name);
+      nameTab.style.background = meta.color;
+      box.classList.remove('narration');
+    }
+
+    // choices vs text
+    const choiceLayer = document.getElementById('choice-layer');
+    choiceLayer.innerHTML = '';
+    choiceLayer.classList.remove('active');
+
+    this.history.push({ who: this.fill(meta.name), text: this.fill(scene.text) });
+    if (this.history.length > 200) this.history.shift();
+
+    this.typeText(this.fill(scene.text), () => {
+      if (scene.choices && scene.choices.length) {
+        this.renderChoices(scene.choices);
+      }
+    });
+  },
+
+  renderSprites(scene) {
+    const slots = { left: document.getElementById('sprite-left'), center: document.getElementById('sprite-center'), right: document.getElementById('sprite-right') };
+    const active = { left: null, center: null, right: null };
+    (scene.sprites || []).forEach(sp => { if (slots[sp.pos]) active[sp.pos] = sp; });
+    const speaker = scene.who;
+    Object.keys(slots).forEach(pos => {
+      const el = slots[pos]; const sp = active[pos];
+      if (!sp) {
+        if (el.dataset.char) { el.classList.remove('shown'); el.dataset.char = ''; setTimeout(() => { if (!el.dataset.char) el.innerHTML = ''; }, 300); }
+        return;
+      }
+      const sig = sp.char + ':' + sp.expr;
+      if (el.dataset.sig !== sig) { el.innerHTML = characterSVG(sp.char, sp.expr); el.dataset.sig = sig; }
+      el.dataset.char = sp.char;
+      el.classList.add('shown');
+      el.classList.toggle('dim', speaker && speaker !== sp.char && speaker !== 'narrator' && speaker !== 'player');
+    });
+  },
+
+  typeText(text, done) {
+    clearTimeout(this.typeTimer);
+    const el = document.getElementById('dialogue-text');
+    el.textContent = '';
+    this.typing = true;
+    document.getElementById('next-hint').style.opacity = 0;
+    const speed = this.skipping ? 2 : Math.max(4, 60 - this.settings.speed);
+    let i = 0;
+    const step = () => {
+      if (i <= text.length) {
+        el.textContent = text.slice(0, i);
+        if (!this.skipping && i % 2 === 0) Sound.blip();
+        i++;
+        this.typeTimer = setTimeout(step, speed);
+      } else {
+        this.finishType(done);
+      }
+    };
+    step();
+    this._pendingDone = done;
+    this._pendingText = text;
+  },
+  finishType(done) {
+    clearTimeout(this.typeTimer);
+    const el = document.getElementById('dialogue-text');
+    if (this._pendingText != null) el.textContent = this._pendingText;
+    this.typing = false;
+    document.getElementById('next-hint').style.opacity = 0.7;
+    if (done) done();
+    if (this.auto && !this._hasChoices()) {
+      this.autoTimer = setTimeout(() => this.advance(), this.settings.autoDelay);
+    }
+    if (this.skipping && !this._hasChoices()) {
+      this.autoTimer = setTimeout(() => this.advance(), 120);
+    }
+  },
+  _hasChoices() { return document.getElementById('choice-layer').classList.contains('active'); },
+
+  renderChoices(choices) {
+    const layer = document.getElementById('choice-layer');
+    layer.innerHTML = '';
+    choices.forEach((c, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.style.animationDelay = (idx * 70) + 'ms';
+      btn.textContent = this.fill(c.text);
+      btn.onclick = () => this.choose(c);
+      layer.appendChild(btn);
+    });
+    layer.classList.add('active');
+  },
+
+  choose(c) {
+    this.stopAuto();
+    Sound.pick();
+    const eff = { phakin: c.p || 0, tawan: c.t || 0, nil: c.n || 0 };
+    this.applyEffects(eff);
+    if (c.flag) this.state.flags[c.flag] = true;
+    document.getElementById('choice-layer').classList.remove('active');
+    document.getElementById('choice-layer').innerHTML = '';
+    this.goTo(c.next);
+  },
+
+  applyEffects(eff) {
+    let popped = false;
+    Object.keys(eff).forEach(k => {
+      if (eff[k]) {
+        this.state.affection[k] = Math.max(0, (this.state.affection[k] || 0) + eff[k]);
+        if (eff[k] > 0 && !popped) { this.heartPop(k, eff[k]); Sound.pop(); popped = true; }
+      }
+    });
+  },
+
+  heartPop(char, amt) {
+    const meta = CHARACTERS[char];
+    const p = document.createElement('div');
+    p.className = 'heart-pop';
+    p.innerHTML = `♥ ${this.fill(meta.name)} +${amt}`;
+    p.style.color = meta.color;
+    document.getElementById('game-screen').appendChild(p);
+    setTimeout(() => p.remove(), 1600);
+  },
+
+  /* ---------- advance / input ---------- */
+  advance() {
+    if (this._hasChoices()) return;
+    if (this.typing) { this.finishType(this._pendingDone); return; }
+    const scene = this.scenes[this.state.scene];
+    if (!scene) return;
+    if (scene.endType) return; // ending waits for button
+    if (scene.choices && scene.choices.length) return;
+    if (scene.next) this.goTo(scene.next);
+  },
+
+  toggleAuto() {
+    this.auto = !this.auto;
+    document.getElementById('btn-auto').classList.toggle('on', this.auto);
+    if (this.auto && !this.typing && !this._hasChoices()) this.advance();
+    else if (!this.auto) clearTimeout(this.autoTimer);
+  },
+  toggleSkip() {
+    this.skipping = !this.skipping;
+    document.getElementById('btn-skip').classList.toggle('on', this.skipping);
+    if (this.skipping) { if (this.typing) this.finishType(this._pendingDone); else if (!this._hasChoices()) this.advance(); }
+    else clearTimeout(this.autoTimer);
+  },
+  stopAuto() { this.auto = false; this.skipping = false; clearTimeout(this.autoTimer); const a = document.getElementById('btn-auto'); const s = document.getElementById('btn-skip'); if (a) a.classList.remove('on'); if (s) s.classList.remove('on'); },
+
+  /* ---------- endings ---------- */
+  renderEnding(scene) {
+    this.stopAuto();
+    const ov = document.getElementById('ending-overlay');
+    const kind = scene.endType;
+    const char = (scene.who && CHARACTERS[scene.who]) ? scene.who : (this.state ? this._routeChar() : null);
+    this.markSeen('end_' + scene.id);
+    const badge = { good: '♥ END', normal: '☆ END', bad: '… END', friend: '☺ END' }[kind] || 'END';
+    document.getElementById('ending-badge').textContent = badge;
+    document.getElementById('ending-badge').className = 'ending-badge ' + kind;
+    document.getElementById('ending-title').textContent = this.fill(scene.endTitle || 'จบตอน');
+    document.getElementById('ending-text').textContent = this.fill(scene.text);
+    document.getElementById('dialogue-box').style.opacity = 0;
+    ov.classList.add('active');
+    Sound.chime();
+  },
+  _routeChar() {
+    const id = this.state.scene || '';
+    return ROMANCEABLE.find(c => id.startsWith(c)) || null;
+  },
+  closeEnding() {
+    document.getElementById('ending-overlay').classList.remove('active');
+    document.getElementById('dialogue-box').style.opacity = 1;
+    this.showTitle();
+  },
+
+  /* ---------- save / load ---------- */
+  getSaves() { try { return JSON.parse(LS.get(SAVE_KEY)) || {}; } catch (e) { return {}; } },
+  hasSaves() { return Object.keys(this.getSaves()).length > 0; },
+  saveTo(slot, silent) {
+    if (!this.state) return;
+    const saves = this.getSaves();
+    const scene = this.scenes[this.state.scene];
+    saves[slot] = {
+      state: JSON.parse(JSON.stringify(this.state)),
+      label: this.fill((scene && scene.location) || bgTag(scene && scene.bg) || 'บันทึก'),
+      preview: this.fill((scene && scene.text) || '').slice(0, 46),
+      stamp: this.state.time,
+    };
+    LS.set(SAVE_KEY, JSON.stringify(saves));
+    if (!silent) { this.renderSaveSlots(); this.toast('บันทึกแล้ว 💾'); }
+  },
+  loadFrom(slot) {
+    const saves = this.getSaves();
+    const s = saves[slot];
+    if (!s) return;
+    this.state = JSON.parse(JSON.stringify(s.state));
+    this.history = [];
+    this.closeMenu();
+    this.show('game-screen');
+    document.getElementById('bg-layer').dataset.bg = '';
+    ['sprite-left', 'sprite-center', 'sprite-right'].forEach(id => { const e = document.getElementById(id); e.innerHTML = ''; e.dataset.sig = ''; e.dataset.char = ''; });
+    this.goTo(this.state.scene);
+  },
+  continueGame() {
+    if (!this.hasSaves()) return;
+    const saves = this.getSaves();
+    // load most recent (auto slot preferred)
+    const key = saves['auto'] ? 'auto' : Object.keys(saves)[0];
+    this.loadFrom(key);
+  },
+  autosave() { if (this.state) this.saveTo('auto', true); },
+
+  /* ---------- menus ---------- */
+  openMenu(tab) {
+    document.getElementById('menu-overlay').classList.add('active');
+    this.switchTab(tab || 'save');
+  },
+  closeMenu() { document.getElementById('menu-overlay').classList.remove('active'); },
+  switchTab(tab) {
+    document.querySelectorAll('.menu-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    document.querySelectorAll('.menu-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === tab));
+    if (tab === 'save' || tab === 'load') this.renderSaveSlots();
+    if (tab === 'status') this.renderStatus();
+  },
+  renderSaveSlots() {
+    const saves = this.getSaves();
+    ['save', 'load'].forEach(mode => {
+      const wrap = document.getElementById(mode + '-slots');
+      if (!wrap) return;
+      wrap.innerHTML = '';
+      const slots = ['auto', 'slot1', 'slot2', 'slot3', 'slot4'];
+      slots.forEach(slot => {
+        const s = saves[slot];
+        const div = document.createElement('div');
+        div.className = 'save-slot' + (s ? ' filled' : ' empty') + (slot === 'auto' ? ' auto' : '');
+        const title = slot === 'auto' ? 'ออโต้เซฟ' : 'ช่อง ' + slot.replace('slot', '');
+        div.innerHTML = `<div class="slot-title">${title}</div>` +
+          (s ? `<div class="slot-loc">${s.label}</div><div class="slot-prev">${s.preview}…</div>`
+             : `<div class="slot-empty">— ว่าง —</div>`);
+        if (mode === 'save') {
+          if (slot !== 'auto') div.onclick = () => this.saveTo(slot);
+          else div.classList.add('locked');
+        } else {
+          if (s) div.onclick = () => this.loadFrom(slot);
+        }
+        wrap.appendChild(div);
+      });
+    });
+  },
+  renderStatus() {
+    const wrap = document.getElementById('status-body');
+    if (!this.state) { wrap.innerHTML = '<p style="text-align:center;opacity:.6">ยังไม่ได้เริ่มเกม</p>'; return; }
+    wrap.innerHTML = ROMANCEABLE.map(c => {
+      const meta = CHARACTERS[c];
+      const val = this.state.affection[c] || 0;
+      const max = 12;
+      const hearts = Array.from({ length: 6 }, (_, i) => {
+        const filled = val >= (i + 1) * 2;
+        const half = !filled && val >= i * 2 + 1;
+        return `<span class="mini-heart ${filled ? 'on' : half ? 'half' : ''}" style="color:${meta.color}">♥</span>`;
+      }).join('');
+      return `<div class="status-row">
+        <div class="status-face">${characterSVG(c, val >= 8 ? 'happy' : val >= 4 ? 'smile' : 'neutral')}</div>
+        <div class="status-info">
+          <div class="status-name" style="color:${meta.color}">${meta.name}</div>
+          <div class="status-role">${meta.role}</div>
+          <div class="status-hearts">${hearts}</div>
+        </div></div>`;
+    }).join('');
+  },
+
+  /* ---------- cast gallery ---------- */
+  renderCast() {
+    const wrap = document.getElementById('cast-body');
+    const seen = this.seen();
+    wrap.innerHTML = ROMANCEABLE.map(c => {
+      const meta = CHARACTERS[c];
+      const got = ['good', 'normal', 'bad'].filter(k => seen['end_' + c + '_' + k]);
+      const badges = ['good', 'normal', 'bad'].map(k => {
+        const on = seen['end_' + c + '_' + k];
+        const sym = { good: '♥', normal: '☆', bad: '…' }[k];
+        return `<span class="end-badge-mini ${on ? 'on' : ''}" title="${k}">${on ? sym : '?'}</span>`;
+      }).join('');
+      return `<div class="cast-card" style="--c:${meta.color};--cs:${meta.colorSoft}">
+        <div class="cast-face">${characterSVG(c, 'smile')}</div>
+        <div class="cast-name">${meta.name} <span class="cast-en">${meta.en}</span></div>
+        <div class="cast-role">${meta.role}</div>
+        <div class="cast-tag">${meta.tagline}</div>
+        <div class="cast-blurb">${meta.blurb}</div>
+        <div class="cast-ends">ตอนจบที่ปลดล็อก: ${badges}</div>
+      </div>`;
+    }).join('');
+  },
+
+  /* ---------- backlog ---------- */
+  openLog() {
+    const wrap = document.getElementById('log-body');
+    wrap.innerHTML = this.history.slice(-80).map(h =>
+      `<div class="log-line">${h.who ? `<b>${h.who}</b> ` : ''}${h.text}</div>`).join('');
+    document.getElementById('log-overlay').classList.add('active');
+    wrap.scrollTop = wrap.scrollHeight;
+  },
+  closeLog() { document.getElementById('log-overlay').classList.remove('active'); },
+
+  /* ---------- toast ---------- */
+  toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(this._toastT);
+    this._toastT = setTimeout(() => t.classList.remove('show'), 1400);
+  },
+
+  /* ---------- UI binding ---------- */
+  bindUI() {
+    document.getElementById('btn-new').onclick = () => { if (this.hasSaves()) { if (confirm('เริ่มเกมใหม่? เกมที่เล่นค้างจะยังอยู่ในช่องเซฟ')) this.newGame(); } else this.newGame(); };
+    document.getElementById('btn-continue').onclick = () => this.continueGame();
+    document.getElementById('btn-cast').onclick = () => { this.renderCast(); this.show('cast-screen'); };
+    document.getElementById('btn-about').onclick = () => this.show('about-screen');
+    document.querySelectorAll('.to-title').forEach(b => b.onclick = () => this.showTitle());
+    document.getElementById('name-confirm').onclick = () => this.confirmName();
+    document.getElementById('name-input').addEventListener('keydown', e => { if (e.key === 'Enter') this.confirmName(); });
+    document.querySelectorAll('.name-suggest').forEach(b => b.onclick = () => { document.getElementById('name-input').value = b.textContent; });
+
+    // in-game controls
+    document.getElementById('advance-area').onclick = () => this.advance();
+    document.getElementById('btn-menu').onclick = () => this.openMenu('save');
+    document.getElementById('btn-log').onclick = () => this.openLog();
+    document.getElementById('btn-auto').onclick = () => this.toggleAuto();
+    document.getElementById('btn-skip').onclick = () => this.toggleSkip();
+    document.getElementById('btn-status').onclick = () => this.openMenu('status');
+
+    // menu
+    document.querySelectorAll('.menu-tab').forEach(t => t.onclick = () => this.switchTab(t.dataset.tab));
+    document.getElementById('menu-close').onclick = () => this.closeMenu();
+    document.getElementById('menu-title').onclick = () => { if (confirm('กลับหน้าหลัก? อย่าลืมเซฟก่อนนะ')) { this.autosave(); this.closeMenu(); this.showTitle(); } };
+    document.getElementById('log-close').onclick = () => this.closeLog();
+    document.getElementById('ending-continue').onclick = () => this.closeEnding();
+
+    // settings
+    const sp = document.getElementById('set-speed');
+    sp.oninput = () => { this.settings.speed = +sp.value; this.saveSettings(); };
+    const mute = document.getElementById('set-mute');
+    if (mute) mute.onclick = () => { this.settings.mute = !this.settings.mute; Sound.muted = this.settings.mute; mute.textContent = this.settings.mute ? '🔇 ปิดเสียง' : '🔊 เปิดเสียง'; this.saveSettings(); if (!this.settings.mute) Sound.pick(); };
+    document.getElementById('set-clear').onclick = () => { if (confirm('ลบข้อมูลเซฟและตอนจบที่ปลดล็อกทั้งหมด?')) { LS.remove(SAVE_KEY); LS.remove(SEEN_KEY); this.toast('ล้างข้อมูลแล้ว'); this.renderSaveSlots(); } };
+
+    // keyboard
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('game-screen').classList.contains('active')) return;
+      if (document.getElementById('menu-overlay').classList.contains('active')) { if (e.key === 'Escape') this.closeMenu(); return; }
+      if (document.getElementById('log-overlay').classList.contains('active')) { if (e.key === 'Escape') this.closeLog(); return; }
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); this.advance(); }
+      else if (e.key === 'Escape') this.openMenu('save');
+      else if (e.key === 'a' || e.key === 'A') this.toggleAuto();
+      else if (e.key === 'l' || e.key === 'L') this.openLog();
+    });
+
+    // autosave every scene advance
+    const origGoTo = this.goTo.bind(this);
+    this.goTo = (id) => { origGoTo(id); if (this.state && document.getElementById('game-screen').classList.contains('active')) this.autosave(); };
+  },
+};
+
+window.addEventListener('DOMContentLoaded', () => Game.init());
+
+</script>
+<script>
+/* floating petals on the title screen */
+(function(){
+  const wrap=document.getElementById('petals');
+  const emo=['🌸','💗','🌷','💜','🧡','✨'];
+  for(let i=0;i<16;i++){
+    const p=document.createElement('div');p.className='petal';
+    p.textContent=emo[i%emo.length];
+    p.style.left=(Math.random()*100)+'%';
+    p.style.animationDuration=(7+Math.random()*8)+'s';
+    p.style.animationDelay=(-Math.random()*10)+'s';
+    p.style.fontSize=(16+Math.random()*16)+'px';
+    wrap.appendChild(p);
+  }
+})();
+</script>
+</body>
+</html>

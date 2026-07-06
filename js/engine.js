@@ -9,6 +9,22 @@ const SAVE_KEY = 'blvn_saves_v1';
 const SET_KEY = 'blvn_settings_v1';
 const SEEN_KEY = 'blvn_seen_v1';
 
+/* Safe storage wrapper: uses localStorage when available, otherwise
+   falls back to an in-memory store (sandboxed iframes / private mode
+   may block localStorage — the game must still run and save within a
+   session even then). */
+const LS = (() => {
+  const mem = {};
+  let ok = false;
+  try { const k = '__blvn_t'; localStorage.setItem(k, '1'); localStorage.removeItem(k); ok = true; } catch (e) { ok = false; }
+  return {
+    available: ok,
+    get(k) { try { return ok ? localStorage.getItem(k) : (k in mem ? mem[k] : null); } catch (e) { return k in mem ? mem[k] : null; } },
+    set(k, v) { try { if (ok) localStorage.setItem(k, v); else mem[k] = v; } catch (e) { mem[k] = v; } },
+    remove(k) { try { if (ok) localStorage.removeItem(k); else delete mem[k]; } catch (e) { delete mem[k]; } },
+  };
+})();
+
 const Game = {
   scenes: {},
   resolve: {},
@@ -34,7 +50,7 @@ const Game = {
 
   loadSettings() {
     try {
-      const s = JSON.parse(localStorage.getItem(SET_KEY));
+      const s = JSON.parse(LS.get(SET_KEY));
       if (s) this.settings = Object.assign(this.settings, s);
     } catch (e) {}
     const sp = document.getElementById('set-speed');
@@ -43,10 +59,10 @@ const Game = {
     const mb = document.getElementById('set-mute');
     if (mb) mb.textContent = this.settings.mute ? '🔇 ปิดเสียง' : '🔊 เปิดเสียง';
   },
-  saveSettings() { localStorage.setItem(SET_KEY, JSON.stringify(this.settings)); },
+  saveSettings() { LS.set(SET_KEY, JSON.stringify(this.settings)); },
 
-  seen() { try { return JSON.parse(localStorage.getItem(SEEN_KEY)) || {}; } catch (e) { return {}; } },
-  markSeen(key) { const s = this.seen(); s[key] = true; localStorage.setItem(SEEN_KEY, JSON.stringify(s)); },
+  seen() { try { return JSON.parse(LS.get(SEEN_KEY)) || {}; } catch (e) { return {}; } },
+  markSeen(key) { const s = this.seen(); s[key] = true; LS.set(SEEN_KEY, JSON.stringify(s)); },
 
   /* ---------- screens ---------- */
   show(id) {
@@ -320,7 +336,7 @@ const Game = {
   },
 
   /* ---------- save / load ---------- */
-  getSaves() { try { return JSON.parse(localStorage.getItem(SAVE_KEY)) || {}; } catch (e) { return {}; } },
+  getSaves() { try { return JSON.parse(LS.get(SAVE_KEY)) || {}; } catch (e) { return {}; } },
   hasSaves() { return Object.keys(this.getSaves()).length > 0; },
   saveTo(slot, silent) {
     if (!this.state) return;
@@ -332,7 +348,7 @@ const Game = {
       preview: this.fill((scene && scene.text) || '').slice(0, 46),
       stamp: this.state.time,
     };
-    localStorage.setItem(SAVE_KEY, JSON.stringify(saves));
+    LS.set(SAVE_KEY, JSON.stringify(saves));
     if (!silent) { this.renderSaveSlots(); this.toast('บันทึกแล้ว 💾'); }
   },
   loadFrom(slot) {
@@ -487,7 +503,7 @@ const Game = {
     sp.oninput = () => { this.settings.speed = +sp.value; this.saveSettings(); };
     const mute = document.getElementById('set-mute');
     if (mute) mute.onclick = () => { this.settings.mute = !this.settings.mute; Sound.muted = this.settings.mute; mute.textContent = this.settings.mute ? '🔇 ปิดเสียง' : '🔊 เปิดเสียง'; this.saveSettings(); if (!this.settings.mute) Sound.pick(); };
-    document.getElementById('set-clear').onclick = () => { if (confirm('ลบข้อมูลเซฟและตอนจบที่ปลดล็อกทั้งหมด?')) { localStorage.removeItem(SAVE_KEY); localStorage.removeItem(SEEN_KEY); this.toast('ล้างข้อมูลแล้ว'); this.renderSaveSlots(); } };
+    document.getElementById('set-clear').onclick = () => { if (confirm('ลบข้อมูลเซฟและตอนจบที่ปลดล็อกทั้งหมด?')) { LS.remove(SAVE_KEY); LS.remove(SEEN_KEY); this.toast('ล้างข้อมูลแล้ว'); this.renderSaveSlots(); } };
 
     // keyboard
     document.addEventListener('keydown', e => {
