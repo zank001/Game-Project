@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#e14e7f">
+<title>รักแรกผลิบาน · Blooming Hearts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&family=Mali:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%97%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ TITLE ============ -->
+  <section id="title-screen" class="screen active">
+    <div class="title-petals" id="petals"></div>
+    <div class="title-inner">
+      <div class="title-badge">Boys' Love Visual Novel</div>
+      <h1 class="title-main">รักแรกผลิบาน</h1>
+      <div class="title-sub">เกมจีบหนุ่มในรั้วมหาวิทยาลัย</div>
+      <div class="title-en">Blooming Hearts</div>
+      <div class="title-menu">
+        <button class="menu-btn" id="btn-new">เริ่มเรื่องราวใหม่ 💗</button>
+        <button class="menu-btn ghost" id="btn-continue">เล่นต่อ</button>
+        <button class="menu-btn ghost" id="btn-cast">แนะนำหนุ่มๆ</button>
+        <button class="menu-btn ghost" id="btn-about">วิธีเล่น &amp; เครดิต</button>
+      </div>
+    </div>
+    <div class="title-foot">เลือกเส้นทางของหัวใจคุณ · จีบใครดี?</div>
+  </section>
+
+  <!-- ============ NAME ============ -->
+  <section id="name-screen" class="screen">
+    <div class="center-card">
+      <div class="name-title">ก่อนเริ่มต้น...</div>
+      <div class="name-desc">อยากให้หนุ่มๆ เรียกคุณว่าอะไรดี?</div>
+      <input id="name-input" maxlength="12" placeholder="ใส่ชื่อของคุณ" autocomplete="off">
+      <div class="name-suggests">
+        <button class="name-suggest">ข้าวปั้น</button>
+        <button class="name-suggest">พีท</button>
+        <button class="name-suggest">ต้นน้ำ</button>
+        <button class="name-suggest">ไอซ์</button>
+      </div>
+      <button class="menu-btn" id="name-confirm" style="width:min(320px,84%)">เริ่มเลย!</button>
+      <button class="back-btn to-title" style="margin-top:16px">← กลับ</button>
+    </div>
+  </section>
+
+  <!-- ============ CAST ============ -->
+  <section id="cast-screen" class="screen">
+    <div class="sub-head">
+      <button class="back-btn to-title">← กลับ</button>
+      <h2>แนะนำหนุ่มๆ</h2>
+    </div>
+    <div id="cast-body"></div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about-screen" class="screen">
+    <div class="sub-head">
+      <button class="back-btn to-title">← กลับ</button>
+      <h2>วิธีเล่น &amp; เครดิต</h2>
+    </div>
+    <div class="about-body">
+      <p><b>รักแรกผลิบาน</b> คือเกม Visual Novel แนวจีบหนุ่ม (Boys' Love) ที่คุณจะได้สวมบทเป็นนักศึกษาปี 1
+      ผู้เพิ่งก้าวเข้าสู่รั้วมหาวิทยาลัย และได้พบกับหนุ่มๆ สามคนที่มีเสน่ห์ต่างกันไป</p>
+      <h3>วิธีเล่น</h3>
+      <p>• คลิก/แตะที่หน้าจอ หรือกด <kbd>Space</kbd> / <kbd>Enter</kbd> เพื่อเดินเรื่องต่อ<br>
+      • เมื่อมี <b>ตัวเลือก</b> ปรากฏ ให้เลือกคำตอบที่ใจคุณอยากตอบ — แต่ละคำตอบมีผลต่อ<b>คะแนนหัวใจ ♥</b> ของหนุ่มแต่ละคน<br>
+      • คะแนนหัวใจจะกำหนดว่าคุณจะได้ตอนจบแบบไหน (สมหวัง / ค่อยเป็นค่อยไป / พลาดโอกาส)<br>
+      • มีทั้งหมด <b>3 เส้นทางรัก × 3 ตอนจบ = 9 ตอนจบ</b> ให้ตามเก็บ!</p>
+      <h3>ปุ่มลัด</h3>
+      <p>
+      <kbd>A</kbd> เล่นอัตโนมัติ (Auto) · <kbd>L</kbd> ย้อนดูบทสนทนา (Log) · <kbd>Esc</kbd> เมนู/บันทึก<br>
+      ในเกมมีปุ่ม <b>≡</b> เมนู, <b>♥</b> ดูคะแนนหัวใจ, <b>▷</b> Auto, <b>≫</b> Skip, <b>❐</b> Log</p>
+      <h3>บันทึกเกม</h3>
+      <p>เกมจะ <b>ออโต้เซฟ</b> ให้อัตโนมัติทุกฉาก และมีช่องเซฟด้วยตนเองอีก 4 ช่อง (บันทึกในเครื่องของคุณ)</p>
+      <h3>เครดิต</h3>
+      <p>ออกแบบและพัฒนาเป็นเกมเว็บแบบ self-contained ด้วย HTML/CSS/JavaScript ล้วน — ตัวละคร ฉาก และภาพทั้งหมดวาดด้วย SVG ไม่ต้องโหลดไฟล์ภาพจากภายนอก 🎨<br>
+      สร้างด้วย 💗 เพื่อคนรักซีรีส์วาย</p>
+    </div>
+  </section>
+
+  <!-- ============ GAME ============ -->
+  <section id="game-screen" class="screen">
+    <div id="bg-layer"></div>
+    <div id="loc-tag"></div>
+    <div class="sprite-layer">
+      <div class="sprite" id="sprite-left"></div>
+      <div class="sprite" id="sprite-center"></div>
+      <div class="sprite" id="sprite-right"></div>
+    </div>
+    <div id="advance-area"></div>
+
+    <div class="top-bar">
+      <button class="ctrl" id="btn-status" title="คะแนนหัวใจ">♥</button>
+      <button class="ctrl" id="btn-auto" title="เล่นอัตโนมัติ (A)">▷</button>
+      <button class="ctrl" id="btn-skip" title="ข้ามเร็ว">≫</button>
+      <button class="ctrl" id="btn-log" title="บทสนทนาย้อนหลัง (L)">❐</button>
+      <button class="ctrl" id="btn-menu" title="เมนู (Esc)">≡</button>
+    </div>
+
+    <div id="dialogue-box">
+      <span id="name-tab"></span>
+      <div id="dialogue-text"></div>
+      <div id="next-hint">▼</div>
+    </div>
+
+    <div id="choice-layer"></div>
+    <div id="toast"></div>
+  </section>
+
+  <!-- ============ MENU OVERLAY ============ -->
+  <div id="menu-overlay" class="overlay">
+    <div class="menu-card">
+      <div class="menu-head">
+        <button class="menu-tab active" data-tab="save">บันทึก</button>
+        <button class="menu-tab" data-tab="load">โหลด</button>
+        <button class="menu-tab" data-tab="status">หัวใจ</button>
+        <button class="menu-tab" data-tab="settings">ตั้งค่า</button>
+        <button class="menu-x" id="menu-close">✕</button>
+      </div>
+      <div class="menu-body">
+        <div class="menu-panel active" data-panel="save"><div class="slots-grid" id="save-slots"></div></div>
+        <div class="menu-panel" data-panel="load"><div class="slots-grid" id="load-slots"></div></div>
+        <div class="menu-panel" data-panel="status"><div id="status-body"></div></div>
+        <div class="menu-panel" data-panel="settings">
+          <div class="set-row"><label>ความเร็วข้อความ</label><input type="range" id="set-speed" min="4" max="55" value="30"></div>
+          <div class="set-row"><label>เสียงประกอบ</label><button class="back-btn" id="set-mute">🔊 เปิดเสียง</button></div>
+          <div class="set-row"><label>ล้างข้อมูลทั้งหมด</label><button class="back-btn" id="set-clear">ล้างเซฟ &amp; ตอนจบ</button></div>
+          <p style="color:var(--ink-soft);font-size:13px;margin-top:14px;line-height:1.7">เกมนี้เก็บข้อมูลไว้ในเบราว์เซอร์ของคุณเท่านั้น (localStorage) ไม่มีการส่งข้อมูลออกไปที่ใด</p>
+        </div>
+      </div>
+      <div class="menu-foot">
+        <button class="link-btn" id="menu-title">← กลับหน้าหลัก</button>
+        <span style="font-size:12px;color:var(--ink-soft)">รักแรกผลิบาน</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ LOG OVERLAY ============ -->
+  <div id="log-overlay" class="overlay">
+    <div class="log-card">
+      <div class="log-head"><h3>บทสนทนาย้อนหลัง</h3><button class="menu-x" id="log-close">✕</button></div>
+      <div id="log-body"></div>
+    </div>
+  </div>
+
+  <!-- ============ ENDING OVERLAY ============ -->
+  <div id="ending-overlay">
+    <div class="ending-card">
+      <div class="ending-badge" id="ending-badge">END</div>
+      <h1 id="ending-title"></h1>
+      <p id="ending-text"></p>
+      <button id="ending-continue">กลับหน้าหลัก</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/art.js"></script>
+<script src="js/backgrounds.js"></script>
+<script src="js/characters.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/story.js"></script>
+<script src="js/engine.js"></script>
+<script>
+/* floating petals on the title screen */
+(function(){
+  const wrap=document.getElementById('petals');
+  const emo=['🌸','💗','🌷','💜','🧡','✨'];
+  for(let i=0;i<16;i++){
+    const p=document.createElement('div');p.className='petal';
+    p.textContent=emo[i%emo.length];
+    p.style.left=(Math.random()*100)+'%';
+    p.style.animationDuration=(7+Math.random()*8)+'s';
+    p.style.animationDelay=(-Math.random()*10)+'s';
+    p.style.fontSize=(16+Math.random()*16)+'px';
+    wrap.appendChild(p);
+  }
+})();
+</script>
+</body>
+</html>

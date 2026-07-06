@@ -1,0 +1,7 @@
+# scratch / working files (not part of the game)
+scratch_*.js
+scratchpad_*.png
+shot_*.png
+scratchpad/
+node_modules/
+.DS_Store
