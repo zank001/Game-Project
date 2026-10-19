@@ -1,0 +1,1804 @@
+{
+  "formatVersion": 1,
+  "version": "2026-10-19T13:42:00+00:00",
+  "updatedAt": "2026-10-19T13:42:00+00:00",
+  "coverageNote": "20 production entries, 20 approved city-specific scenes. City-center queue anchors are not verified scene viewpoints. Cities without approved assets use explicit regional fallback art.",
+  "style": {
+    "width": 480,
+    "height": 220,
+    "pixelGrid": 2,
+    "camera": "wide street-level side view with a clear lower foreground",
+    "palette": "restrained cream, forest green, sage, turquoise, warm ochre",
+    "detail": "stepped shapes and crisp pixels; preserve reference geography and building positions",
+    "characterArea": {
+      "x": 290,
+      "y": 123,
+      "width": 62,
+      "height": 82
+    },
+    "characterEmbedded": false,
+    "era": "contemporary; stable across the character lifetime",
+    "maxPaletteColors": 64
+  },
+  "sources": [
+    {
+      "name": "GeoNames city identification",
+      "url": "https://download.geonames.org/export/dump/cities500.zip",
+      "use": "Place IDs and city-center queue anchors only",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+      "name": "Wikimedia reference discovery (not retrieved or verified)",
+      "url": "https://commons.wikimedia.org/wiki/Commons:Search_by_location",
+      "use": "Candidate reference discovery only; individual file licensing still required"
+    },
+    {
+      "name": "Wikimedia reuse guidance",
+      "url": "https://commons.wikimedia.org/wiki/Commons:Reusing_content_outside_Wikimedia",
+      "use": "Review original file author, license, attribution, and adaptation rights"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "city-1153671",
+      "placeId": "geonames:1153671",
+      "cityName": "Chiang Mai",
+      "countryId": "th",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ลานอนุสาวรีย์สามกษัตริย์ หน้าอาคารศูนย์ศิลปวัฒนธรรมเมืองเชียงใหม่",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 18.79038,
+        "longitude": 98.98468,
+        "sourceUrl": "https://www.geonames.org/1153671/",
+        "isSceneView": false
+      },
+      "reference": {
+        "status": "verified",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chiang_Mai_-_Chiang_Mai_City_Art_and_Cultural_Center_-_0001.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Chiang_Mai_-_Chiang_Mai_City_Art_and_Cultural_Center_-_0001.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "creator": "Stefan Fussan",
+        "license": {
+          "name": "CC BY-SA 3.0",
+          "url": "https://creativecommons.org/licenses/by-sa/3.0",
+          "derivativesAllowed": true,
+          "attribution": "Chiang Mai - Chiang Mai City Art and Cultural Center - 0001.jpg — Stefan Fussan, CC BY-SA 3.0. Source: https://commons.wikimedia.org/wiki/File:Chiang_Mai_-_Chiang_Mai_City_Art_and_Cultural_Center_-_0001.jpg. Pixel-art adaptation must be identified as a change. Share the resulting adaptation under the same Creative Commons Attribution-ShareAlike license version."
+        },
+        "imageDate": "2014-05-23",
+        "retrievedAt": "2026-10-19T13:09:05+00:00",
+        "caption": "Chiang Mai City Art and Cultural Center, Chiang Mai, Thailand",
+        "location": {
+          "latitude": 18.790218,
+          "longitude": 98.987758,
+          "description": "Three Kings Monument square in Chiang Mai, facing the Chiang Mai City Arts and Cultural Centre. The photograph shows a broad paved foreground, the centered three-king monument, a cream two-storey civic building and an orange tiled roof. Camera coordinates are copied from the source file GPS, not the city-centre queue anchor."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:09:05+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true,
+          "notes": "Retain the plaza, centered three-figure monument, cream facade, long orange roof and flanking trees. Do not add mountains or a riverside. Location was checked against source caption, camera GPS, file identity and visible scene; license/author were read from the individual Commons file metadata."
+        },
+        "sha256": "6068f86057d805cb87a29123a17aae06d870f19dea7929aed6191de2593ac1bc",
+        "commonsPageId": 38051663,
+        "creatorSourceHtml": "<bdi><a href=\"//commons.wikimedia.org/wiki/User:DerFussi\" title=\"User:DerFussi\">Stefan Fussan</a></bdi>",
+        "sourceLicenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "localPath": "data/scenes/references/city-1153671-6068f86057d8.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:13:07.730Z",
+        "referenceSha256": "6068f86057d805cb87a29123a17aae06d870f19dea7929aed6191de2593ac1bc",
+        "prompt": "Create a finished background for a Thai life game as a wide 24:11 landscape composition, intended final size 480 x 220 pixels. Use the attached real photograph as the sole spatial reference: Three Kings Monument square, Chiang Mai, Thailand, looking toward the Chiang Mai City Arts and Cultural Centre. Preserve its real arrangement exactly: broad paved civic square in the lower foreground; three bronze king statues centered on their stepped pedestal; the long, symmetrical two-storey cream civic building behind them with a central triangular gable and low orange-tiled roof; small trees and light fence at the sides. Keep the photograph's camera direction and relative building positions. Preserve the monument as three small statues, not living people. Render as professional crisp pixel art with clearly visible 2-pixel block clusters, approximately a 240 x 110 art grid enlarged 2x to 480 x 220; flat stepped shading, controlled architectural detail, restrained warm cream, forest green, sage, muted turquoise and warm ochre. Gentle afternoon light, welcoming calm atmosphere. It must look like deliberate pixel art, not a filtered photograph, watercolor, smooth vector art, voxel art or blurred painting. Retain clear existing paved foreground around pixel coordinates x290..352 and y165..210 so a separate game character can stand with feet at x316,y202. No living people, embedded character, UI, title, labels, watermarks, decorative borders or legible writing. Do not introduce temples, mountains, rivers or any other landmark absent from this actual view. Fill the entire wide canvas with this one coherent referenced scene.",
+        "rawGeneratedPath": "/workspace/.game-project-env/scene-production/generated/city-1153671.raw.png",
+        "originalGeneratedPath": "/workspace/generated_images/exec-c0c1d7d3-6fc5-4277-934c-9935207c80b2.png",
+        "processing": "Resized actual imagegen output to240x110 with nearest-neighbour; quantized64colors MEDIANCUT; RGB nearest-neighbour enlarged480x220. Exact2x2pixelgrid. No semantic retouching.",
+        "license": {
+          "name": "CC BY-SA 3.0",
+          "url": "https://creativecommons.org/licenses/by-sa/3.0",
+          "derivativesAllowed": true,
+          "attribution": "Chiang Mai - Chiang Mai City Art and Cultural Center - 0001.jpg — Stefan Fussan, CC BY-SA 3.0. Source: https://commons.wikimedia.org/wiki/File:Chiang_Mai_-_Chiang_Mai_City_Art_and_Cultural_Center_-_0001.jpg. Pixel-art adaptation must be identified as a change. Share the resulting adaptation under the same Creative Commons Attribution-ShareAlike license version. Pixel-art adaptation by Codex/OpenAI image_gen; modified rendering, daylight and frame proportions; retained source geography and building relationships."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-1153671/v1.png",
+        "sha256": "ecb06485544bbd1103a6bde8e67528032270436852ee3b2da11bc65bbcee9989",
+        "width": 480,
+        "height": 220
+      },
+      "review": {
+        "reviewer": "Codex visual inspection of actual reference and final480x220asset",
+        "reviewedAt": "2026-10-19T13:20:37.659688+00:00",
+        "assetSha256": "ecb06485544bbd1103a6bde8e67528032270436852ee3b2da11bc65bbcee9989",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Compared original StefanFussan photograph and final480x220pixelasset: ChiangMaiThreeKings monument in front of cream cultural-centre facade, central orange-gable roof, side trees and broad tiled plaza preserved. Simplified statue detail and daylight rendering disclosed. No added mountains or unrelated temples. Separate sprite feet316,202 on unobstructed plaza.64-color2x2pixelgrid."
+      }
+    },
+    {
+      "id": "city-1609350",
+      "placeId": "geonames:1609350",
+      "cityName": "Bangkok",
+      "countryId": "th",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ตลาดริมถนนเยาวราช กรุงเทพฯ อาคารร้านค้า ร่มผลไม้ และแนวสายไฟตามภาพต้นฉบับ",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 13.75398,
+        "longitude": 100.50144,
+        "sourceUrl": "https://www.geonames.org/1609350/",
+        "isSceneView": false
+      },
+      "reference": {
+        "status": "verified",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:2016_Bangkok,_Dystrykt_Samphanthawong,_Ulica_Yaowarat_(12).jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0e/2016_Bangkok%2C_Dystrykt_Samphanthawong%2C_Ulica_Yaowarat_%2812%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "creator": "Marcin Konsek",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "derivativesAllowed": true,
+          "attribution": "2016 Bangkok, Dystrykt Samphanthawong, Ulica Yaowarat (12).jpg — Marcin Konsek, CC BY-SA 4.0. Source: https://commons.wikimedia.org/wiki/File:2016_Bangkok,_Dystrykt_Samphanthawong,_Ulica_Yaowarat_(12).jpg. Pixel-art adaptation must be identified as a change and shared under Creative Commons Attribution-ShareAlike 4.0."
+        },
+        "imageDate": "2016-02-27 09:59",
+        "retrievedAt": "2026-10-19T13:22:41+00:00",
+        "caption": "Street food vendors. Yaowarat Road. Samphanthawong District, Bangkok, Thailand.",
+        "location": {
+          "latitude": 13.741067,
+          "longitude": 100.508605,
+          "description": "Street-food and fruit vendors along Yaowarat Road, Samphanthawong District, Bangkok. Eye-level view along the actual street, with mid-rise shopfronts on the left, yellow-and-white commercial frontage and transformer on the right, overhead cables and market carts in the foreground. Camera GPS is copied from the original file."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:22:41+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true,
+          "notes": "Inspected original photo: Bangkok Chinatown shopfronts, overhead utility wiring, market umbrellas and fruit carts match the source caption and camera GPS. Crowd/vehicles may be removed for the separate character layer, while the street axis, building order and stall arrangement should be retained. The foreground is busy: final character anchor must be checked against visible asphalt instead of assumed at the standard point."
+        },
+        "sha256": "70ae281098f72f35398441b4ae603731c8b4e54400c0f31365a3ddaece9965ba",
+        "commonsPageId": 63355123,
+        "creatorSourceHtml": "<a href=\"//commons.wikimedia.org/wiki/User:Halavar\" title=\"User:Halavar\">Marcin Konsek</a>",
+        "localPath": "data/scenes/references/city-1609350-70ae281098f7.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:29:27.109Z",
+        "referenceSha256": "70ae281098f72f35398441b4ae603731c8b4e54400c0f31365a3ddaece9965ba",
+        "prompt": "Create a finished background for a Thai life game, a wide 24:11 landscape scene intended for final size 480 x 220 pixels. Use the attached actual photograph as the sole spatial reference: the street-food and fruit-vendor stretch of Yaowarat Road, Samphanthawong, Bangkok, at this photographed eye-level viewpoint. Preserve its real street axis and building order: grey and cream mid-rise shopfronts and vertical signboards on the left, the large yellow-and-white commercial facade and utility transformer on the right, dense overhead utility cables crossing the sky, market umbrellas and fruit carts at street level. Retain the sense of Bangkok Chinatown without importing any other Bangkok landmark. Keep the different fruit-cart groups near their corresponding street edges and preserve their forms and colorful fruit; remove live people, bus and cars to expose the existing asphalt circulation space. Keep a clear walkable patch of existing street in the lower foreground for a separate game character; do not turn the street into a park or invent a grand square. Render deliberate professional pixel art with crisp blocky 2-pixel clusters, approximately a 240 x 110 grid enlarged 2x; flat stepped shading, controlled architectural detail and a restrained palette of warm cream, forest green, sage, muted turquoise and warm ochre. Gentle afternoon light. This should be game pixel art, not a filtered photograph, watercolor, smooth vector illustration or voxel art. No people, embedded character, UI, title, watermarks, decorative border or legible writing. Commercial signboards remain simple colorful panels at their real positions without readable text. Do not add temples, rivers, mountains or landmarks absent from this exact photo. Fill the entire wide canvas with the same coherent street view.",
+        "rawGeneratedPath": "/workspace/.game-project-env/scene-production/generated/city-1609350.raw.png",
+        "originalGeneratedPath": "/workspace/generated_images/exec-6930026d-e76f-47d2-993e-de0b88d90f4b.png",
+        "processing": {
+          "tool": "Pillow",
+          "gridWidth": 240,
+          "gridHeight": 110,
+          "resampling": "NEAREST",
+          "paletteColors": 64,
+          "quantization": "MEDIANCUT",
+          "mode": "RGB",
+          "outputWidth": 480,
+          "outputHeight": 220
+        },
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "derivativesAllowed": true,
+          "attribution": "2016 Bangkok, Dystrykt Samphanthawong, Ulica Yaowarat (12).jpg — Marcin Konsek, CC BY-SA 4.0. Source: https://commons.wikimedia.org/wiki/File:2016_Bangkok,_Dystrykt_Samphanthawong,_Ulica_Yaowarat_(12).jpg. Pixel-art adaptation must be identified as a change and shared under Creative Commons Attribution-ShareAlike 4.0. Pixel-art adaptation generated with OpenAI image_gen.imagegen; resized and palette-quantized by Codex."
+        },
+        "processedPath": "/workspace/.game-project-env/scene-production/generated/city-1609350.png",
+        "characterPosition": {
+          "x": 220,
+          "y": 202
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-1609350/v1.png",
+        "sha256": "3f827325a1e762f648d4aa05eebbcdfba37b82e5df7f6103f64de34d5d38f767",
+        "width": 480,
+        "height": 220
+      },
+      "characterPosition": {
+        "x": 220,
+        "y": 202
+      },
+      "review": {
+        "reviewer": "Codex scene visual inspection",
+        "reviewedAt": "2026-10-19T13:31:09+00:00",
+        "assetSha256": "3f827325a1e762f648d4aa05eebbcdfba37b82e5df7f6103f64de34d5d38f767",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "characterPosition": {
+          "x": 220,
+          "y": 202
+        },
+        "notes": "Compared final 480x220 artwork with the original Yaowarat street-food photograph. Left grey shop blocks, right yellow/white facade and transformer, crossing utility cables, street axis, market umbrellas and fruit-cart groups retain the real view. Crowds and vehicles were removed to expose existing asphalt, and signboards keep their shapes without legible writing. Use characterPosition (220,202): this lies in the broad clear asphalt aisle. The default point (316,202) is immediately in front of foreground crates and is less suitable for a readable character layer."
+      }
+    },
+    {
+      "id": "city-1609776",
+      "placeId": "geonames:1609776",
+      "cityName": "Khon Kaen",
+      "countryId": "th",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ถนนคนเดินขอนแก่น ทางเดินมีต้นไม้ ร่มร้านค้า และโคมแขวน",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 16.44671,
+        "longitude": 102.833,
+        "sourceUrl": "https://www.geonames.org/1609776/",
+        "isSceneView": false
+      },
+      "reference": {
+        "status": "verified",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%84%E0%B8%99%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%99_4_-_panoramio.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/79/%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%84%E0%B8%99%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%99_4_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "creator": "NaruponOat",
+        "license": {
+          "name": "CC BY 3.0",
+          "url": "https://creativecommons.org/licenses/by/3.0",
+          "derivativesAllowed": true,
+          "attribution": "ถนนคนเดิน 4 - panoramio.jpg — NaruponOat, CC BY 3.0. Source: https://commons.wikimedia.org/wiki/File:%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%84%E0%B8%99%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%99_4_-_panoramio.jpg. Original shared through Panoramio; pixel-art adaptation must be identified as a change."
+        },
+        "imageDate": "Taken on 11 February 2012",
+        "retrievedAt": "2026-10-19T13:24:07+00:00",
+        "caption": "ถนนคนเดิน 4",
+        "location": {
+          "latitude": 16.440432,
+          "longitude": 102.835286,
+          "description": "Walking-street market in central Khon Kaen at the exact source file camera GPS (16.440432, 102.835286). The photograph shows tree-lined stalls and umbrellas, strings of green diamond-shaped lanterns, an asphalt pedestrian street and a low pale boundary wall on the right. GPS falls within central Khon Kaen; no street name beyond the source caption is inferred."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:24:07+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true,
+          "notes": "Inspected original image and Thai caption “ถนนคนเดิน 4”; verified individual file creator, CC BY 3.0 license, archived Panoramio source credit and the camera GPS within central Khon Kaen. Preserve the tree-lined street, umbrellas, lantern strings and low wall; do not invent a lake, temple or skyline not visible in the photo. Crowds may be removed for the separate character layer; inspect clear paving before choosing character anchor."
+        },
+        "sha256": "a0e518e1e760d42e21b418d0dd648b171655553d14b83742d92a44c0dcd8fb41",
+        "commonsPageId": 54472480,
+        "creatorSourceHtml": "<a rel=\"mw:ExtLink nofollow\" href=\"https://web.archive.org/web/20161021065854/http://www.panoramio.com/user/5090653?with_photo_id=66562054\" class=\"external text\">NaruponOat</a>",
+        "originalSourceCredit": "https://web.archive.org/web/20161021065852/http://www.panoramio.com/photo/66562054",
+        "localPath": "data/scenes/references/city-1609776-a0e518e1e760.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:29:29.348Z",
+        "referenceSha256": "a0e518e1e760d42e21b418d0dd648b171655553d14b83742d92a44c0dcd8fb41",
+        "prompt": "Create a finished background for a Thai life game as a wide 24:11 landscape composition, intended final size 480 x 220 pixels. The attached actual photograph is the sole spatial reference: the tree-lined walking-street market in central Khon Kaen, Thailand, at the photographed camera point. Preserve the real street layout and its local features: mature trees frame the left and upper edges; strings of distinctive pale green diamond-shaped lanterns cross the street and recede into the distance; red and cream market umbrellas and low vendor tables line the pedestrian route; a low pale boundary wall runs along the right. This view has no visible high-rise skyline or temple. Keep the street vanishing direction, umbrella groups, trees and lantern placement faithful to the photo. Remove live people so the existing pedestrian asphalt route becomes clear between the stall edges; keep a clear lower-foreground patch of that real street for a separate character, preferably feet x316,y202. Do not invent a plaza, lake or building landmark. Translate the photographed night lighting into soft late-afternoon light while retaining the green hanging lanterns and warm stall lights. Render deliberate professional crisp pixel art with visible 2-pixel clusters, approximately a 240 x 110 grid enlarged 2x; flat stepped shading and restrained warm cream, forest green, sage, muted turquoise and warm ochre colors. Not a filtered photo, watercolor, smooth vector illustration or voxel art. No people, embedded character, UI, title, captions, watermarks, borders or legible writing. The background must remain one coherent actual market street rather than a collage of famous landmarks. Fill the full wide canvas.",
+        "rawGeneratedPath": "/workspace/.game-project-env/scene-production/generated/city-1609776.raw.png",
+        "originalGeneratedPath": "/workspace/generated_images/exec-8e0197b0-de7a-40e0-a7a7-4b16041ebc13.png",
+        "processing": {
+          "tool": "Pillow",
+          "gridWidth": 240,
+          "gridHeight": 110,
+          "resampling": "NEAREST",
+          "paletteColors": 64,
+          "quantization": "MEDIANCUT",
+          "mode": "RGB",
+          "outputWidth": 480,
+          "outputHeight": 220
+        },
+        "license": {
+          "name": "CC BY 3.0",
+          "url": "https://creativecommons.org/licenses/by/3.0",
+          "derivativesAllowed": true,
+          "attribution": "ถนนคนเดิน 4 - panoramio.jpg — NaruponOat, CC BY 3.0. Source: https://commons.wikimedia.org/wiki/File:%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%84%E0%B8%99%E0%B9%80%E0%B8%94%E0%B8%B4%E0%B8%99_4_-_panoramio.jpg. Original shared through Panoramio; pixel-art adaptation must be identified as a change. Pixel-art adaptation generated with OpenAI image_gen.imagegen; resized and palette-quantized by Codex."
+        },
+        "processedPath": "/workspace/.game-project-env/scene-production/generated/city-1609776.png"
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-1609776/v1.png",
+        "sha256": "78406606d2182937469c898c84b0108835ded29fd1f40f5a5421951341ae8a61",
+        "width": 480,
+        "height": 220
+      },
+      "characterPosition": {
+        "x": 316,
+        "y": 202
+      },
+      "review": {
+        "reviewer": "Codex scene visual inspection",
+        "reviewedAt": "2026-10-19T13:31:09+00:00",
+        "assetSha256": "78406606d2182937469c898c84b0108835ded29fd1f40f5a5421951341ae8a61",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "characterPosition": {
+          "x": 316,
+          "y": 202
+        },
+        "notes": "Compared final 480x220 artwork with the central Khon Kaen walking-street photograph and original GPS/caption. The tree framing, green diamond lantern strings, red/cream market umbrellas, low pale wall on the right and pedestrian street receding left retain the photographed layout. Night lighting changed to late afternoon, live crowds removed; no lake, temple or skyline was introduced. At (316,202), feet land on clear existing asphalt in front of the market tables. Shared pixel grid/palette treatment verified."
+      }
+    },
+    {
+      "id": "city-1606147",
+      "placeId": "geonames:1606147",
+      "cityName": "Songkhla",
+      "countryId": "th",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "หัวมุมอาคารไม้สีขาวในย่านเมืองเก่าสงขลา",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 7.19882,
+        "longitude": 100.5951,
+        "sourceUrl": "https://www.geonames.org/1606147/",
+        "isSceneView": false
+      },
+      "reference": {
+        "status": "verified",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Songkhla_12.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Songkhla_12.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "creator": "Slleong",
+        "license": {
+          "name": "CC0",
+          "url": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "derivativesAllowed": true,
+          "attribution": "Songkhla 12.jpg — Slleong, CC0. Source: https://commons.wikimedia.org/wiki/File:Songkhla_12.jpg. Pixel-art adaptation must be identified as a change."
+        },
+        "imageDate": "2024-05-17 14:05:21",
+        "retrievedAt": "2026-10-19T13:09:05+00:00",
+        "caption": "Shophouses in Songkhla Old Town, Songkhla City, Songkhla",
+        "location": {
+          "latitude": 7.197489,
+          "longitude": 100.588797,
+          "description": "Street corner in Songkhla Old Town at the source photograph GPS. The view shows a long white timber upper-floor shophouse, an orange corrugated awning, street-level shops, overhead utility wires and a narrow asphalt road."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:09:05+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true,
+          "notes": "Retain the corner building and its white timber upper floor, orange awning, rear concrete building and road directions. This is a town street, not Samila Beach. Location was checked against source caption, camera GPS, file identity and visible scene; license/author were read from the individual Commons file metadata."
+        },
+        "sha256": "21df58f594f87409b333845814e529cc76f04a673e502fc41a6ae274fea976b6",
+        "commonsPageId": 149401272,
+        "creatorSourceHtml": "<a rel=\"mw:WikiLink\" href=\"https://commons.wikimedia.org/wiki/User:Slleong\" title=\"User:Slleong\">Slleong</a>",
+        "sourceLicenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "localPath": "data/scenes/references/city-1606147-21df58f594f8.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:17:22.258Z",
+        "referenceSha256": "21df58f594f87409b333845814e529cc76f04a673e502fc41a6ae274fea976b6",
+        "prompt": "Create a finished background for a Thai life game in a wide 24:11 landscape composition, intended final size 480 x 220 pixels. The attached real photograph is the sole spatial reference: a street corner of Songkhla Old Town, southern Thailand. Preserve the real geometry and building order: the dominant long corner shophouse has a white horizontal-timber upper storey, weathered dark-framed windows and a low grey pitched tiled roof; an orange corrugated awning runs along its ground-floor shops; a weathered boxy concrete structure rises behind on the left, and a taller pale building with a purple roofline is visible behind the right. Utility wires cross the blue sky. The narrow asphalt streets meet at the foreground corner and recede to the right. Preserve this real low-rise town street, rather than inventing a landmark. Render deliberate crisp pixel art with clearly visible blocky 2-pixel clusters, approximately a 240 x 110 grid enlarged 2x; flat stepped shading and restrained warm cream, forest green, sage, muted turquoise and warm ochre. Gentle afternoon light. Do not make a filtered photograph, watercolor, smooth vector image or voxel art. Preserve an open, unobstructed patch of the existing street foreground around target pixel x290..352,y165..210, with feet position x316,y202, for a separate game character. Remove live people and vehicles so the separate character layer remains clear. Keep the buildings, roof forms, orange awning, utility wires and existing ground layout. No embedded character, UI, text, labels, watermark, border, legible signage, beaches, mermaid statues, temples or other landmarks absent from the photo. Fill the entire canvas with this single coherent street view.",
+        "rawGeneratedPath": "/workspace/.game-project-env/scene-production/generated/city-1606147.raw.png",
+        "originalGeneratedPath": "/workspace/generated_images/exec-d811698a-25d0-47a4-b478-3978d66d6ce6.png",
+        "processing": {
+          "tool": "Pillow",
+          "gridWidth": 240,
+          "gridHeight": 110,
+          "resampling": "NEAREST",
+          "paletteColors": 64,
+          "quantization": "MEDIANCUT",
+          "mode": "RGB",
+          "outputWidth": 480,
+          "outputHeight": 220
+        },
+        "license": {
+          "name": "CC0",
+          "url": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "derivativesAllowed": true,
+          "attribution": "Songkhla 12.jpg — Slleong, CC0. Source: https://commons.wikimedia.org/wiki/File:Songkhla_12.jpg. Pixel-art adaptation must be identified as a change. Pixel-art adaptation generated with OpenAI image_gen.imagegen; resized and palette-quantized by Codex."
+        },
+        "processedPath": "/workspace/.game-project-env/scene-production/generated/city-1606147.png"
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-1606147/v1.png",
+        "sha256": "b0e2759f0629b7a21cd61ddacdfc7d3cdcc9b10da9797853d4894fa5c308dba6",
+        "width": 480,
+        "height": 220
+      },
+      "review": {
+        "reviewer": "Codex scene visual inspection",
+        "reviewedAt": "2026-10-19T13:18:23+00:00",
+        "assetSha256": "b0e2759f0629b7a21cd61ddacdfc7d3cdcc9b10da9797853d4894fa5c308dba6",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Compared final 480x220 pixel art with the downloaded Songkhla Old Town photograph. The white upper-storey corner shophouse, orange awning, dark tiled roof, concrete structure behind, utility wires and foreground road directions remain in the same order. Live people/vehicles and legible commercial text are removed. Pixel clusters and 64-color palette follow the shared output process. At (316,202) the character feet land on the clear existing asphalt foreground; no water or building obstruction."
+      }
+    },
+    {
+      "id": "city-1857910",
+      "placeId": "geonames:1857910",
+      "cityName": "Kyoto",
+      "countryId": "jp",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ถนนยาซากะโดริ เกียวโต มองไปยังเจดีย์โฮคันจิระหว่างอาคารไม้",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 35.02107,
+        "longitude": 135.75385,
+        "sourceUrl": "https://www.geonames.org/1857910/",
+        "isSceneView": false
+      },
+      "reference": {
+        "status": "verified",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Yasaka-dori_early_morning_with_street_lanterns_and_the_Tower_of_Yasaka_(Hokan-ji_Temple),_Kyoto,_Japan.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Yasaka-dori_early_morning_with_street_lanterns_and_the_Tower_of_Yasaka_%28Hokan-ji_Temple%29%2C_Kyoto%2C_Japan.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "creator": "Basile Morin",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "derivativesAllowed": true,
+          "attribution": "Yasaka-dori early morning with street lanterns and the Tower of Yasaka (Hokan-ji Temple), Kyoto, Japan.jpg — Basile Morin, CC BY-SA 4.0. Source: https://commons.wikimedia.org/wiki/File:Yasaka-dori_early_morning_with_street_lanterns_and_the_Tower_of_Yasaka_(Hokan-ji_Temple),_Kyoto,_Japan.jpg. Pixel-art adaptation must be identified as a change. Share the resulting adaptation under the same Creative Commons Attribution-ShareAlike license version."
+        },
+        "imageDate": "12 June 2019 05:24:20",
+        "retrievedAt": "2026-10-19T13:09:05+00:00",
+        "caption": "Yasaka-dori, early morning with street lanterns and the Tower of Yasaka (Hokan-ji Temple), 388 Yasaka Kamimachi, Higashiyama-ku, Kyoto, Japan. Important cultural heritage of Kyoto, Hokan-ji is a 46 m (151 ft) high, 5 storey pagoda with a tiled roof that was founded in the 6th century.",
+        "location": {
+          "latitude": 34.99818,
+          "longitude": 135.780092,
+          "description": "Yasaka-dori in Higashiyama, Kyoto, looking down the stone street toward the Hokan-ji/Yasaka pagoda. The pagoda sits left of centre and traditional timber and plaster facades line both sides; lanterns hang on the right. Camera coordinates come directly from the file GPS."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:09:05+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true,
+          "notes": "Retain the downhill street vanishing point, pagoda left of centre, timber eaves and lantern frontage on the right. No torii gate or other landmark should be introduced. Location was checked against source caption, camera GPS, file identity and visible scene; license/author were read from the individual Commons file metadata."
+        },
+        "sha256": "805efd0627424577d111a6ff3751f0f5a965bfa69e29d82457c11a0577f8a94b",
+        "commonsPageId": 83047725,
+        "creatorSourceHtml": "<a href=\"//commons.wikimedia.org/wiki/User:Basile_Morin\" title=\"User:Basile Morin\">Basile Morin</a>",
+        "sourceLicenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "localPath": "data/scenes/references/city-1857910-805efd062742.jpg"
+      },
+      "characterPosition": {
+        "x": 220,
+        "y": 202
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:13:06.994Z",
+        "referenceSha256": "805efd0627424577d111a6ff3751f0f5a965bfa69e29d82457c11a0577f8a94b",
+        "prompt": "Create a finished background for a Thai life game as a wide 24:11 landscape composition, intended final size 480 x 220 pixels. Use the attached real photograph as the sole spatial reference: Yasaka-dori in Higashiyama, Kyoto, looking downhill toward the Hokan-ji / Yasaka pagoda. Preserve its real arrangement and camera direction: the stone pedestrian street leads from the lower foreground into the centre distance; the five-storey dark-timber pagoda rises left of centre; low timber shopfronts and grey tiled eaves frame the left side; a long two-storey tan plaster-and-timber facade with lanterns and layered tiled eaves runs along the right. Keep the pagoda, street vanishing point and building order faithful to this photo. Adapt to the wide frame through careful composition while retaining a coherent actual viewpoint. Render as professional crisp pixel art with clearly visible 2-pixel block clusters, approximately a 240 x 110 art grid enlarged 2x to 480 x 220; flat stepped shading, controlled architectural detail, restrained warm cream, forest green, sage, muted turquoise and warm ochre. Gentle afternoon light, welcoming calm atmosphere. It must look like deliberate pixel art, not a filtered photograph, watercolor, smooth vector art, voxel art or blurred painting. Retain existing walkable stone foreground around pixel coordinates x290..352 and y165..210 so a separate game character can stand with feet at x316,y202. No people, embedded character, UI, title, labels, watermarks, decorative borders or legible writing. Lanterns may retain their shapes but no legible text. Do not add torii gates, Mt Fuji, another temple, modern skyscrapers or any landmark absent from this exact view. Fill the entire wide canvas with this one coherent referenced street.",
+        "rawGeneratedPath": "/workspace/.game-project-env/scene-production/generated/city-1857910.raw.png",
+        "originalGeneratedPath": "/workspace/generated_images/exec-a33afea0-fa9c-48b8-84e3-5edb24f54c1e.png",
+        "processing": "Resized actual imagegen output to240x110 with nearest-neighbour; quantized64colors MEDIANCUT; RGB nearest-neighbour enlarged480x220. Exact2x2pixelgrid. No semantic retouching.",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "derivativesAllowed": true,
+          "attribution": "Yasaka-dori early morning with street lanterns and the Tower of Yasaka (Hokan-ji Temple), Kyoto, Japan.jpg — Basile Morin, CC BY-SA 4.0. Source: https://commons.wikimedia.org/wiki/File:Yasaka-dori_early_morning_with_street_lanterns_and_the_Tower_of_Yasaka_(Hokan-ji_Temple),_Kyoto,_Japan.jpg. Pixel-art adaptation must be identified as a change. Share the resulting adaptation under the same Creative Commons Attribution-ShareAlike license version. Pixel-art adaptation by Codex/OpenAI image_gen; modified rendering, daylight and frame proportions; retained source geography and building relationships."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-1857910/v1.png",
+        "sha256": "19ae8ea65f2a5ca9d84bbe318758d6f920d5aafa0137345515ceeeade8a03e39",
+        "width": 480,
+        "height": 220
+      },
+      "review": {
+        "reviewer": "Codex visual inspection of actual reference and final480x220asset",
+        "reviewedAt": "2026-10-19T13:21:56.947634+00:00",
+        "assetSha256": "19ae8ea65f2a5ca9d84bbe318758d6f920d5aafa0137345515ceeeade8a03e39",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Compared BasileMorin source photograph with finalpixelart: Hokanji pagoda remains leftofcentre, Yasaka-dori slopes between timber/tile townhouses, foregroundbins and brickstep kept at right. Warmdaylight and detail simplification disclosed. The defaultx316 would overlapforegroundbins, so thisscene places separate sprite atx220,y202 on the actual clear stone street.64color2pixelgrid. No added remote landmarks.",
+        "characterPosition": {
+          "x": 220,
+          "y": 202
+        }
+      }
+    },
+    {
+      "id": "city-1853909",
+      "placeId": "geonames:1853909",
+      "cityName": "Osaka",
+      "countryId": "jp",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ถนนย่านโดทงโบริ โอซากา อาคารร้านค้าและป้ายไฟตามแนวถนนจริง",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 34.69374,
+        "longitude": 135.50218,
+        "sourceUrl": "https://www.geonames.org/1853909/",
+        "isSceneView": false
+      },
+      "reference": {
+        "status": "verified",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:A_street_in_Dotonbori,_Osaka,_Japan.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fa/A_street_in_Dotonbori%2C_Osaka%2C_Japan.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "creator": "Joli Rumi",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "derivativesAllowed": true,
+          "attribution": "A street in Dotonbori, Osaka, Japan.jpg — Joli Rumi, CC BY-SA 4.0. Source: https://commons.wikimedia.org/wiki/File:A_street_in_Dotonbori,_Osaka,_Japan.jpg. Pixel-art adaptation must be identified as a change and shared under the same Creative Commons Attribution-ShareAlike license version."
+        },
+        "imageDate": "2025-11-09 18:46:00",
+        "retrievedAt": "2026-10-19T13:23:26+00:00",
+        "caption": "A street in Dotonbori, Osaka, Japan",
+        "location": {
+          "latitude": 34.668614,
+          "longitude": 135.503142,
+          "description": "An eye-level commercial street in Dotonbori, Osaka at the original file camera GPS. Tall shopfronts enclose the pedestrian street; vertical illuminated signboards line both sides, a red-and-white banded facade stands on the left and a fish-shaped shop sign appears on the right. This is the photographed street rather than an invented canal viewpoint."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:23:26+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true,
+          "notes": "Inspected the actual wide street photo. Retain street axis, dense mid-rise facade order, tall signboard positions and hanging fish-shaped sign; remove live crowds and legible commercial text for the character layer. Do not substitute the earlier portrait photograph of Ebisu Bridge: this reference has different coordinates and viewpoint. File identity, individual photo creator/license, caption and camera coordinates were checked."
+        },
+        "sha256": "9607d02fa9e700f9a3c5e72ab090b79c31c1f1778d9f9e495e80bb00acfb8d81",
+        "commonsPageId": 183021783,
+        "creatorSourceHtml": "<a href=\"//commons.wikimedia.org/wiki/User:Joli_Rumi\" title=\"User:Joli Rumi\">Joli Rumi</a>",
+        "localPath": "data/scenes/references/city-1853909-9607d02fa9e7.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:29:27.862Z",
+        "referenceSha256": "9607d02fa9e700f9a3c5e72ab090b79c31c1f1778d9f9e495e80bb00acfb8d81",
+        "prompt": "Create a finished background for a Thai life game as a wide 24:11 landscape composition, intended final size 480 x 220 pixels. Use the attached real photograph as the only spatial reference: an eye-level pedestrian street in Dotonbori, Osaka, with close mid-rise commercial facades on both sides and the street receding toward the centre distance. Preserve the building order, dense vertical signboard arrangement and real street axis. The left facade has bold red-and-white bands and tall vertical panels; the right side has yellow/red projecting signboards, a covered shopfront and the distinctive pale fish-shaped hanging shop sign seen in the photograph. Keep that fish shape in its true right-side position; do not replace it with a giant crab or add any absent landmark. Remove the live crowd so the actual pedestrian paving becomes visible and keep clear existing walkway in the lower foreground, preferably around target feet x316,y202 with a 62-pixel-wide separate character area. Adapt lighting from the photographed night to gentle late-afternoon warmth while preserving geometry. Render deliberate crisp professional pixel art with visible 2-pixel block clusters, approximately a 240 x 110 grid enlarged 2x; flat stepped shading and restrained warm cream, forest green, sage, muted turquoise and ochre accents. It must look like a pixel-art game background rather than a photo filter, watercolor, smooth vector image or voxel art. No people, embedded character, UI, titles, watermarks, borders or legible writing. Preserve signboard shapes and colors as abstract panels without readable letters or logos. No canal, bridge, pagoda, castle, mountain or invented skyline: this exact reference is a shopping street. Fill the entire wide canvas.",
+        "rawGeneratedPath": "/workspace/.game-project-env/scene-production/generated/city-1853909.raw.png",
+        "originalGeneratedPath": "/workspace/generated_images/exec-e46ff1a4-44f7-464e-9162-d140420893d4.png",
+        "processing": {
+          "tool": "Pillow",
+          "gridWidth": 240,
+          "gridHeight": 110,
+          "resampling": "NEAREST",
+          "paletteColors": 64,
+          "quantization": "MEDIANCUT",
+          "mode": "RGB",
+          "outputWidth": 480,
+          "outputHeight": 220
+        },
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "derivativesAllowed": true,
+          "attribution": "A street in Dotonbori, Osaka, Japan.jpg — Joli Rumi, CC BY-SA 4.0. Source: https://commons.wikimedia.org/wiki/File:A_street_in_Dotonbori,_Osaka,_Japan.jpg. Pixel-art adaptation must be identified as a change and shared under the same Creative Commons Attribution-ShareAlike license version. Pixel-art adaptation generated with OpenAI image_gen.imagegen; resized and palette-quantized by Codex."
+        },
+        "processedPath": "/workspace/.game-project-env/scene-production/generated/city-1853909.png"
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-1853909/v1.png",
+        "sha256": "dfc939cd1449a2d09a6025958c09b31ae845f10c728e7fa7f5f9c0d9a4b47e09",
+        "width": 480,
+        "height": 220
+      },
+      "characterPosition": {
+        "x": 316,
+        "y": 202
+      },
+      "review": {
+        "reviewer": "Codex scene visual inspection",
+        "reviewedAt": "2026-10-19T13:31:09+00:00",
+        "assetSha256": "dfc939cd1449a2d09a6025958c09b31ae845f10c728e7fa7f5f9c0d9a4b47e09",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "characterPosition": {
+          "x": 316,
+          "y": 202
+        },
+        "notes": "Compared final 480x220 artwork with the wide Dotonbori street photograph by Joli Rumi, not the superseded canal portrait. The enclosing shop facades, red/white left frontage, right yellow/red projecting panels, hanging pale fish-shaped sign and central street direction remain consistent. Night lighting was changed to late afternoon; crowds and readable text removed. At (316,202), the character feet land on clear pedestrian paving rather than a shop counter or water. Shared grid and palette treatment verified."
+      }
+    },
+    {
+      "id": "city-2128295",
+      "placeId": "geonames:2128295",
+      "cityName": "Sapporo",
+      "countryId": "jp",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ลานน้ำพุสวนโอโดริ ซัปโปโร พร้อมแนวต้นไม้และอาคารตามมุมภาพ",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 43.06667,
+        "longitude": 141.35,
+        "sourceUrl": "https://www.geonames.org/2128295/",
+        "isSceneView": false
+      },
+      "reference": {
+        "status": "verified",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fountain_at_Odori_Park,_Sapporo.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/05/Fountain_at_Odori_Park%2C_Sapporo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "creator": "Choi2451",
+        "license": {
+          "name": "CC BY-SA 3.0",
+          "url": "https://creativecommons.org/licenses/by-sa/3.0",
+          "derivativesAllowed": true,
+          "attribution": "Fountain at Odori Park, Sapporo.jpg — Choi2451, CC BY-SA 3.0. Source: https://commons.wikimedia.org/wiki/File:Fountain_at_Odori_Park,_Sapporo.jpg. Pixel-art adaptation must be identified as a change and shared under the same Creative Commons Attribution-ShareAlike license version."
+        },
+        "imageDate": "2018-07-19 19:10:12",
+        "retrievedAt": "2026-10-19T13:23:26+00:00",
+        "caption": "홋카이도 삿포로시 오도리 공원 내에 위치한 분수대",
+        "location": {
+          "latitude": 43.060556,
+          "longitude": 141.351667,
+          "description": "Fountain and paved public space inside Odori Park, Sapporo, Hokkaido. The original file camera GPS identifies the viewpoint. The view contains a low circular fountain basin, tiered brown fountain feature with arcing water jets, a red-brick mid-rise at left, pale city blocks farther right, park trees and paved foreground."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:23:26+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true,
+          "notes": "Inspected the original photograph. Retain the fountain basin and water-jet arrangement, red-brick building on the left, receding pale blocks, park trees and foreground paving. The Sapporo TV Tower is not in this view and must not be added. The separate character must stand on the pavement outside the fountain basin. File identity, individual photo creator/license, caption and camera coordinates were checked."
+        },
+        "sha256": "ff562926697f398ed20ba3b8d72e824a8d72377ea42052a4bc069be9c5005d0e",
+        "commonsPageId": 114349243,
+        "creatorSourceHtml": "<a rel=\"mw:WikiLink\" href=\"https://commons.wikimedia.org/wiki/User:Choi2451\" title=\"User:Choi2451\">Choi2451</a>",
+        "localPath": "data/scenes/references/city-2128295-ff562926697f.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:29:28.606Z",
+        "referenceSha256": "ff562926697f398ed20ba3b8d72e824a8d72377ea42052a4bc069be9c5005d0e",
+        "prompt": "Create a finished background for a Thai life game as a wide 24:11 landscape composition, intended final size 480 x 220 pixels. Use only the attached real photograph for spatial reference: a fountain and paved public space in Odori Park, Sapporo, Hokkaido. Preserve the actual arrangement: a low broad circular fountain basin and the tiered ochre-brown fountain feature with arcing water jets sit in front of trees; a long red-brick mid-rise building is on the left, pale grey commercial blocks recede behind toward the centre-right, and trees and lawns extend on the right. Keep the source camera direction and all important building positions. Preserve the basin and its curved dark edging, but also preserve a broad clear strip of the EXISTING paved plaza outside the fountain at the lower foreground so a separate character can stand on paving, never in water, around target feet x316,y202. Keep the fountain above that foreground paving. Render professional deliberate pixel art with crisp 2-pixel block clusters, approximately a 240 x 110 grid enlarged 2x; flat stepped shading, controlled detail and restrained warm cream, forest green, sage, muted turquoise and warm ochre. Gentle afternoon light instead of the original overcast evening. It must look like game pixel art, not a filtered photograph, watercolor, smooth vector illustration or voxel art. No people, embedded character, UI, title, watermark, decorative borders or legible writing. Building signs become simple panels without readable text. Do not add Sapporo TV Tower, mountains or any landmark absent from this specific reference. Fill the whole wide frame with this coherent real park view.",
+        "rawGeneratedPath": "/workspace/.game-project-env/scene-production/generated/city-2128295.raw.png",
+        "originalGeneratedPath": "/workspace/generated_images/exec-2f9e3357-95d0-49bf-b46e-bca535e8d31f.png",
+        "processing": {
+          "tool": "Pillow",
+          "gridWidth": 240,
+          "gridHeight": 110,
+          "resampling": "NEAREST",
+          "paletteColors": 64,
+          "quantization": "MEDIANCUT",
+          "mode": "RGB",
+          "outputWidth": 480,
+          "outputHeight": 220
+        },
+        "license": {
+          "name": "CC BY-SA 3.0",
+          "url": "https://creativecommons.org/licenses/by-sa/3.0",
+          "derivativesAllowed": true,
+          "attribution": "Fountain at Odori Park, Sapporo.jpg — Choi2451, CC BY-SA 3.0. Source: https://commons.wikimedia.org/wiki/File:Fountain_at_Odori_Park,_Sapporo.jpg. Pixel-art adaptation must be identified as a change and shared under the same Creative Commons Attribution-ShareAlike license version. Pixel-art adaptation generated with OpenAI image_gen.imagegen; resized and palette-quantized by Codex."
+        },
+        "processedPath": "/workspace/.game-project-env/scene-production/generated/city-2128295.png"
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-2128295/v1.png",
+        "sha256": "01b78f3eba47a7b5e9a119834681b89e813459b12fdeca657bf85987e01a76f9",
+        "width": 480,
+        "height": 220
+      },
+      "characterPosition": {
+        "x": 316,
+        "y": 202
+      },
+      "review": {
+        "reviewer": "Codex scene visual inspection",
+        "reviewedAt": "2026-10-19T13:31:09+00:00",
+        "assetSha256": "01b78f3eba47a7b5e9a119834681b89e813459b12fdeca657bf85987e01a76f9",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "characterPosition": {
+          "x": 316,
+          "y": 202
+        },
+        "notes": "Compared final 480x220 artwork with the Odori Park fountain photograph. The circular basin, ochre-brown tiered fountain and water arcs, red-brick left block, pale receding blocks and trees retain their source order; no TV tower or extra landmark was added. The sky and light were changed from overcast evening to afternoon. At (316,202), the feet are on clear foreground plaza paving outside the basin, whose nearest dark edge is above this point. Shared pixel grid/palette treatment verified."
+      }
+    },
+    {
+      "id": "city-1863967",
+      "placeId": "geonames:1863967",
+      "cityName": "Fukuoka",
+      "countryId": "jp",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ทางเดินบนสะพาน Nakasu Kakehashi ฟุกุโอกะ",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 33.6,
+        "longitude": 130.41667,
+        "sourceUrl": "https://www.geonames.org/1863967/",
+        "isSceneView": false
+      },
+      "reference": {
+        "status": "verified",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nakasu_Kakehashi_the_SW_view_from_the_NE_end_Hakata-ku_and_Ch%C5%AB%C5%8D-ku_Fukuoka_20231221.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/50/Nakasu_Kakehashi_the_SW_view_from_the_NE_end_Hakata-ku_and_Ch%C5%AB%C5%8D-ku_Fukuoka_20231221.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "creator": "Hirho",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "derivativesAllowed": true,
+          "attribution": "Nakasu Kakehashi the SW view from the NE end Hakata-ku and Chūō-ku Fukuoka 20231221.jpg — Hirho, CC BY-SA 4.0. Source: https://commons.wikimedia.org/wiki/File:Nakasu_Kakehashi_the_SW_view_from_the_NE_end_Hakata-ku_and_Ch%C5%AB%C5%8D-ku_Fukuoka_20231221.jpg. Pixel-art adaptation must be identified as a change. Share the resulting adaptation under the same Creative Commons Attribution-ShareAlike license version."
+        },
+        "imageDate": "2023-12-21 17:01:44",
+        "retrievedAt": "2026-10-19T13:09:05+00:00",
+        "caption": "Nakasu Kakehashi, the southwest view from the northeast end (Address: Nakasu 4-chōme, Hakata-ku and Nishi-nakasu and Haruyoshi 3-chōme, Chūō-ku, Fukuoka City, Japan)",
+        "location": {
+          "latitude": 33.591,
+          "longitude": 130.407444,
+          "description": "Southwest view from the northeast end of Nakasu Kakehashi pedestrian bridge, Nakasu 4-chome, Hakata-ku toward Nishi-nakasu/Haruyoshi, Fukuoka. The brick walkway and bridge railings lead toward the urban frontage, with water visible at the sides. Source file GPS is the actual camera point."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:09:05+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true,
+          "notes": "Retain the brick pedestrian bridge in the foreground, paired railings, urban blocks ahead, water at the sides and the dusk sky. Do not move the camera to an aerial view. Location was checked against source caption, camera GPS, file identity and visible scene; license/author were read from the individual Commons file metadata."
+        },
+        "sha256": "70f2e8ced7fedf4df835b4aa3e0e3ea715cfba4f6849b792b821be2cdaddde61",
+        "commonsPageId": 162604193,
+        "creatorSourceHtml": "<a href=\"//commons.wikimedia.org/wiki/User:Hirho\" title=\"User:Hirho\">Hirho</a>",
+        "sourceLicenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "localPath": "data/scenes/references/city-1863967-70f2e8ced7fe.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:17:23.008Z",
+        "referenceSha256": "70f2e8ced7fedf4df835b4aa3e0e3ea715cfba4f6849b792b821be2cdaddde61",
+        "prompt": "Create a finished background for a Thai life game in a wide 24:11 landscape composition, intended final size 480 x 220 pixels. The attached real photograph is the sole spatial reference: the southwest view from the northeast end of Nakasu Kakehashi pedestrian bridge in central Fukuoka, Japan. Preserve the actual perspective and urban block order: a broad brick-paved pedestrian bridge runs from the full lower foreground into the centre distance; paired dark metal railings with pale concrete caps bound both sides; the river appears only beside the bridge edges; a large glass-fronted square building with reddish vertical side piers stands on the left, a darker mid-rise with a red rooftop sign block stands near the centre-right, and smaller grey city blocks continue on the far right. Keep water off the centre foreground. Render deliberate crisp pixel art with visible blocky 2-pixel clusters, approximately a 240 x 110 grid enlarged 2x; flat stepped shading, restrained warm cream, forest green, sage, muted turquoise and warm ochre, gentle afternoon light. It must be clean game pixel art, not a filtered photograph, watercolor, smooth vector art or voxel art. Keep the existing brick walkway clear around target pixel x290..352,y165..210, feet position x316,y202, for a separate character layer. Preserve a coherent eye-level view along this bridge, retaining river placement, building positions and the pedestrian paving. No people, cars, embedded character, UI, labels, watermarks, decorative borders or legible writing. Signboards can remain as simple colored geometric panels in their original positions, without text. Do not introduce shrines, pagodas, mountains or other landmarks absent from this actual reference. Fill the entire wide canvas.",
+        "rawGeneratedPath": "/workspace/.game-project-env/scene-production/generated/city-1863967.raw.png",
+        "originalGeneratedPath": "/workspace/generated_images/exec-ae5af0df-5ba0-4b77-8b43-253c5d564390.png",
+        "processing": {
+          "tool": "Pillow",
+          "gridWidth": 240,
+          "gridHeight": 110,
+          "resampling": "NEAREST",
+          "paletteColors": 64,
+          "quantization": "MEDIANCUT",
+          "mode": "RGB",
+          "outputWidth": 480,
+          "outputHeight": 220
+        },
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "derivativesAllowed": true,
+          "attribution": "Nakasu Kakehashi the SW view from the NE end Hakata-ku and Chūō-ku Fukuoka 20231221.jpg — Hirho, CC BY-SA 4.0. Source: https://commons.wikimedia.org/wiki/File:Nakasu_Kakehashi_the_SW_view_from_the_NE_end_Hakata-ku_and_Ch%C5%AB%C5%8D-ku_Fukuoka_20231221.jpg. Pixel-art adaptation must be identified as a change. Share the resulting adaptation under the same Creative Commons Attribution-ShareAlike license version. Pixel-art adaptation generated with OpenAI image_gen.imagegen; resized and palette-quantized by Codex."
+        },
+        "processedPath": "/workspace/.game-project-env/scene-production/generated/city-1863967.png"
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-1863967/v1.png",
+        "sha256": "256590eedcecec742a8c7b323b648ab3ab06daecfc4c9bf1d4f0ec84e20f6546",
+        "width": 480,
+        "height": 220
+      },
+      "review": {
+        "reviewer": "Codex scene visual inspection",
+        "reviewedAt": "2026-10-19T13:18:23+00:00",
+        "assetSha256": "256590eedcecec742a8c7b323b648ab3ab06daecfc4c9bf1d4f0ec84e20f6546",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Compared final 480x220 pixel art with the downloaded Nakasu Kakehashi bridge photograph. The brick pedestrian deck, railings, water confined to the sides, left glass block and centre-right red-topped block retain the photographed viewpoint and order. Lighting is changed from dusk to gentle afternoon as requested. No extra landmark or person is introduced. At (316,202) the feet land on clear brick paving inside the bridge railings. Shared 240x110 grid, 64-color median-cut palette and nearest-neighbour 2x output verified."
+      }
+    },
+    {
+      "id": "city-5746545",
+      "placeId": "geonames:5746545",
+      "cityName": "Portland, Oregon",
+      "countryId": "us",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ทางเดินร่มไม้ Halprin SW Third Avenue ในพอร์ตแลนด์ รัฐออริกอน",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 45.52345,
+        "longitude": -122.67621,
+        "sourceUrl": "https://www.geonames.org/5746545/",
+        "isSceneView": false
+      },
+      "reference": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Halprin_Open_Space_Sequence_-_3rd_Ave_ped_mall_between_Lovejoy_Fountain_and_Harrison.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Halprin_Open_Space_Sequence_-_3rd_Ave_ped_mall_between_Lovejoy_Fountain_and_Harrison.jpg",
+        "creator": "Steve Morgan",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "derivativesAllowed": true,
+          "attribution": "Halprin Open Space Sequence - 3rd Ave ped mall between Lovejoy Fountain and Harrison.jpg — Steve Morgan, CC BY-SA 4.0; https://commons.wikimedia.org/wiki/File:Halprin_Open_Space_Sequence_-_3rd_Ave_ped_mall_between_Lovejoy_Fountain_and_Harrison.jpg. Credit source and identify modifications. Adaptations must retain CC BY-SA 4.0."
+        },
+        "imageDate": "2015-04-26",
+        "retrievedAt": "2026-10-19T13:08:15.416795+00:00",
+        "caption": "Looking north on a pedestrian mall on the alignment of SW 3rd Avenue towards Harrison Street from just north of Lovejoy Fountain Park, in downtown Portland, Oregon.  The pathway is part of the Halprin Open Space Sequence, a system of connected pedestrian malls and landscaped open spaces created in 1966–68 and listed on the U.S. National Register of Historic Places in 2013.  \n\n\n\n\n\n\nThis is an image of a place or building that is listed on the National Register of Historic Places in the United States of America. Its reference number is 13000058 (Wikidata).",
+        "location": {
+          "latitude": 45.50973889,
+          "longitude": -122.68015833,
+          "description": "Commons file GPS camera position (WGS-84). Looking north along the SW Third Avenue pedestrian mall, just north of Lovejoy Fountain Park toward SW Harrison Street, Portland, Oregon. Image inspection confirms the tree-lined pedestrian path, benches and low modern buildings; not a GeoNames city-centre viewpoint."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:08:15.416795+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true
+        },
+        "sha256": "df8ec55b8a6efbcc79421e74473134eb09fc9c92a4ce0171ce0d88c61b846922",
+        "status": "verified",
+        "localPath": "data/scenes/references/city-5746545-df8ec55b8a6e.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "referenceSha256": "df8ec55b8a6efbcc79421e74473134eb09fc9c92a4ce0171ce0d88c61b846922",
+        "rawGeneratedPath": "/workspace/generated_images/exec-691d1dd3-b3e1-4473-938e-9139241ade7a.png",
+        "rawCopyPath": "/workspace/.game-project-env/scene-production/generated/city-5746545.raw.png",
+        "generatedAt": "2026-10-19T13:13:55.970283+00:00",
+        "originalReferenceSha256": "df8ec55b8a6efbcc79421e74473134eb09fc9c92a4ce0171ce0d88c61b846922",
+        "prompt": "Create a single finished background for a Thai life-simulation web game, derived strictly from the supplied real photograph. Output a wide landscape composition with aspect ratio 24:11, intended to become exactly 480 × 220 pixels. This must be handcrafted pixel art: a visual base grid of 240 × 110 pixels doubled, crisp stepped silhouettes, distinct solid 2-pixel clusters, limited small colour palette, no smooth gradients, no painterly brushwork, no photographic texture, no blur, no anti-aliased outlines. Restrained cream, forest green, sage, turquoise and warm ochre with gentle afternoon light. Preserve this particular photograph's actual viewpoint, street/path orientation, building masses and relative positions. Adapt the source framing into the wide aspect ratio carefully without inventing architecture or geographical landmarks outside the reference. Keep recognizable geometry rather than decorative generic city imagery. Show no people, vehicles occupied by people, character, game UI, logos, signs, letters, numbers or readable text. Architectural sign areas should be plain material matching the facade. No city-name caption. Keep an unobstructed existing ground area in the lower foreground corresponding to target pixels x=290..352, y=165..210, so a separately drawn character can stand with feet at (316,202). This area must be walkable ground that exists in the reference, never water or a made-up platform. Do not draw a character or marker in that area.\nLOCATION AND PHOTOGRAPH: The Halprin Open Space Sequence SW Third Avenue pedestrian mall in downtown Portland, Oregon, looking north toward SW Harrison Street just north of Lovejoy Fountain Park. Preserve the source's straight paved pedestrian path receding to the centre-left, two rows of mature slender tree trunks, the reddish warm tree canopy across the upper scene with green foliage behind, the low grey/brown modern building along the right, and the edge of a taller modern building along the left. Keep the empty wooden benches on the left and simple spherical park lights beside the path as blocky pixel shapes. Preserve the small low right-side stairs/metal handrails as peripheral geometry. Make the lower paved path clear and visible, including the existing walking surface near the lower centre-right reserved character area; keep right-edge rails away from the standing patch. There is no skyline, mountain, bridge or river in this photograph, so add none. This is a quiet real tree-lined downtown pedestrian mall, not a generic forest trail.",
+        "reviewStatus": "final-size visual inspection passed; ready for serial pipeline ingestion",
+        "processing": {
+          "tool": "Pillow",
+          "inputDimensions": [
+            1852,
+            849
+          ],
+          "steps": [
+            "Convert generated PNG to RGB",
+            "Nearest-neighbour resize to 240 × 110",
+            "Quantize to 64 colours with median cut and no dithering",
+            "Convert indexed colour to RGB",
+            "Nearest-neighbour upscale to 480 × 220",
+            "Save optimized RGB PNG"
+          ],
+          "outputDimensions": [
+            480,
+            220
+          ],
+          "pixelGrid": 2
+        },
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "derivativesAllowed": true,
+          "attribution": "Halprin Open Space Sequence - 3rd Ave ped mall between Lovejoy Fountain and Harrison.jpg — Steve Morgan, CC BY-SA 4.0; https://commons.wikimedia.org/wiki/File:Halprin_Open_Space_Sequence_-_3rd_Ave_ped_mall_between_Lovejoy_Fountain_and_Harrison.jpg. Credit source and identify modifications. Adaptations must retain CC BY-SA 4.0. Adaptation changes: pixel-art rendering; widened view framing with simplified geometry; gentle afternoon relighting; 240 × 110 sampling, 64-colour median-cut palette and nearest-neighbour 2 × upscaling to a 480 × 220 background."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-5746545/v1.png",
+        "sha256": "206fb976627f329f137949a3abd67f7d0aee12a76a2338a420b6a6478a709398",
+        "width": 480,
+        "height": 220
+      },
+      "review": {
+        "reviewer": "Codex visual inspection (USA reference/art)",
+        "reviewedAt": "2026-10-19T13:17:20.537543+00:00",
+        "assetSha256": "206fb976627f329f137949a3abd67f7d0aee12a76a2338a420b6a6478a709398",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Inspected the final 480 × 220 image beside the original geolocated photograph. The northbound paved pedestrian mall, tree rows, left benches and building edge, and low right building with peripheral handrails keep their source relationships. Warm foliage and sunlight are stylized; the framing is wider, foliage and small fixtures are simplified, and sign lettering is omitted. No river, mountain, skyline or unrelated landmark was introduced. The character feet at (316, 202) are on the existing paved path below the right planting edge, clear of rails and benches. Crisp 2 × 2 clusters and the restrained 64-colour palette read consistently at final size."
+      }
+    },
+    {
+      "id": "city-4671654",
+      "placeId": "geonames:4671654",
+      "cityName": "Austin, Texas",
+      "countryId": "us",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ลานทางเดินหน้าพิพิธภัณฑ์ Bullock ในออสติน รัฐเท็กซัส",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 30.26715,
+        "longitude": -97.74306,
+        "sourceUrl": "https://www.geonames.org/4671654/",
+        "isSceneView": false
+      },
+      "reference": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bullock_Museum_Capitol_Mall_Austin_Texas_2023.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Bullock_Museum_Capitol_Mall_Austin_Texas_2023.jpg",
+        "creator": "Larry D. Moore",
+        "license": {
+          "name": "CC BY 4.0",
+          "url": "https://creativecommons.org/licenses/by/4.0",
+          "derivativesAllowed": true,
+          "attribution": "Bullock Museum Capitol Mall Austin Texas 2023.jpg — Larry D. Moore, CC BY 4.0; https://commons.wikimedia.org/wiki/File:Bullock_Museum_Capitol_Mall_Austin_Texas_2023.jpg. Credit source and identify modifications."
+        },
+        "imageDate": "Taken on 6 June 2023, 11:44:33",
+        "retrievedAt": "2026-10-19T13:08:15.417616+00:00",
+        "caption": "The Bullock Texas State History Museum in Austin, Texas, United States. Congress Avenue originally ran in front of the museum. The state replaced the road with a pedestrian mall as part of the Texas Capitol Complex Project.",
+        "location": {
+          "latitude": 30.28054,
+          "longitude": -97.7381,
+          "description": "Commons file GPS camera position (WGS-84). Looking toward the Bullock Texas State History Museum from the Capitol Mall in Austin, Texas. Image inspection confirms the pink stone curved museum facade and dome, the star at left and pedestrian foreground at right; not a GeoNames city-centre viewpoint."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:08:15.417616+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true
+        },
+        "sha256": "b3ba48cbfd92cd0d26b02e4c53d46cf5a5010507939e248fc2b8771a90494831",
+        "status": "verified",
+        "localPath": "data/scenes/references/city-4671654-b3ba48cbfd92.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "referenceSha256": "b3ba48cbfd92cd0d26b02e4c53d46cf5a5010507939e248fc2b8771a90494831",
+        "rawGeneratedPath": "/workspace/generated_images/exec-60d930aa-4392-45c7-a075-4bdc96c8f235.png",
+        "rawCopyPath": "/workspace/.game-project-env/scene-production/generated/city-4671654.raw.png",
+        "generatedAt": "2026-10-19T13:13:55.977706+00:00",
+        "originalReferenceSha256": "b3ba48cbfd92cd0d26b02e4c53d46cf5a5010507939e248fc2b8771a90494831",
+        "prompt": "Create a single finished background for a Thai life-simulation web game, derived strictly from the supplied real photograph. Output a wide landscape composition with aspect ratio 24:11, intended to become exactly 480 × 220 pixels. This must be handcrafted pixel art: a visual base grid of 240 × 110 pixels doubled, crisp stepped silhouettes, distinct solid 2-pixel clusters, limited small colour palette, no smooth gradients, no painterly brushwork, no photographic texture, no blur, no anti-aliased outlines. Restrained cream, forest green, sage, turquoise and warm ochre with gentle afternoon light. Preserve this particular photograph's actual viewpoint, street/path orientation, building masses and relative positions. Adapt the source framing into the wide aspect ratio carefully without inventing architecture or geographical landmarks outside the reference. Keep recognizable geometry rather than decorative generic city imagery. Show no people, vehicles occupied by people, character, game UI, logos, signs, letters, numbers or readable text. Architectural sign areas should be plain material matching the facade. No city-name caption. Keep an unobstructed existing ground area in the lower foreground corresponding to target pixels x=290..352, y=165..210, so a separately drawn character can stand with feet at (316,202). This area must be walkable ground that exists in the reference, never water or a made-up platform. Do not draw a character or marker in that area.\nLOCATION AND PHOTOGRAPH: Bullock Texas State History Museum, viewed from the Capitol Mall in Austin, Texas. Preserve the actual pinkish cream limestone museum facade across the middle, the curved central rotunda with shallow segmented dome, the three large dark arched entrance openings, the rows of square windows and the low curved wings. Keep the bronze five-point star sculpture to the LEFT of the central entrance, and the plain taller rectangular building behind at the FAR LEFT. Preserve the slanted low reddish-brown stone retaining wall crossing the left/lower middle and the existing light-coloured pedestrian paving in the lower RIGHT foreground. The reserved standing patch must lie on that existing lower-right pavement, not on top of the stone wall or in landscaping. Keep sparse small trees on the right. Omit all lettering from the building, wall, banners and signs; leave plain wall and fabric colours. Do not add the Texas Capitol, skyscrapers, rivers, vehicles, extra sculpture or other landmarks that are not in this photograph. Architectural relationships should clearly match this specific reference.",
+        "reviewStatus": "final-size visual inspection passed; ready for serial pipeline ingestion",
+        "processing": {
+          "tool": "Pillow",
+          "inputDimensions": [
+            1852,
+            849
+          ],
+          "steps": [
+            "Convert generated PNG to RGB",
+            "Nearest-neighbour resize to 240 × 110",
+            "Quantize to 64 colours with median cut and no dithering",
+            "Convert indexed colour to RGB",
+            "Nearest-neighbour upscale to 480 × 220",
+            "Save optimized RGB PNG"
+          ],
+          "outputDimensions": [
+            480,
+            220
+          ],
+          "pixelGrid": 2
+        },
+        "license": {
+          "name": "CC BY 4.0",
+          "url": "https://creativecommons.org/licenses/by/4.0",
+          "derivativesAllowed": true,
+          "attribution": "Bullock Museum Capitol Mall Austin Texas 2023.jpg — Larry D. Moore, CC BY 4.0; https://commons.wikimedia.org/wiki/File:Bullock_Museum_Capitol_Mall_Austin_Texas_2023.jpg. Credit source and identify modifications. Adaptation changes: pixel-art rendering; widened view framing with simplified geometry; gentle afternoon relighting; 240 × 110 sampling, 64-colour median-cut palette and nearest-neighbour 2 × upscaling to a 480 × 220 background."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-4671654/v1.png",
+        "sha256": "06e17ab9b5744204e798f5064c7d87ebde0cd2d3414ca8c40a8871c1f6187e73",
+        "width": 480,
+        "height": 220
+      },
+      "review": {
+        "reviewer": "Codex visual inspection (USA reference/art)",
+        "reviewedAt": "2026-10-19T13:17:20.551954+00:00",
+        "assetSha256": "06e17ab9b5744204e798f5064c7d87ebde0cd2d3414ca8c40a8871c1f6187e73",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Inspected the final 480 × 220 image beside the original geolocated photograph. The central Bullock Museum rotunda/dome and dark entrance arches, bronze star at left, taller far-left block, right wing, diagonal reddish retaining wall and right-side pedestrian paving remain in the source order. Facade reliefs/windows are simplified and the view is widened with warmer light; all museum, banner and wall lettering is removed. No Capitol building, river or unrelated landmark was added. The character feet at (316, 202) fall on the light paved foreground below the retaining wall, rather than on the wall or landscaping. Final artwork has crisp 2 × 2 pixel clusters and 64 colours."
+      }
+    },
+    {
+      "id": "city-5419384",
+      "placeId": "geonames:5419384",
+      "cityName": "Denver, Colorado",
+      "countryId": "us",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "แยกถนน California กับ 16th Street เดนเวอร์ มีแนวรางรถรางและอาคารตามภาพจริง",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 39.73915,
+        "longitude": -104.9847,
+        "sourceUrl": "https://www.geonames.org/5419384/",
+        "isSceneView": false
+      },
+      "reference": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:633_17th_Street_viewed_from_16th_and_California_in_downtown_Denver,_Colorado,_2018-02-09-7935.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/25/633_17th_Street_viewed_from_16th_and_California_in_downtown_Denver%2C_Colorado%2C_2018-02-09-7935.jpg",
+        "creator": "Tim Kiser",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "derivativesAllowed": true,
+          "attribution": "633 17th Street viewed from 16th and California in downtown Denver, Colorado, 2018-02-09-7935.jpg — Tim Kiser, CC BY-SA 4.0; https://commons.wikimedia.org/wiki/File:633_17th_Street_viewed_from_16th_and_California_in_downtown_Denver,_Colorado,_2018-02-09-7935.jpg. Credit source and identify modifications. Adaptations must retain CC BY-SA 4.0."
+        },
+        "imageDate": "2018-02-09 18:53:29",
+        "retrievedAt": "2026-10-19T13:08:15.417997+00:00",
+        "caption": "In downtown Denver, Colorado, the building \"633 17th Street,\" formerly known as First Interstate Tower North, as viewed from the intersection of California Street and the 16th Street Mall. The building was designed by Welton Becket and Associates and completed in 1974, according to its record on the defunct website Emporis.",
+        "location": {
+          "latitude": 39.745159,
+          "longitude": -104.992163,
+          "description": "Commons file GPS camera position (WGS-84). At California Street and the 16th Street Mall, looking toward 633 17th Street, downtown Denver, Colorado. Image inspection confirms the central slender vertically striped tower, side buildings and street intersection with tram tracks; not a GeoNames city-centre viewpoint."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:08:15.417997+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true
+        },
+        "sha256": "c4088c5e565c399f0a22a2f56b6a66a7e26e40dd4690149cce223aab4daa575e",
+        "status": "verified",
+        "localPath": "data/scenes/references/city-5419384-c4088c5e565c.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "referenceSha256": "c4088c5e565c399f0a22a2f56b6a66a7e26e40dd4690149cce223aab4daa575e",
+        "rawGeneratedPath": "/workspace/generated_images/exec-b403801f-af0c-432c-a13e-8635e7ccfd4a.png",
+        "rawCopyPath": "/workspace/.game-project-env/scene-production/generated/city-5419384.raw.png",
+        "generatedAt": "2026-10-19T13:13:55.995312+00:00",
+        "originalReferenceSha256": "c4088c5e565c399f0a22a2f56b6a66a7e26e40dd4690149cce223aab4daa575e",
+        "prompt": "Create a single finished background for a Thai life-simulation web game, derived strictly from the supplied real photograph. Output a wide landscape composition with aspect ratio 24:11, intended to become exactly 480 × 220 pixels. This must be handcrafted pixel art: a visual base grid of 240 × 110 pixels doubled, crisp stepped silhouettes, distinct solid 2-pixel clusters, limited small colour palette, no smooth gradients, no painterly brushwork, no photographic texture, no blur, no anti-aliased outlines. Restrained cream, forest green, sage, turquoise and warm ochre with gentle afternoon light. Preserve this particular photograph's actual viewpoint, street/path orientation, building masses and relative positions. Adapt the source framing into the wide aspect ratio carefully without inventing architecture or geographical landmarks outside the reference. Keep recognizable geometry rather than decorative generic city imagery. Show no people, vehicles occupied by people, character, game UI, logos, signs, letters, numbers or readable text. Architectural sign areas should be plain material matching the facade. No city-name caption. Keep an unobstructed existing ground area in the lower foreground corresponding to target pixels x=290..352, y=165..210, so a separately drawn character can stand with feet at (316,202). This area must be walkable ground that exists in the reference, never water or a made-up platform. Do not draw a character or marker in that area.\nLOCATION AND PHOTOGRAPH: Downtown Denver, Colorado, at California Street and the 16th Street Mall, looking toward the narrow vertically striped tower of 633 17th Street. The source is portrait; fit these source buildings into the required wide game background by simplifying their vertical massing and framing the actual intersection clearly, preserving their left/right order and street orientation. Keep the narrow dark/light vertically striped rectangular tower approximately central, the older pale masonry shopfront building close along the left, the tall flat narrow white building to the right of the central tower, and the large reddish-brown horizontally banded office building on the right with its low slanted green-glass canopy. Keep the broad crossing in the lower foreground, the actual diagonal tram rails, and the line of slim dark streetlights. Remove the photographer's pedestrians and all vehicles so the existing pavement and crossing provide open foreground, especially the reserved lower centre-right standing area. Bare tree branches may frame the upper left as in the reference, but use gentle softly lit afternoon colours rather than photographic fog. Remove all storefront lettering, advertisements and street signs' text. Do not add mountains, the State Capitol, Union Station, rivers or any other Denver landmarks absent from this photograph.",
+        "reviewStatus": "final-size visual inspection passed; ready for serial pipeline ingestion",
+        "processing": {
+          "tool": "Pillow",
+          "inputDimensions": [
+            1852,
+            849
+          ],
+          "steps": [
+            "Convert generated PNG to RGB",
+            "Nearest-neighbour resize to 240 × 110",
+            "Quantize to 64 colours with median cut and no dithering",
+            "Convert indexed colour to RGB",
+            "Nearest-neighbour upscale to 480 × 220",
+            "Save optimized RGB PNG"
+          ],
+          "outputDimensions": [
+            480,
+            220
+          ],
+          "pixelGrid": 2
+        },
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "derivativesAllowed": true,
+          "attribution": "633 17th Street viewed from 16th and California in downtown Denver, Colorado, 2018-02-09-7935.jpg — Tim Kiser, CC BY-SA 4.0; https://commons.wikimedia.org/wiki/File:633_17th_Street_viewed_from_16th_and_California_in_downtown_Denver,_Colorado,_2018-02-09-7935.jpg. Credit source and identify modifications. Adaptations must retain CC BY-SA 4.0. Adaptation changes: pixel-art rendering; widened view framing with simplified geometry; gentle afternoon relighting; 240 × 110 sampling, 64-colour median-cut palette and nearest-neighbour 2 × upscaling to a 480 × 220 background."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-5419384/v1.png",
+        "sha256": "3c356ba14fff0e1d3dd356e04d9ea6ea4c23f6e9326311c2905a04b160498da1",
+        "width": 480,
+        "height": 220
+      },
+      "review": {
+        "reviewer": "Codex visual inspection (USA reference/art)",
+        "reviewedAt": "2026-10-19T13:17:20.570949+00:00",
+        "assetSha256": "3c356ba14fff0e1d3dd356e04d9ea6ea4c23f6e9326311c2905a04b160498da1",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Inspected the final 480 × 220 image beside the original geolocated portrait photograph. The older close left frontage, central narrow vertically striped tower, white slab to its right, and far-right horizontally banded office block with green-glass canopy retain their source order and street orientation. The portrait framing is widened and building heights/spacing compressed; distant secondary shapes, windows, lamps and branches are simplified into pixel blocks. Source cars and pedestrians are removed, fog replaced with warmer afternoon light, and storefront/sign lettering omitted. No mountains, Capitol, Union Station or unrelated recognizable landmark is added. The feet at (316, 202) are on the existing paved intersection/crossing foreground, clear of buildings and street furniture. Final style uses crisp 2 × 2 clusters and 64 colours."
+      }
+    },
+    {
+      "id": "city-4887398",
+      "placeId": "geonames:4887398",
+      "cityName": "Chicago, Illinois",
+      "countryId": "us",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "แม่น้ำชิคาโก มองไปทางสะพาน DuSable และหอนาฬิกาอาคาร Wrigley",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 41.85003,
+        "longitude": -87.65005,
+        "sourceUrl": "https://www.geonames.org/4887398/",
+        "isSceneView": false
+      },
+      "reference": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chicago_River_toward_Michigan_Avenue_at_blue_hour.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Chicago_River_toward_Michigan_Avenue_at_blue_hour.jpg",
+        "creator": "NorbertNagel",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "derivativesAllowed": true,
+          "attribution": "Chicago River toward Michigan Avenue at blue hour — NorbertNagel, CC BY-SA 4.0; https://commons.wikimedia.org/wiki/File:Chicago_River_toward_Michigan_Avenue_at_blue_hour.jpg . Credit source and identify modifications; adaptations must be licensed CC BY-SA 4.0."
+        },
+        "imageDate": "2026-08-12 06:02:17",
+        "retrievedAt": "2026-10-19T13:06:42.515845+00:00",
+        "caption": "View eastward along the main branch of the Chicago River in downtown Chicago, Illinois, during blue hour. Prominent buildings include 330 North Wabash at the far left, the Wrigley Building to the left of center, the Equitable Building at 401 North Michigan Avenue in the center, and the historic London Guarantee Building at the right edge. The Michigan Avenue Bridge (DuSable Bridge) spans the river in the middle distance. The image is an HDR composite created from three exposures, bracketed at 2 EV intervals.",
+        "location": {
+          "latitude": 41.888604,
+          "longitude": -87.627051,
+          "description": "Commons file GPS camera position (WGS-84); view eastward along the Chicago River toward the Michigan Avenue / DuSable Bridge, Chicago, Illinois. Position is from the photograph file page, not the GeoNames city-centre anchor."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:06:42.515845+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true
+        },
+        "sha256": "f1362e76bac44077201d3ff17876d4194544c16ef1831b5e11b81eeea7c62e9c",
+        "status": "verified",
+        "localPath": "data/scenes/references/city-4887398-f1362e76bac4.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:11:56.373Z",
+        "referenceSha256": "f1362e76bac44077201d3ff17876d4194544c16ef1831b5e11b81eeea7c62e9c",
+        "prompt": "Create a finished background asset for the Thai life game Another Life, based strictly on the attached verified photograph of the Chicago River looking east toward Michigan Avenue/DuSable Bridge, Chicago. This is an image-to-image adaptation: retain the river corridor, Wrigley Building clock tower left of center, dark modern rectangular Equitable building in center, low bascule bridge across the middle distance, and curving right-bank riverwalk with historic stone building on right. Keep actual relative positions; do not add Willis Tower, extra landmarks, mountains, or unrelated buildings. Recompose as a very wide 24:11 landscape, target 480 x 220 pixels. Crisp restrained pixel art, clear stepped 2-pixel clusters, limited cream/forest-green/sage/turquoise/warm-ochre palette, gentle afternoon light, painterly detail forbidden. Buildings and river must feel recognizably this exact reference view. Keep a clean near-ground foreground on the right-bank riverwalk at x=290..352,y=165..210 of the final 480x220 frame for a separate game character, with ground at y=202; no person or character in the image. Retain river depth and building order while widening the existing paved riverbank toward that foreground. Background only, no lettering, no UI, no border, no watermark. Deliver one completed landscape artwork, not a collage.",
+        "processing": "Generated 24:11 composition resized to 240x110 with nearest-neighbour sampling, quantized to 64 colors, then enlarged to exact480x220 with nearest-neighbour for a consistent2-pixel art grid. No semantic retouching.",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Pixel-art adaptation by Codex/OpenAI image_gen, based on NorbertNagel's Chicago River toward Michigan Avenue at blue hour, CC BY-SA4.0. Modified composition, lighting, pixel style and resolution. Attribution and source retained in the scene reference."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-4887398/v1.png",
+        "sha256": "5c2d8f280959c115a93f4b1abdde18a49e820bed21ad4e1392444b480f99731b",
+        "width": 480,
+        "height": 220
+      },
+      "review": {
+        "reviewer": "Codex visual inspection of original reference and final480x220asset",
+        "reviewedAt": "2026-10-19T13:13:35.206249+00:00",
+        "assetSha256": "5c2d8f280959c115a93f4b1abdde18a49e820bed21ad4e1392444b480f99731b",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Compared the actual NorbertNagel source photograph with the generated art and final480x220PNG: river corridor, Wrigley clock tower left, central dark office tower, DuSable bridge and right riverwalk retain their relative positions. Daylight/pixel-art adaptation, no added remote landmarks. Final64-color image uses2-pixelclusters; right paved foreground at(316,202) supports the separate age sprite. Source and derivative CC BY-SA4.0 attribution retained."
+      }
+    },
+    {
+      "id": "city-1259229",
+      "placeId": "geonames:1259229",
+      "cityName": "Pune",
+      "countryId": "in",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ถนน FC Road ปูเน่ แนวต้นไม้ใหญ่และอาคารริมถนน",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 18.51957,
+        "longitude": 73.85535,
+        "sourceUrl": "https://www.geonames.org/1259229/",
+        "isSceneView": false
+      },
+      "reference": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:FC_Road_in_the_morning_-_panoramio.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/29/FC_Road_in_the_morning_-_panoramio.jpg",
+        "creator": "Deepak Patil",
+        "caption": "FC Road in the morning",
+        "imageDate": "Taken on 19 May 2013",
+        "retrievedAt": "2026-10-19T13:12:32+00:00",
+        "license": {
+          "name": "CC BY-SA 3.0",
+          "url": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "FC Road in the morning - panoramio.jpg — Deepak Patil, via Wikimedia Commons, CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0). Pixel adaptation retains this credit and the applicable share-alike terms.",
+          "derivativesAllowed": true
+        },
+        "location": {
+          "latitude": 18.52092742,
+          "longitude": 73.84090422,
+          "description": "Fergusson College Road, Pune at the source photograph GPS: broad tree-lined roadway, green corrugated fence and a stone gate on its left."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:26:27+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true
+        },
+        "notes": "Visually inspected original photo of FC Road in the morning, Pune. Large tree canopy frames both sides, broad asphalt foreground and receding roadway, green corrugated fence and stone entrance arch on the left, parked vehicles along both sides. File GPS on Fergusson College Road matches the named road. Commons credits Deepak Patil and CC BY-SA3.0.",
+        "sha256": "23ea3d4e3625edff658dd948f6c9cb859140dc3cd6244cb7460d1b9c89589d47",
+        "status": "verified",
+        "localPath": "data/scenes/references/city-1259229-23ea3d4e3625.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:29:42+00:00",
+        "prompt": "Reference: FC Road in the morning, Fergusson College Road, Pune, India, photographed by Deepak Patil. Retain the broad asphalt road receding right-of-centre, tall spreading tree canopies framing both sides overhead, green corrugated fence on the left, grey stone entrance arch just behind it, and plain billboard near the left-centre; turn billboard lettering into an unlettered blank panel. Keep a few parked vehicles along the distant curb edges if needed, with the near lower asphalt completely clear for the character patch. Preserve this actual leafy ordinary Pune roadway. Do not add the Shaniwar Wada fort, temples, a beach, mountains or buildings outside the reference. Create a finished background asset for the Thai life game Another Life. This is an image-to-image adaptation based strictly on the attached verified photograph. Preserve the actual geography and left-to-right positions of visible buildings, vegetation, pavement and water; do not add unrelated famous landmarks, extra mountains or tourist buildings. Recompose as a very wide24:11landscape, target480x220pixels. Use crisp restrained pixel art, clear stepped2-pixelclusters, limited cream/forest-green/sage/turquoise/warm-ochre palette and gentle afternoon light. Avoid painterly or smoothed detail. Keep a clean existing-ground foreground patch at finalx290..352,y180..210 for a separate character, with the precise point316,202 on clear solid paving/ground rather than a vehicle, tree, water or sky. Widen only an existing near walkway/ground surface if necessary. Remove people and keep vehicles/furniture outside that reserved patch. Background only: no embedded character, no lettering, no UI, no border, no watermark. Deliver one completed wide landscape artwork, not a collage.",
+        "referenceSha256": "23ea3d4e3625edff658dd948f6c9cb859140dc3cd6244cb7460d1b9c89589d47",
+        "rawPath": "/workspace/.game-project-env/scene-production/generated/city-1259229.raw.png",
+        "processing": "Generated wide composition resized to240x110 using NEAREST; quantized to64colors with MEDIANCUT; converted toRGB; enlarged to exact480x220 using NEAREST. No semantic retouching.",
+        "license": {
+          "name": "CC BY-SA 3.0",
+          "url": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Pixel-art adaptation by Codex/OpenAI image_gen, based on Deepak Patil’s reference photograph. Modified composition, lighting, pixel style and resolution. FC Road in the morning - panoramio.jpg — Deepak Patil, via Wikimedia Commons, CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0). Pixel adaptation retains this credit and the applicable share-alike terms."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-1259229/v1.png",
+        "sha256": "e935e0785b85d299758cd64d49d1c519447053547dc01c22c1c75fc6295babbb",
+        "width": 480,
+        "height": 220
+      },
+      "characterPosition": {
+        "x": 316,
+        "y": 202
+      },
+      "review": {
+        "reviewer": "Codex visual inspection",
+        "reviewedAt": "2026-10-19T13:31:20+00:00",
+        "assetSha256": "e935e0785b85d299758cd64d49d1c519447053547dc01c22c1c75fc6295babbb",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Final480x220asset inspected against verified original. Retains actual FC Road geometry, tree canopies, left green corrugated fence, stone gate, billboard position and receding curbside parked vehicles. Billboard letters replaced with blank panel; near asphalt cleared. Exact2pixelgrid/64colors. Point316,202 is clear asphalt in warm dappled light."
+      }
+    },
+    {
+      "id": "city-1264527",
+      "placeId": "geonames:1264527",
+      "cityName": "Chennai",
+      "countryId": "in",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ถนน Triplicane High Road เจนไน ตามภาพอ้างอิงถนนและอาคารร้านค้า",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 13.08784,
+        "longitude": 80.27847,
+        "sourceUrl": "https://www.geonames.org/1264527/",
+        "isSceneView": false
+      },
+      "reference": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chennai.in_Triplicane_High_Road_-_panoramio.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/38/Chennai.in_Triplicane_High_Road_-_panoramio.jpg",
+        "creator": "SINHA",
+        "caption": "Chennai.in Triplicane High Road",
+        "imageDate": "Taken on 21 December 2005",
+        "retrievedAt": "2026-10-19T13:12:32+00:00",
+        "license": {
+          "name": "CC BY-SA 3.0",
+          "url": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Chennai.in Triplicane High Road - panoramio.jpg — SINHA, via Wikimedia Commons, CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0). Pixel adaptation retains this credit and the applicable share-alike terms.",
+          "derivativesAllowed": true
+        },
+        "location": {
+          "latitude": 13.06252222,
+          "longitude": 80.27441944,
+          "description": "Triplicane High Road, Chennai at the source photograph GPS, looking along low shop fronts and road toward a mid-distance bus, with the near-right footpath visible."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:32:07+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true
+        },
+        "notes": "Visually inspected original Triplicane High Road photograph. Low shopfronts and overhead wires flank the road, a bus is in the middle distance, parked motorcycles line the right curb and the right-side shop walkway is visible. File caption and geotag identify this Chennai road. Commons metadata credits SINHA, with CC BY-SA3.0 adaptation rights.",
+        "sha256": "ae8ca7c1177b30538804ed73e9643d8fdd13e598194c3c25c051f1b66cd51287",
+        "status": "verified",
+        "localPath": "data/scenes/references/city-1264527-ae8ca7c1177b.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:33:23+00:00",
+        "prompt": "Create a finished background asset for the Thai life game Another Life, based strictly on the attached verified photograph Chennai.in Triplicane High Road by SINHA. This is an image-to-image adaptation of a real ordinary commercial street in Triplicane, Chennai, India. Preserve the low two/three-storey shop buildings along the left, their small balconies and overhead utility wires, the bus in the middle distance, the central distant grey block with its thin rooftop mast, the near right-hand shop fronts and projecting awnings, and the right curb/footpath. Keep their relative positions and the street direction. Convert shop signs to unlettered colored panels. The reference is crowded: remove pedestrians, seated people and the motorcycles/vehicles that obstruct the near right walkway, revealing existing plain paved sidewalk there; a few parked motorcycles may stay farther in the distance. Recompose as a very wide24:11landscape, target480x220pixels. Use crisp restrained pixel art, clear stepped2-pixelclusters, limited cream/forest-green/sage/turquoise/warm-ochre palette and gentle afternoon light. Avoid painterly or smooth detail. Keep a clean existing-pavement foreground patch at finalx290..352,y180..210, with point316,202 on solid unobstructed paving for a separate character. Widen that existing near footpath slightly if needed while preserving the background geography. Do not add Marina Beach, a temple, Chennai railway station, mountains or unrelated buildings. Background only, no embedded character, no people, no lettering, no UI, no border, no watermark. Deliver one completed wide landscape artwork, not a collage.",
+        "referenceSha256": "ae8ca7c1177b30538804ed73e9643d8fdd13e598194c3c25c051f1b66cd51287",
+        "rawPath": "/workspace/.game-project-env/scene-production/generated/city-1264527.raw.png",
+        "processing": "Generated wide composition resized to240x110 using NEAREST; quantized to64colors with MEDIANCUT; converted toRGB; enlarged to exact480x220 using NEAREST. No semantic retouching.",
+        "license": {
+          "name": "CC BY-SA 3.0",
+          "url": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Pixel-art adaptation by Codex/OpenAI image_gen, based on SINHA’s reference photograph. Modified composition, lighting, pixel style and resolution. Chennai.in Triplicane High Road - panoramio.jpg — SINHA, via Wikimedia Commons, CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0). Pixel adaptation retains this credit and the applicable share-alike terms."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-1264527/v1.png",
+        "sha256": "d612113b3d46d4ef3f4d57f0d638a524c4350654fb9cee899c32de16f623593e",
+        "width": 480,
+        "height": 220
+      },
+      "characterPosition": {
+        "x": 316,
+        "y": 202
+      },
+      "review": {
+        "reviewer": "Codex visual inspection",
+        "reviewedAt": "2026-10-19T13:33:57+00:00",
+        "assetSha256": "d612113b3d46d4ef3f4d57f0d638a524c4350654fb9cee899c32de16f623593e",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Inspected final480x220pixelasset against verified Triplicane High Road photo. Retains low shop corridor, wires, projecting right awnings, mid-distance bus, right walkway and distant grey block/mast. Crowds and near motorcycles removed as specified, lettering turned into color panels. Consistent64color2pixelgrid. Point316,202 is clear near-right sidewalk paving; no embedded character or UI."
+      }
+    },
+    {
+      "id": "city-1277333",
+      "placeId": "geonames:1277333",
+      "cityName": "Bengaluru",
+      "countryId": "in",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ทางเดิน Church Street เบงกาลูรู อาคารร้านค้าและแนวต้นไม้",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 12.97194,
+        "longitude": 77.59369,
+        "sourceUrl": "https://www.geonames.org/1277333/",
+        "isSceneView": false
+      },
+      "reference": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bangalore_Church_street_trees_3.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Bangalore_Church_street_trees_3.jpg",
+        "creator": "T. R. Shankar Raman",
+        "caption": "Trees along Church Street, Bangalore, India",
+        "imageDate": "2018-06-19 15:04:23",
+        "retrievedAt": "2026-10-19T13:38:13+00:00",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Bangalore Church street trees 3.jpg — T. R. Shankar Raman, via Wikimedia Commons, CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0). Pixel adaptation retains this credit and the applicable share-alike terms.",
+          "derivativesAllowed": true
+        },
+        "location": {
+          "latitude": 12.97510528,
+          "longitude": 77.60451506,
+          "description": "Church Street in Bengaluru (Bangalore), trees and street frontage at the source photo geotag."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:38:13+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true
+        },
+        "notes": "Visually inspected original Church Street photo: paved pedestrian corridor, a leaning large tree and red-brick low frontage on the left, palms, dense trees and a low open commercial balcony/front on the right, slim lamps and bollards. Source caption and GPS identify Church Street, Bengaluru. Creator T. R. Shankar Raman and CC BY-SA4.0 verified from Commons metadata.",
+        "sha256": "fed2c2632eec466f1407319532048b503b138f2a75b9ad0df3085c0c56a4f89b",
+        "status": "verified",
+        "localPath": "data/scenes/references/city-1277333-fed2c2632eec.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:39:52+00:00",
+        "prompt": "Reference: Bangalore Church street trees3, Church Street, Bengaluru, India, photographed by T.R.Shankar Raman. Faithfully retain the broad pedestrian stone-paved street receding toward the middle distance, the conspicuously leaning large tree trunk on the left, palms and red-brick low shop frontage behind it, pale low wall and bicycle near left foreground, the dense leafy canopy framing both sides, slim street lamps, short black bollards on the right and the low commercial building with an open upper balcony/front on the right. Preserve the actual left-right ordering and green ordinary-neighborhood character. Remove the pedestrians and the near scooter so the pedestrian paving is clear at the character patch. Do not add Vidhana Soudha, Bangalore Palace, a temple, metro track, beach or mountains absent from the photograph. Create a finished background asset for the Thai life game Another Life. This is an image-to-image adaptation based strictly on the attached verified photograph. Preserve the actual geography and left-to-right positions of the visible architecture, trees, street and pavement. Recompose as a very wide24:11landscape, target480x220pixels. Use crisp restrained pixel art with clear stepped2-pixelclusters, limited cream/forest-green/sage/turquoise/warm-ochre palette and gentle afternoon light. Avoid painterly or smoothed detail. Reserve a clean existing-ground foreground patch at finalx290..352,y180..210 for a separate game character, with the exact point316,202 on solid unobstructed paving rather than a car, tree, bush, water or sky. Widen an existing near footpath/paved area if necessary while retaining the background street geometry. Remove pedestrians and keep foreground vehicles/furniture outside that reserved patch. All signs must be plain unlettered color panels. Background only, no embedded character, no people, no lettering, no UI, no border, no watermark. Deliver one completed wide landscape artwork, not a collage.",
+        "referenceSha256": "fed2c2632eec466f1407319532048b503b138f2a75b9ad0df3085c0c56a4f89b",
+        "rawPath": "/workspace/.game-project-env/scene-production/generated/city-1277333.raw.png",
+        "processing": "Generated wide composition resized to240x110 using NEAREST; quantized to64colors with MEDIANCUT; converted toRGB; enlarged to exact480x220 using NEAREST. No semantic retouching.",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Pixel-art adaptation by Codex/OpenAI image_gen, based on T. R. Shankar Raman’s reference photograph. Modified composition, lighting, pixel style and resolution. Bangalore Church street trees 3.jpg — T. R. Shankar Raman, via Wikimedia Commons, CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0). Pixel adaptation retains this credit and the applicable share-alike terms."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-1277333/v1.png",
+        "sha256": "2f739745c029734928a3b721d7c886b64dd85bccc2196b9a9ed53849861b6f87",
+        "width": 480,
+        "height": 220
+      },
+      "characterPosition": {
+        "x": 316,
+        "y": 202
+      },
+      "review": {
+        "reviewer": "Codex visual inspection",
+        "reviewedAt": "2026-10-19T13:40:39+00:00",
+        "assetSha256": "2f739745c029734928a3b721d7c886b64dd85bccc2196b9a9ed53849861b6f87",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Inspected final480x220pixelasset against verified Church Street original. Retains paved pedestrian corridor, distinctive leaning left tree, palms/red-brick low frontage and pale wall/bicycle left, open balcony commercial building right, lamps/bollards and green canopy. Crowds removed and signs blanked. Consistent64color2pixelgrid; point316,202 is clear pedestrian paving."
+      }
+    },
+    {
+      "id": "city-1269515",
+      "placeId": "geonames:1269515",
+      "cityName": "Jaipur",
+      "countryId": "in",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ถนนในชัยปุระ อาคารร้านค้าและแนวถนนตามมุมภาพอ้างอิง",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": 26.91962,
+        "longitude": 75.78781,
+        "sourceUrl": "https://www.geonames.org/1269515/",
+        "isSceneView": false
+      },
+      "reference": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Main_Road_in_front_of_Hawa_mahal_Jaipur_India.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Main_Road_in_front_of_Hawa_mahal_Jaipur_India.jpg",
+        "creator": "Swapnil.Karambelkar",
+        "caption": "Main Road in front of Hawa mahal Jaipur India",
+        "imageDate": "2017-11-13 15:02:10",
+        "retrievedAt": "2026-10-19T13:38:13+00:00",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Main Road in front of Hawa mahal Jaipur India.jpg — Swapnil.Karambelkar, via Wikimedia Commons, CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0). Pixel adaptation retains this credit and the applicable share-alike terms.",
+          "derivativesAllowed": true
+        },
+        "location": {
+          "latitude": 26.9248,
+          "longitude": 75.8246,
+          "description": "Wide Jaipur road at the uploader photo geotag, identified by its source title as Main Road in front of Hawa Mahal. The actual view shows roadside trees, low pink/terracotta buildings and a planted centre divider; the honeycomb palace frontage is not in frame."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:38:13+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true
+        },
+        "notes": "Visually inspected original wide road photo. Pink/terracotta low frontage and a domed corner turret on the left, dense roadside trees, central planted divider, green bus left, blue three-wheeler right. Original caption calls this Main Road in front of Hawa Mahal, Jaipur; the famous honeycomb palace front is not visible and must not be invented. Location is the source photo geotag supplied by uploader Swapnil.Karambelkar. CC BY-SA4.0 verified in Commons metadata.",
+        "sha256": "df3bec41f6ad357d9b76bf31af8b481c3cda0c2235a664b7e7c4a6c9228f1ed3",
+        "status": "verified",
+        "localPath": "data/scenes/references/city-1269515-df3bec41f6ad.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:39:52+00:00",
+        "prompt": "Reference: Main Road in front of Hawa mahal Jaipur India, photographed by Swapnil.Karambelkar. The actual photo shows a broad ordinary Jaipur roadway; it does NOT show the famous honeycomb Hawa Mahal façade. Preserve the low terracotta/pink roadside building with its small domed corner turret at far left, low pale/pink fronts behind trees on the right, dense roadside tree canopies, the receding road corridor and the central planted divider with small yellow flowers. Retain the green bus on the left and a blue three-wheeler farther on the right if they do not obstruct the reserved ground patch. Recompose the near foreground so the central planted divider stays toward the centre-left and existing clear pavement/road to its right occupies the character patch atx290..352,y180..210; point316,202 must be unobstructed solid road/pavement. Do not invent Hawa Mahal's honeycomb front, a fort, new domes, mountains or unrelated tourist landmarks. Create a finished background asset for the Thai life game Another Life. This is an image-to-image adaptation based strictly on the attached verified photograph. Preserve the actual geography and left-to-right positions of the visible architecture, trees, street and pavement. Recompose as a very wide24:11landscape, target480x220pixels. Use crisp restrained pixel art with clear stepped2-pixelclusters, limited cream/forest-green/sage/turquoise/warm-ochre palette and gentle afternoon light. Avoid painterly or smoothed detail. Reserve a clean existing-ground foreground patch at finalx290..352,y180..210 for a separate game character, with the exact point316,202 on solid unobstructed paving rather than a car, tree, bush, water or sky. Widen an existing near footpath/paved area if necessary while retaining the background street geometry. Remove pedestrians and keep foreground vehicles/furniture outside that reserved patch. All signs must be plain unlettered color panels. Background only, no embedded character, no people, no lettering, no UI, no border, no watermark. Deliver one completed wide landscape artwork, not a collage.",
+        "referenceSha256": "df3bec41f6ad357d9b76bf31af8b481c3cda0c2235a664b7e7c4a6c9228f1ed3",
+        "rawPath": "/workspace/.game-project-env/scene-production/generated/city-1269515.raw.png",
+        "processing": "Generated wide composition resized to240x110 using NEAREST; quantized to64colors with MEDIANCUT; converted toRGB; enlarged to exact480x220 using NEAREST. No semantic retouching.",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Pixel-art adaptation by Codex/OpenAI image_gen, based on Swapnil.Karambelkar’s reference photograph. Modified composition, lighting, pixel style and resolution. Main Road in front of Hawa mahal Jaipur India.jpg — Swapnil.Karambelkar, via Wikimedia Commons, CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0). Pixel adaptation retains this credit and the applicable share-alike terms."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-1269515/v1.png",
+        "sha256": "ded73399e8d709e22eeea04c26d7148484f32abd4641191e8d742c7e5103974b",
+        "width": 480,
+        "height": 220
+      },
+      "characterPosition": {
+        "x": 316,
+        "y": 202
+      },
+      "review": {
+        "reviewer": "Codex visual inspection",
+        "reviewedAt": "2026-10-19T13:40:39+00:00",
+        "assetSha256": "ded73399e8d709e22eeea04c26d7148484f32abd4641191e8d742c7e5103974b",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Inspected final480x220pixelasset against verified Jaipur road photo. Retains low terracotta left frontage with its corner turret, roadside trees/right low fronts, central flowered divider, green bus left and blue three-wheeler right. No invented honeycomb Hawa Mahal front or fort. Near right road widened/cleared as requested for character position. Consistent64color2pixelgrid; point316,202 is clear grey asphalt."
+      }
+    },
+    {
+      "id": "city-3464975",
+      "placeId": "geonames:3464975",
+      "cityName": "Curitiba",
+      "countryId": "br",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ทางเดิน Rua das Flores กูรีตีบา ลายพื้นโมเสกและอาคารริมทาง",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": -25.42778,
+        "longitude": -49.27306,
+        "sourceUrl": "https://www.geonames.org/3464975/",
+        "isSceneView": false
+      },
+      "reference": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Rua_das_Flores_-_Curitiba_-_panoramio.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Rua_das_Flores_-_Curitiba_-_panoramio.jpg",
+        "creator": "Larissa Fraga",
+        "caption": "Rua das Flores - Curitiba",
+        "imageDate": "Taken on 1 January 2012",
+        "retrievedAt": "2026-10-19T13:12:32+00:00",
+        "license": {
+          "name": "CC BY 3.0",
+          "url": "https://creativecommons.org/licenses/by/3.0",
+          "attribution": "Rua das Flores - Curitiba - panoramio.jpg — Larissa Fraga, via Wikimedia Commons, CC BY 3.0 (https://creativecommons.org/licenses/by/3.0). Pixel adaptation retains this credit and the applicable share-alike terms.",
+          "derivativesAllowed": true
+        },
+        "location": {
+          "latitude": -25.43198,
+          "longitude": -49.27359,
+          "description": "Pedestrian Rua das Flores (Rua XV de Novembro), Curitiba, at the source photo geotag."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:25:59+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true
+        },
+        "notes": "Visually inspected the original photograph. Rua das Flores pedestrian corridor has mosaic stone paving, a central straight inset strip, double ornamental black lamps, benches and flower planters, cream/ochre historic fronts on the left and taller glazed shop fronts on the right. File title and caption match the source GPS. CC BY3.0 and Larissa Fraga are stated in the Commons metadata.",
+        "sha256": "8c3382fb2929c3b19ed314674c58f83a81751cab9c3432219625f7dd5f6af52e",
+        "status": "verified",
+        "localPath": "data/scenes/references/city-3464975-8c3382fb2929.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:29:43+00:00",
+        "prompt": "Reference: Rua das Flores (Rua XV de Novembro), Curitiba, Brazil, photographed by Larissa Fraga. Retain the long pedestrian shopping corridor receding toward left-of-centre, black-and-white mosaic stone pavement, straight central dark inset strip, cream/ochre historic storefronts and yellow awnings along the left, taller modern glazed shop-front blocks on the right, ornamental black double lamps, sparse street trees, dark benches and round flower planters. Preserve their relative ordering and the distinctive paving. Leave unobstructed mosaic paving across the lower centre-right at the character patch. Do not add Curitiba's botanical-garden greenhouse, a beach or skyscrapers outside the reference. Create a finished background asset for the Thai life game Another Life. This is an image-to-image adaptation based strictly on the attached verified photograph. Preserve the actual geography and left-to-right positions of visible buildings, vegetation, pavement and water; do not add unrelated famous landmarks, extra mountains or tourist buildings. Recompose as a very wide24:11landscape, target480x220pixels. Use crisp restrained pixel art, clear stepped2-pixelclusters, limited cream/forest-green/sage/turquoise/warm-ochre palette and gentle afternoon light. Avoid painterly or smoothed detail. Keep a clean existing-ground foreground patch at finalx290..352,y180..210 for a separate character, with the precise point316,202 on clear solid paving/ground rather than a vehicle, tree, water or sky. Widen only an existing near walkway/ground surface if necessary. Remove people and keep vehicles/furniture outside that reserved patch. Background only: no embedded character, no lettering, no UI, no border, no watermark. Deliver one completed wide landscape artwork, not a collage.",
+        "referenceSha256": "8c3382fb2929c3b19ed314674c58f83a81751cab9c3432219625f7dd5f6af52e",
+        "rawPath": "/workspace/.game-project-env/scene-production/generated/city-3464975.raw.png",
+        "processing": "Generated wide composition resized to240x110 using NEAREST; quantized to64colors with MEDIANCUT; converted toRGB; enlarged to exact480x220 using NEAREST. No semantic retouching.",
+        "license": {
+          "name": "CC BY 3.0",
+          "url": "https://creativecommons.org/licenses/by/3.0",
+          "attribution": "Pixel-art adaptation by Codex/OpenAI image_gen, based on Larissa Fraga’s reference photograph. Modified composition, lighting, pixel style and resolution. Rua das Flores - Curitiba - panoramio.jpg — Larissa Fraga, via Wikimedia Commons, CC BY 3.0 (https://creativecommons.org/licenses/by/3.0). Pixel adaptation retains this credit and the applicable share-alike terms."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-3464975/v1.png",
+        "sha256": "8ab4f76697a802ccebc0fb26c242d481e75b7d41c09658e785aab55a34d907a7",
+        "width": 480,
+        "height": 220
+      },
+      "characterPosition": {
+        "x": 316,
+        "y": 202
+      },
+      "review": {
+        "reviewer": "Codex visual inspection",
+        "reviewedAt": "2026-10-19T13:31:20+00:00",
+        "assetSha256": "8ab4f76697a802ccebc0fb26c242d481e75b7d41c09658e785aab55a34d907a7",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Final480x220asset inspected against verified original. Retains Curitiba pedestrian street perspective, mosaic paving and inset strip, twin lamps, cream/ochre fronts left, glazed shop fronts right, benches and planters. Exact2pixelgrid/64colors. Point316,202 lies on unobstructed mosaic paving."
+      }
+    },
+    {
+      "id": "city-3448439",
+      "placeId": "geonames:3448439",
+      "cityName": "São Paulo",
+      "countryId": "br",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ถนนย่านใจกลางเซาเปาลู แนวตึกสูง อาคารลายแถบ และภาพบนผนังตามต้นฉบับ",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": -23.5475,
+        "longitude": -46.63611,
+        "sourceUrl": "https://www.geonames.org/3448439/",
+        "isSceneView": false
+      },
+      "reference": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Streets_of_Sao_Paulo_5.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Streets_of_Sao_Paulo_5.jpg",
+        "creator": "Slyronit",
+        "caption": "Streets of Sao Paulo",
+        "imageDate": "2016-03-19 23:27:17",
+        "retrievedAt": "2026-10-19T13:12:32+00:00",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Streets of Sao Paulo 5.jpg — Slyronit, via Wikimedia Commons, CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0). Pixel adaptation retains this credit and the applicable share-alike terms.",
+          "derivativesAllowed": true
+        },
+        "location": {
+          "latitude": -23.542961,
+          "longitude": -46.635281,
+          "description": "Elevated street view across central São Paulo at the photograph geotag. Tall glazed slab on the left; cream historic corner building left of centre; mural-covered slab and low arched wall centre-right; yellow-banded building on the right."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:22:09+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true
+        },
+        "notes": "Visually inspected original JPEG. Streets and buildings match the São Paulo caption and camera geotag from Commons; verified CC BY-SA4.0 license and Slyronit creator in the file metadata.",
+        "sha256": "7176490c6851762370753f6ba775a0694e107040d6495ba4dbba6b9cba635b3f",
+        "status": "verified",
+        "localPath": "data/scenes/references/city-3448439-7176490c6851.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:23:43+00:00",
+        "prompt": "Create a finished background asset for the Thai life game Another Life, based strictly on the attached verified photograph Streets of Sao Paulo 5 by Slyronit, showing an elevated view of central São Paulo, Brazil. This is an image-to-image adaptation. Preserve the tall blue-grey glazed rectangular slab at the far left, the narrow cream historic corner building beside it, the broad branching streets and triangular planted median in the lower half, the mid-distance ordinary white and cream city blocks, the plain tan slab with large painted wall centre-right, the low arched wall beside it, and the yellow-banded modern slab on the far right. Retain their actual relative positions and the street directions. Do not add famous landmarks, a beach, mountains, extra bridges, or unrelated buildings. Recompose as a very wide 24:11 landscape, target480x220pixels; reduce excess sky while keeping the actual buildings and street arrangement recognizable. Crisp restrained pixel art with clear stepped2-pixelclusters, limited cream,forest-green,sage,turquoise,warm-ochre palette and gentle afternoon light. Avoid painterly or smoothed detail. Keep a clean, unobstructed paved area of the existing near street/sidewalk foreground at x290..352,y180..210 of the final480x220frame for a separate character; the point316,202 must be solid paving rather than a car, tree, water, or sky. Widen the existing near paved footpath slightly if needed while retaining the background street geometry. Remove people and keep vehicles outside that reserved patch. Background only, no character, no lettering, no UI, no border, no watermark. Deliver one completed landscape artwork, not a collage.",
+        "referenceSha256": "7176490c6851762370753f6ba775a0694e107040d6495ba4dbba6b9cba635b3f",
+        "rawPath": "/workspace/.game-project-env/scene-production/generated/city-3448439.raw.png",
+        "processing": "Generated wide composition resized to240x110 using NEAREST; quantized to64colors with MEDIANCUT; converted toRGB; enlarged to exact480x220 using NEAREST. No semantic retouching.",
+        "license": {
+          "name": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Pixel-art adaptation by Codex/OpenAI image_gen, based on Slyronit’s reference photograph. Modified composition, lighting, pixel style and resolution. Streets of Sao Paulo 5.jpg — Slyronit, via Wikimedia Commons, CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0). Pixel adaptation retains this credit and the applicable share-alike terms."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-3448439/v1.png",
+        "sha256": "51647b19964c1f91926438fd74ce67eb8f3dd85bcebf9a5cb63e87c86debdae4",
+        "width": 480,
+        "height": 220
+      },
+      "review": {
+        "reviewer": "Codex visual inspection",
+        "reviewedAt": "2026-10-19T13:24:08+00:00",
+        "assetSha256": "51647b19964c1f91926438fd74ce67eb8f3dd85bcebf9a5cb63e87c86debdae4",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Inspected final480x220 pixel asset against original verified photo. Preserves central São Paulo branching roads/triangular median, left glazed slab and historic cream corner, mural slab centre-right, arched wall and right yellow-banded building. Consistent64color2pixelgrid. Foreground around316,202 is clear tan paving; no embedded character or UI."
+      }
+    },
+    {
+      "id": "city-3390760",
+      "placeId": "geonames:3390760",
+      "cityName": "Recife",
+      "countryId": "br",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ถนน Rua Bom Jesus เรซีเฟ อาคารเก่าเรียงตามแนวถนน",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": -8.05389,
+        "longitude": -34.88111,
+        "sourceUrl": "https://www.geonames.org/3390760/",
+        "isSceneView": false
+      },
+      "reference": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sobrados_na_Rua_do_Bom_Jesus,_Recife.JPG",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Sobrados_na_Rua_do_Bom_Jesus%2C_Recife.JPG",
+        "creator": "Pedro P. Palazzo",
+        "caption": "Sobrados dos séculos XVII a XX no bairro holandês do Recife",
+        "imageDate": "2010-06-03 16:26:46",
+        "retrievedAt": "2026-10-19T13:12:32+00:00",
+        "license": {
+          "name": "CC BY-SA 3.0",
+          "url": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Sobrados na Rua do Bom Jesus, Recife.JPG — Pedro P. Palazzo, via Wikimedia Commons, CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0). Pixel adaptation retains this credit and the applicable share-alike terms.",
+          "derivativesAllowed": true
+        },
+        "location": {
+          "latitude": -8.06243,
+          "longitude": -34.871441,
+          "description": "Historic façades on Rua do Bom Jesus in Recife Antigo, at the source photo geotag."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:25:59+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true
+        },
+        "notes": "Visually inspected original photograph of historic façades on Rua do Bom Jesus in Recife. Left-to-right: white ornate corner, arcaded pale building, brown horizontal-window block, white balcony building, white/orange-trim façade and red/orange framed large windows. Cars occupy the street foreground. Source photo geotag lies on the identified street. Creator Pedro P. Palazzo and CC BY-SA3.0 are stated in Commons metadata.",
+        "sha256": "8065d2b6dcbb93fc2add3886cbd5bb1013b4e7ee8732244efb14872f346d2ee8",
+        "status": "verified",
+        "localPath": "data/scenes/references/city-3390760-8065d2b6dcbb.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:29:42+00:00",
+        "prompt": "Reference: Sobrados na Rua do Bom Jesus, Recife, Brazil, photographed by Pedro P. Palazzo. Preserve the closely spaced historic street façades in their exact left-to-right sequence: ornate pale corner building at far left; long pale building with repeated arches and dark balcony rail; brown/cream horizontal-window block; narrow white balcony building; white façade with orange-red trim and dark shuttered windows; red/orange-framed tall glazed façade on the right. Keep their real storey rhythm and roofline character. The reference has cars crowding the very near street; remove those foreground cars and render the existing paved street cleanly, giving a clear broad lower ground strip for the separate character. Do not invent a canal, a bridge, hills or unrelated Recife landmarks. Create a finished background asset for the Thai life game Another Life. This is an image-to-image adaptation based strictly on the attached verified photograph. Preserve the actual geography and left-to-right positions of visible buildings, vegetation, pavement and water; do not add unrelated famous landmarks, extra mountains or tourist buildings. Recompose as a very wide24:11landscape, target480x220pixels. Use crisp restrained pixel art, clear stepped2-pixelclusters, limited cream/forest-green/sage/turquoise/warm-ochre palette and gentle afternoon light. Avoid painterly or smoothed detail. Keep a clean existing-ground foreground patch at finalx290..352,y180..210 for a separate character, with the precise point316,202 on clear solid paving/ground rather than a vehicle, tree, water or sky. Widen only an existing near walkway/ground surface if necessary. Remove people and keep vehicles/furniture outside that reserved patch. Background only: no embedded character, no lettering, no UI, no border, no watermark. Deliver one completed wide landscape artwork, not a collage.",
+        "referenceSha256": "8065d2b6dcbb93fc2add3886cbd5bb1013b4e7ee8732244efb14872f346d2ee8",
+        "rawPath": "/workspace/.game-project-env/scene-production/generated/city-3390760.raw.png",
+        "processing": "Generated wide composition resized to240x110 using NEAREST; quantized to64colors with MEDIANCUT; converted toRGB; enlarged to exact480x220 using NEAREST. No semantic retouching.",
+        "license": {
+          "name": "CC BY-SA 3.0",
+          "url": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Pixel-art adaptation by Codex/OpenAI image_gen, based on Pedro P. Palazzo’s reference photograph. Modified composition, lighting, pixel style and resolution. Sobrados na Rua do Bom Jesus, Recife.JPG — Pedro P. Palazzo, via Wikimedia Commons, CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0). Pixel adaptation retains this credit and the applicable share-alike terms."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-3390760/v1.png",
+        "sha256": "82d9c69b2bc5e96679b08ffecfe683242fb8c83f19bf2cee74434fdc16395f0a",
+        "width": 480,
+        "height": 220
+      },
+      "characterPosition": {
+        "x": 316,
+        "y": 202
+      },
+      "review": {
+        "reviewer": "Codex visual inspection",
+        "reviewedAt": "2026-10-19T13:31:20+00:00",
+        "assetSha256": "82d9c69b2bc5e96679b08ffecfe683242fb8c83f19bf2cee74434fdc16395f0a",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Final480x220asset inspected against verified original. Historic Rua do Bom Jesus facade order remains: pale ornate corner/arches, brown horizontal-window block, white balconies, orange trim, orange-framed glazed frontage. Foreground cars/people removed and existing street revealed. Exact2pixelgrid/64colors. Point316,202 is tan/cream street paving just below the facade base; character body can overlap the background facade."
+      }
+    },
+    {
+      "id": "city-3463237",
+      "placeId": "geonames:3463237",
+      "cityName": "Florianópolis",
+      "countryId": "br",
+      "version": 1,
+      "tier": "city-specific",
+      "stage": "approved",
+      "description": "ชายฝั่งอ่าว Santo Antônio de Lisboa ฟลอเรียนอโปลิส เรือและแนวเนินตามภาพจริง แต่งสีจากต้นฉบับขาวดำ",
+      "anchor": {
+        "type": "city-centre",
+        "latitude": -27.59667,
+        "longitude": -48.54917,
+        "sourceUrl": "https://www.geonames.org/3463237/",
+        "isSceneView": false
+      },
+      "reference": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Santo_Ant%C3%B4nio_de_Lisboa,_Florian%C3%B3polis,_SC,_Brasil_(22210866942).jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/63/Santo_Ant%C3%B4nio_de_Lisboa%2C_Florian%C3%B3polis%2C_SC%2C_Brasil_%2822210866942%29.jpg",
+        "creator": "Alexandre Machado from São José - SC, Brasil",
+        "caption": "(c) Alexandre Machado",
+        "imageDate": "2015-09-13 17:07",
+        "retrievedAt": "2026-10-19T13:12:32+00:00",
+        "license": {
+          "name": "CC BY-SA 2.0",
+          "url": "https://creativecommons.org/licenses/by-sa/2.0",
+          "attribution": "Santo Antônio de Lisboa, Florianópolis, SC, Brasil (22210866942).jpg — Alexandre Machado from São José - SC, Brasil, via Wikimedia Commons, CC BY-SA 2.0 (https://creativecommons.org/licenses/by-sa/2.0). Pixel adaptation retains this credit and the applicable share-alike terms.",
+          "derivativesAllowed": true
+        },
+        "location": {
+          "latitude": -27.50849,
+          "longitude": -48.51894,
+          "description": "Geotagged shore at Santo Antônio de Lisboa, Florianópolis, looking across the bay toward low continental hills. The source view has sailing boats, overhead broad-leaf branches and a sand beach at the bottom/right."
+        },
+        "review": {
+          "reviewer": "Codex reference inspection",
+          "reviewedAt": "2026-10-19T13:25:59+00:00",
+          "locationVerified": true,
+          "captionVerified": true,
+          "rightsVerified": true
+        },
+        "notes": "Visually inspected original black-and-white waterfront photograph from Santo Antônio de Lisboa, Florianópolis. Source title and geotag identify the neighborhood; broad bay, anchored sailing boats, low distant hill profile, overhanging broad-leaf canopy and a sandy beach rising to the right match that setting. Original ImageDescription is the photographer credit. Creator Alexandre Machado and CC BY-SA2.0 are verified from Commons metadata.",
+        "sha256": "db18fea5d354f6bdfa9e0fb601bd440821dc426a9aacb7fddad9022ae1a6a8af",
+        "status": "verified",
+        "localPath": "data/scenes/references/city-3463237-db18fea5d354.jpg"
+      },
+      "generation": {
+        "generator": "OpenAI image_gen.imagegen",
+        "generatedAt": "2026-10-19T13:29:42+00:00",
+        "prompt": "Reference: Santo Antônio de Lisboa shoreline, Florianópolis, Brazil, photographed by Alexandre Machado. The source is BLACK AND WHITE. Preserve the actual reference geometry: calm broad bay with rows of anchored sailing boats, the low continuous continental hill silhouette across the horizon, overhanging broad-leaf tree canopy at upper left, and a sandy shore rising diagonally toward the right in the foreground. Faithfully adapt the photograph's shapes; apply a natural restrained sage/turquoise/cream/ochre afternoon COLORIZATION as an artistic adaptation, not a claim that the original source establishes the colors. Keep the existing sandy foreground broad enough at lower right/centre that316,202 is dry sand above the waterline. Do not invent a city skyline, church, palm tree, bridge or foreground pier. Create a finished background asset for the Thai life game Another Life. This is an image-to-image adaptation based strictly on the attached verified photograph. Preserve the actual geography and left-to-right positions of visible buildings, vegetation, pavement and water; do not add unrelated famous landmarks, extra mountains or tourist buildings. Recompose as a very wide24:11landscape, target480x220pixels. Use crisp restrained pixel art, clear stepped2-pixelclusters, limited cream/forest-green/sage/turquoise/warm-ochre palette and gentle afternoon light. Avoid painterly or smoothed detail. Keep a clean existing-ground foreground patch at finalx290..352,y180..210 for a separate character, with the precise point316,202 on clear solid paving/ground rather than a vehicle, tree, water or sky. Widen only an existing near walkway/ground surface if necessary. Remove people and keep vehicles/furniture outside that reserved patch. Background only: no embedded character, no lettering, no UI, no border, no watermark. Deliver one completed wide landscape artwork, not a collage.",
+        "referenceSha256": "db18fea5d354f6bdfa9e0fb601bd440821dc426a9aacb7fddad9022ae1a6a8af",
+        "colorizationNote": "Original reference photograph is black and white. Natural scene colors are an artistic palette adaptation; source evidence establishes geography and composition, not actual colors.",
+        "rawPath": "/workspace/.game-project-env/scene-production/generated/city-3463237.raw.png",
+        "processing": "Generated wide composition resized to240x110 using NEAREST; quantized to64colors with MEDIANCUT; converted toRGB; enlarged to exact480x220 using NEAREST. No semantic retouching.",
+        "license": {
+          "name": "CC BY-SA 2.0",
+          "url": "https://creativecommons.org/licenses/by-sa/2.0",
+          "attribution": "Pixel-art adaptation by Codex/OpenAI image_gen, based on Alexandre Machado from São José - SC, Brasil’s reference photograph. Modified composition, lighting, pixel style and resolution. Santo Antônio de Lisboa, Florianópolis, SC, Brasil (22210866942).jpg — Alexandre Machado from São José - SC, Brasil, via Wikimedia Commons, CC BY-SA 2.0 (https://creativecommons.org/licenses/by-sa/2.0). Pixel adaptation retains this credit and the applicable share-alike terms."
+        }
+      },
+      "asset": {
+        "url": "data/scenes/assets/city-3463237/v1.png",
+        "sha256": "fa1e01b19494121fd154e3b64af9a93c0bc93df3bd5f432a9efc28fa69f2642e",
+        "width": 480,
+        "height": 220
+      },
+      "characterPosition": {
+        "x": 316,
+        "y": 202
+      },
+      "review": {
+        "reviewer": "Codex visual inspection",
+        "reviewedAt": "2026-10-19T13:31:20+00:00",
+        "assetSha256": "fa1e01b19494121fd154e3b64af9a93c0bc93df3bd5f432a9efc28fa69f2642e",
+        "geography": true,
+        "buildings": true,
+        "style": true,
+        "characterSpace": true,
+        "notes": "Final480x220asset inspected against verified BLACK-AND-WHITE source. Retains bay, low hill silhouette, sailboat rows, upper-left leafy canopy and diagonal sandy shore. Colorization and warmer afternoon lighting are artistic adaptations; original source does not establish scene colors. Exact2pixelgrid/64colors. Point316,202 is dry beach sand above the waterline; no invented buildings or bridge."
+      }
+    }
+  ]
+}
