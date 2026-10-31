@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1b2233">
+<title>สยาม 77 · Siam77</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9B%95%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="view"></canvas>
+
+<!-- HUD -->
+<div id="hud" hidden>
+  <div id="hudTL" class="panel">
+    <div id="hClock">☀️ 07:00</div>
+    <div id="hDate"></div>
+  </div>
+  <div id="hudLoc" class="panel">
+    <div id="hProv"></div>
+    <div id="hArea"></div>
+  </div>
+  <div id="hudTR">
+    <div class="panel money"><span id="hMoney">฿0</span><span id="hRide"></span></div>
+    <canvas id="minimap" width="150" height="110"></canvas>
+  </div>
+  <div id="hudBL" class="panel needs">
+    <div class="need"><span>🍚</span><div class="nb"><i id="nHunger"></i></div></div>
+    <div class="need"><span>⚡</span><div class="nb"><i id="nEnergy"></i></div></div>
+    <div class="need"><span>😊</span><div class="nb"><i id="nMood"></i></div></div>
+    <div class="need"><span>❤️</span><div class="nb"><i id="nHealth"></i></div></div>
+  </div>
+  <button id="prompt" class="panel" hidden></button>
+  <div id="hudBtns">
+    <button id="bMap" title="แผนที่ (M)">🗺️<span>แผนที่</span></button>
+    <button id="bInv" title="กระเป๋า (I)">🎒<span>กระเป๋า</span></button>
+    <button id="bPass" title="พาสปอร์ต (P)">📮<span>พาสปอร์ต</span></button>
+    <button id="bQuest" title="ภารกิจ (J)">📝<span>ภารกิจ</span></button>
+    <button id="bStat" title="ตัวละคร (C)">👤<span>ตัวละคร</span></button>
+    <button id="bMenu" title="เมนู (Esc)">☰<span>เมนู</span></button>
+  </div>
+  <div id="zoomBtns"><button id="bZoomIn">＋</button><button id="bZoomOut">－</button></div>
+  <div id="mobileBtns"><button id="bRide">🚲</button><button id="bAct">E</button></div>
+  <div id="joy"><div id="joyKnob"></div></div>
+</div>
+<div id="toasts"></div>
+<div id="banner"></div>
+
+<!-- modal window -->
+<div id="modal" hidden>
+  <div class="win"><div class="win-h"><span class="ttl"></span><button class="x" aria-label="ปิด">✕</button></div><div class="win-b"></div></div>
+</div>
+<div id="fade"></div>
+
+<!-- title -->
+<div id="title" hidden>
+  <div class="logo">
+    <div class="l1">สยาม<span>77</span></div>
+    <div class="l2">ชีวิตจริงใน 77 จังหวัด · Siam77</div>
+  </div>
+  <div class="tbtns">
+    <button id="tContinue" class="btn big" hidden>▶ เล่นต่อ<small id="tSaveInfo"></small></button>
+    <button id="tNew" class="btn big">✨ เริ่มชีวิตใหม่</button>
+    <button id="tHelp" class="btn">❓ วิธีเล่น</button>
+  </div>
+  <div class="tfoot">Phase 1 · โลกจำลองที่เดินสำรวจได้ทั้งประเทศ — ระบบการเมืองจะมาใน Phase 2</div>
+</div>
+
+<!-- loading -->
+<div id="loading">
+  <div class="ld">
+    <div class="ldlogo">สยาม<span>77</span></div>
+    <div id="ldMsg">กำลังเตรียมโลก...</div>
+    <div class="ldbar"><i id="ldBar"></i></div>
+    <div id="ldTip"></div>
+  </div>
+</div>
+
+<script src="js/util.js"></script>
+<script src="js/data_geo.js"></script>
+<script src="js/data_provinces.js"></script>
+<script src="js/data_game.js"></script>
+<script src="js/worldgen.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/render.js"></script>
+<script src="js/systems.js"></script>
+<script src="js/game.js"></script>
+<script src="js/input.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
