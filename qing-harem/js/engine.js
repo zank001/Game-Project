@@ -668,6 +668,7 @@
     renderTop(hub); renderClimbStrip(hub); renderLadder(hub); renderHero(hub); renderStats(hub); renderRels(); renderActions(hub);
     renderXnBanner();
     Seen.rank(st.rank);
+    if (st.rank >= 2 && st.rank < 8 && !refresh) tip('tb_intro', 'ท่านมี <b>ป้ายชื่อเขียว</b> แล้ว — ทุกสิ้นฤดูฮ่องเต้จะทรงพลิกป้ายเพียง 1–3 ใบ ดูโอกาสของท่าน คู่แข่ง และอารมณ์ฮ่องเต้ได้ที่ปุ่ม <b>🎴 ป้ายชื่อเขียว</b> · ฝากขันทีจางฝูจัดคิวได้ แต่ถ้าฮองเฮาหรือไทเฮาไม่พอใจ ชื่อท่านอาจถูกขีดออก', '.btn-tablet');
     if (st.rank >= 1 && !refresh) tip('wd_intro', 'ท่านมี <b>ตู้เสื้อผ้า</b> แล้ว — เลือกชุด เครื่องหัว และเครื่องประดับได้ตามฐานะ ซื้อเพิ่มด้วยเงินตำลึง หรือรับเป็นของพระราชทานเมื่อเลื่อนขั้น เครื่องแต่งกายมีผลต่อการทอยเต๋าและความอิจฉาจากศัตรู', '.btn-wardrobe');
     if (!noSave && !st.cur && st.phase !== 'ended') Saves.save('auto', st);
     Game._deltas = null;
