@@ -1036,3 +1036,64 @@ body[data-screen="hub-screen"] .tip-root { top: calc(142px + var(--st)); }
   .wd-act { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-end; }
   .wd-worn, .wd-lock { flex: 1 1 auto; text-align: left; }
 }
+
+/* ============================================================
+   XIUNÜ (ซิ่วหนี่)
+   ============================================================ */
+.hero-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.hero-btns .btn-wardrobe { margin-top: 0; }
+.btn-xiunu { position: relative; min-height: 38px; padding: 5px 14px; font-size: 14px; }
+.xn-dot { position: absolute; top: 3px; right: 5px; width: 10px; height: 10px; border-radius: 50%; background: #ff4d5e; box-shadow: 0 0 0 2px rgba(20, 8, 12, .9), 0 0 10px #ff4d5e; animation: xnPulse 1.6s ease-in-out infinite; }
+@keyframes xnPulse { 50% { transform: scale(1.35); opacity: .75; } }
+.xn-banner { display: flex; align-items: center; gap: 12px; margin: 0 0 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--gold); background: linear-gradient(180deg, rgba(217, 164, 65, .26), rgba(217, 164, 65, .08)); box-shadow: 0 0 18px rgba(217, 164, 65, .18); }
+.xn-banner[hidden] { display: none; }
+.xb-ico { font-size: 26px; flex: none; }
+.xb-body { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.xb-body b { font-family: var(--font-th); font-size: 15.5px; color: var(--gold-xl); }
+.xb-body small { color: var(--cream-d); font-size: 12.5px; line-height: 1.4; }
+.modal-xiunu .modal-body { padding: 12px 14px 18px; }
+.modal-xiunu .mtab { padding: 8px 12px; font-size: 14px; }
+.xn-head-bar { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; padding: 8px 12px; margin-bottom: 8px; border-radius: 10px; background: rgba(20, 8, 12, .55); border: 1px solid var(--gold-faint); font-size: 14px; color: var(--cream); }
+.xn-head-bar b { color: var(--gold-xl); }
+.xn-head-bar .dn { color: #f2a79a; }
+.xn-note { margin: 0 2px 10px; font-size: 12.5px; line-height: 1.55; color: var(--cream-d); }
+.xn-list { display: flex; flex-direction: column; gap: 10px; }
+.xn-empty { padding: 26px 8px; text-align: center; line-height: 1.6; }
+.xn-card { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 4px 14px; padding: 12px; border-radius: 12px; background: linear-gradient(180deg, rgba(62, 22, 32, .85), rgba(30, 11, 17, .92)); border: 1px solid var(--gold-faint); }
+.xn-card.sponsored { border-color: var(--gold-dim); }
+.xn-card.maid { border-color: rgba(143, 216, 192, .5); }
+.xn-card.turned { border-color: rgba(230, 100, 90, .6); box-shadow: inset 0 0 0 1px rgba(230, 100, 90, .25); }
+.xn-card.rejected, .xn-card.gone { opacity: .72; }
+.xn-ava { width: 96px; aspect-ratio: 1; overflow: hidden; border-radius: 50%; border: 2px solid rgba(255, 240, 192, .55); background: radial-gradient(circle at 50% 30%, #6a2a3a, #2a0f18); }
+.xn-ava svg { width: 100%; height: 100%; display: block; }
+.xn-body { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.xn-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.xn-head b { font-family: var(--font-th); font-size: 17px; color: var(--gold-xl); }
+.xn-rk { font-size: 12.5px; color: #bfe3d6; }
+.xn-st { font-size: 11.5px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--gold-faint); color: var(--cream-d); background: rgba(0, 0, 0, .3); }
+.xn-sub { font-size: 12.5px; color: var(--cream-d); }
+.xn-blurb { margin: 0; font-size: 13px; line-height: 1.5; color: var(--cream); font-style: italic; }
+.xn-bars, .xn-meters { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.xn-m { display: inline-grid; grid-template-columns: auto 64px auto; align-items: center; gap: 5px; font-size: 11.5px; color: var(--cream-d); }
+.xn-m u { text-decoration: none; }
+.xn-m i { display: block; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--gold) var(--v), rgba(255, 255, 255, .12) var(--v)); }
+.xn-m.fav i { background: linear-gradient(90deg, #d6436a var(--v), rgba(255, 255, 255, .12) var(--v)); }
+.xn-m.loy i { background: linear-gradient(90deg, #4c9a7a var(--v), rgba(255, 255, 255, .12) var(--v)); }
+.xn-m em { font-style: normal; color: var(--cream); min-width: 20px; text-align: right; }
+.xn-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.xn-tag { font-size: 11.5px; padding: 1px 9px; border-radius: 999px; background: rgba(0, 0, 0, .35); border: 1px solid var(--gold-faint); color: var(--cream-d); }
+.xn-tag.known { color: var(--gold-xl); border-color: var(--gold-dim); }
+.xn-tag.amb0 { color: #a9e2b0; } .xn-tag.amb2 { color: #f2a79a; }
+.xn-tag.good { color: #a9e2b0; border-color: rgba(120, 200, 140, .4); }
+.xn-tag.bad { color: #f2a79a; border-color: rgba(230, 120, 100, .45); }
+.xn-act { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; padding-top: 6px; border-top: 1px dashed var(--gold-faint); }
+.xn-act .btn { min-height: 38px; padding: 5px 12px; font-size: 13.5px; }
+.xn-act .btn.dn { color: #f2a79a; }
+.xn-act .btn[disabled] { opacity: .45; pointer-events: none; }
+.xn-done { align-self: center; font-size: 12.5px; color: #a9e2b0; padding: 0 6px; }
+@media (max-width: 720px) {
+  .xn-card { grid-template-columns: 72px minmax(0, 1fr); gap: 4px 10px; padding: 10px; }
+  .xn-ava { width: 72px; }
+  .xn-banner { padding: 8px 10px; }
+  .xn-act .btn { flex: 1 1 auto; }
+}

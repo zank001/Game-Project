@@ -153,14 +153,15 @@ var QL = (function () {
   function envOf(st, needW) {
     var e = { S: st.S, F: st.F, R: st.R, rank: st.rank, sir: st.sir, season: st.t % 4,
               year: Math.floor(st.t / 4) + 1, t: st.t, age: C.startAge + Math.floor(st.t / 4), origin: st.origin };
-    if (needW) e.W = wardrobeEnv(st);
+    if (needW && needW !== 'X') e.W = wardrobeEnv(st);
+    if (needW === 'X' || needW === 'WX') e.X = xnEnv(st);
     return e;
   }
-  var USES_W = /\bW\b/;
+  var USES_W = /\bW\b/, USES_X = /\bX\b/;
   function cond(expr, st) {
     if (expr === undefined || expr === null || expr === '' || expr === true) return true;
     if (expr === false) return false;
-    try { return !!evalAst(getAst(expr), envOf(st, USES_W.test(expr))); }
+    try { var uw = USES_W.test(expr), ux = USES_X.test(expr); return !!evalAst(getAst(expr), envOf(st, uw && ux ? 'WX' : ux ? 'X' : uw)); }
     catch (e) { if (strict) throw e; warn('[cond]', expr, e.message); return false; }
   }
 
@@ -177,7 +178,8 @@ var QL = (function () {
       .replace(/\{\{RANK\}\}/g, rankTitle(st))
       .replace(/\{\{HEIR\}\}/g, (st.F && typeof st.F.heir_name === 'string' && st.F.heir_name) || 'องค์ชาย')
       .replace(/\{\{YEAR\}\}/g, String(Math.floor(st.t / 4) + 1))
-      .replace(/\{\{SEASON\}\}/g, Q.SEASONS[st.t % 4]);
+      .replace(/\{\{SEASON\}\}/g, Q.SEASONS[st.t % 4])
+      .replace(/\{\{XN(RANK|CLAN)?([123])?\}\}/g, function (m, kind, idx) { return xnFill(st, kind, idx); });
   }
   function dateInfo(st) {
     var year = Math.floor(st.t / 4) + 1, season = st.t % 4;
@@ -206,7 +208,7 @@ var QL = (function () {
     Object.keys(Q.INIT_FLAGS).forEach(function (k) { st.F[k] = Q.INIT_FLAGS[k]; });
     Object.keys(o.start.F || {}).forEach(function (k) { st.F[k] = o.start.F[k]; });
     if (opts.gift && Q.GIFTS[opts.gift]) applyFx(st, Q.GIFTS[opts.gift].fx);
-    ensureW(st);
+    ensureW(st); ensureX(st);
     st.flash = null;
     return st;
   }
@@ -245,6 +247,7 @@ var QL = (function () {
     if (fx.queue) fx.queue.forEach(function (q) { st.queue.push({ id: q.id, due: st.t + 1 + (q['in'] || 0) }); });
     if (fx.ap) st.ap = Math.max(0, st.ap + fx.ap);
     if (fx.give) fx.give.forEach(function (id) { giveItem(st, id); });
+    if (fx.xn) applyXn(st, fx.xn);
     if (fx.log) st.log.push({ t: st.t, text: fill(st, fx.log) });
     if (fx.note) { var f = st.flash || (st.flash = { S: {}, R: {}, notes: [] }); f.notes.push(fill(st, fx.note)); }
   }
@@ -389,6 +392,267 @@ var QL = (function () {
              silver: st.S.silver, sets: Q.WARDROBE.sets };
   }
 
+
+  /* ---------------- xiunü (秀女) — new-concubine batches ---------------- */
+  function ensureX(st) {
+    if (!st.X || typeof st.X !== 'object') st.X = { next: Q.XIUNU.firstAt, batches: 0, seq: 0, girls: {}, order: [], pending: null, focus: null, last: null, fr: {} };
+    var X = st.X;
+    if (!X.girls) X.girls = {}; if (!X.order) X.order = []; if (!X.fr) X.fr = {};
+    return X;
+  }
+  function clampN(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function pickOf(st, arr) { return arr[Math.floor(rnd(st) * arr.length)]; }
+  function rr(st, r) { return ri(st, r[0], r[1]); }
+  function galive(g) { return g.status === 'kept' || g.status === 'sponsored' || g.status === 'maid'; }
+  function genLook(st, arch, han) {
+    var A = Q.XIUNU, r = pickOf(st, A.robes), h = pickOf(st, A.hair);
+    return { skin: pickOf(st, A.skin), hair: h[0], hairHi: h[1], iris: pickOf(st, A.iris), robe: { col: r.col, trim: r.trim, pat: r.pat, patCol: r.patCol },
+             flowers: r.fl, style: pickOf(st, arch.style), han: han, fw: ri(st, 64, 70), jw: ri(st, 18, 23), mole: rnd(st) < 0.18, blush: ri(st, 12, 26) / 100 };
+  }
+  function pickAgent(st, g, arch) {
+    if (rnd(st) >= arch.agentP) return null;
+    var opts = [];
+    if (!st.F.empress_down) opts.push('empress');
+    if (!st.F.niohuru_down) opts.push('consort');
+    if (g.arch === 'highborn') { var pref = g.side === 'military' ? 'consort' : g.side === 'civil' ? 'empress' : null; if (pref && opts.indexOf(pref) >= 0) return pref; }
+    return opts.length ? pickOf(st, opts) : null;
+  }
+  function genGirl(st, X) {
+    var A = Q.XIUNU, keys = Object.keys(A.archetypes), tot = 0, key = keys[0], i;
+    keys.forEach(function (k) { tot += A.archetypes[k].weight; });
+    var r = rnd(st) * tot;
+    for (i = 0; i < keys.length; i++) { r -= A.archetypes[keys[i]].weight; if (r <= 0) { key = keys[i]; break; } }
+    var arch = A.archetypes[key];
+    var han = (key === 'bright' || key === 'artist' || key === 'humble') ? rnd(st) < 0.65 : rnd(st) < 0.35;
+    var clan = key === 'humble' ? { th: 'สามัญชน', side: 'neutral', power: 0 }
+      : key === 'highborn' ? pickOf(st, A.manchu.filter(function (c) { return c.power >= 2; })) : pickOf(st, han ? A.han : A.manchu);
+    var used = {}; X.order.forEach(function (id) { used[X.girls[id].name] = 1; });
+    var pool = A.names.filter(function (n) { return !used[n]; }); if (!pool.length) pool = A.names;
+    var g = { id: 'x' + (++X.seq), name: pickOf(st, pool), clan: clan.th, side: clan.side, power: clan.power, han: han, banner: pickOf(st, A.banners),
+      age: ri(st, 15, 17), arch: key, t0: st.t, batch: X.batches, charm: rr(st, arch.charm), wit: rr(st, arch.wit), talent: rr(st, arch.talent),
+      ambition: rr(st, arch.ambition), loyalty: rr(st, arch.loyalty), favor: 0, rank: 0, status: 'pending', agent: null, faction: 'none',
+      turned: false, known: {}, blurb: pickOf(st, arch.blurbs), look: null };
+    g.agent = pickAgent(st, g, arch);
+    g.look = genLook(st, arch, han);
+    return g;
+  }
+  function sponsorCost(g) { return g.arch === 'humble' ? 40 : 60 + 40 * g.power; }
+  function xnQuota(st) { var q = Q.XIUNU.quota; return q[Math.min(8, Math.max(0, st.rank))] || 0; }
+  function newBatch(st) {
+    var X = ensureX(st), A = Q.XIUNU, n = rr(st, A.batchSize), ids = [], i;
+    X.batches++;
+    for (i = 0; i < n; i++) { var g = genGirl(st, X); X.girls[g.id] = g; X.order.push(g.id); ids.push(g.id); }
+    X.last = { no: X.batches, ids: ids, t: st.t };
+    X.next = st.t + A.interval;
+    st.F.xn_fresh = true;
+    if (st.rank >= A.participateRank) X.pending = { no: X.batches, ids: ids, deadline: st.t + A.deadline, quota: xnQuota(st), sponsored: 0 };
+    else autoPlace(st, ids);
+    return ids;
+  }
+  function autoPlace(st, ids) {
+    var X = ensureX(st);
+    ids.forEach(function (id) { var g = X.girls[id]; if (g.status !== 'pending') return; g.status = 'kept'; g.rank = 1; g.faction = g.agent || 'none'; });
+  }
+  function autoResolve(st) { var X = ensureX(st), P = X.pending; if (!P) return; autoPlace(st, P.ids); X.pending = null; }
+  function xnInvestigate(st, id) {
+    var X = ensureX(st), g = X.girls[id], cost = Q.XIUNU.investigateCost;
+    if (!g || g.status !== 'pending') return { ok: false, why: 'ไม่สามารถสืบประวัติได้' };
+    if (g.known.done) return { ok: false, why: 'สืบประวัติผู้นี้ไปแล้ว' };
+    if (st.S.silver < cost) return { ok: false, why: 'เงินตำลึงไม่พอ' };
+    st.flash = null; applyFx(st, { silver: -cost });
+    var p = clampN(0.5 + (st.S.wit - 45) / 80, 0.3, 0.95);
+    g.known.done = true; g.known.arch = true;
+    var b = g.ambition < 35 ? 0 : g.ambition < 65 ? 1 : 2;
+    if (rnd(st) > p) b = clampN(b + (rnd(st) < 0.5 ? -1 : 1), 0, 2);
+    g.known.ambition = b;
+    g.known.agent = (rnd(st) < p * 0.85) ? (g.agent ? 'yes' : 'no') : null;
+    return { ok: true, flash: st.flash };
+  }
+  function xnDecide(st, id, choice) {
+    var X = ensureX(st), P = X.pending, g = X.girls[id], note = '';
+    if (!P || !g || g.status !== 'pending' || P.ids.indexOf(id) < 0) return { ok: false, why: 'ไม่อยู่ในรายชื่อที่รอพิจารณา' };
+    st.flash = null;
+    if (choice === 'sponsor') {
+      var cost = sponsorCost(g);
+      if (P.sponsored >= P.quota) return { ok: false, why: 'โควตารับเข้าสังกัดของรุ่นนี้เต็มแล้ว' };
+      if (st.S.silver < cost) return { ok: false, why: 'เงินตำลึงไม่พอ (ต้องใช้ ' + cost + ' ตำลึง)' };
+      applyFx(st, { silver: -cost, prestige: g.power >= 2 ? 2 : 1 });
+      g.status = 'sponsored'; g.rank = 1; g.loyalty = clampN(g.loyalty + 22, 0, 100); P.sponsored++;
+      note = g.name + ' เข้าสังกัดของท่าน และจะจดจำว่าใครยื่นมือให้';
+    } else if (choice === 'neutral') {
+      g.status = 'kept'; g.rank = 1; g.faction = g.agent || 'none';
+      note = g.name + ' ถูกจัดเข้าวังตามชะตา';
+    } else if (choice === 'maid') {
+      g.status = 'maid'; g.loyalty = clampN(g.loyalty + 35, 0, 100); g.faction = 'none';
+      note = g.name + ' มาเป็นนางกำนัลข้างกายท่าน';
+    } else if (choice === 'reject') {
+      g.status = 'rejected';
+      if (g.power >= 2) { g.revenge = true; applyFx(st, { threat: g.power >= 3 ? 4 : 2 }); note = 'ตระกูล' + g.clan + 'จะจดจำเรื่องนี้'; }
+      if (g.arch === 'humble') { applyFx(st, { virtue: -2 }); note = g.name + ' ถูกส่งกลับสู่ความยากจน'; }
+      if (g.agent && g.known.agent === 'yes') { applyFx(st, { prestige: 2, threat: -2 }); note = 'ท่านปัดสายสืบออกจากวังได้ก่อนที่นางจะเข้ามา'; }
+      if (!note) note = g.name + ' ถูกส่งกลับบ้าน';
+    } else return { ok: false, why: 'คำสั่งไม่ถูกต้อง' };
+    g.decided = true;
+    if (P.ids.every(function (i) { return X.girls[i].status !== 'pending'; })) X.pending = null;
+    flashNote(st, note);
+    return { ok: true, note: note, flash: st.flash };
+  }
+  function xnGift(st, id) {
+    var X = ensureX(st), g = X.girls[id], cost = Q.XIUNU.giftCost;
+    if (!g || !galive(g) || g.turned) return { ok: false, why: 'ไม่สามารถมอบของขวัญให้ได้' };
+    if (g.giftT === st.t) return { ok: false, why: 'มอบของขวัญแก่นางแล้วในฤดูนี้' };
+    if (st.S.silver < cost) return { ok: false, why: 'เงินตำลึงไม่พอ' };
+    st.flash = null; applyFx(st, { silver: -cost });
+    g.loyalty = clampN(g.loyalty + (g.agent ? 3 : 6), 0, 100); g.giftT = st.t;
+    return { ok: true, flash: st.flash };
+  }
+  function xnDismiss(st, id) {
+    var X = ensureX(st), g = X.girls[id];
+    if (!g || !galive(g)) return { ok: false, why: 'ไม่สามารถทำได้' };
+    st.flash = null;
+    var wasLoyal = !g.turned && g.loyalty >= 60 && !g.agent;
+    g.status = 'gone';
+    if (g.turned) applyFx(st, { threat: -2 }); else if (g.agent) applyFx(st, { threat: -1 });
+    if (wasLoyal) applyFx(st, { virtue: -2 });
+    return { ok: true, flash: st.flash };
+  }
+  function applyXn(st, o) {
+    var X = ensureX(st), g = X.focus && X.girls[X.focus];
+    if (!g) return;
+    ['loyalty', 'ambition', 'favor'].forEach(function (k) { if (o[k] !== undefined) g[k] = clampN(g[k] + roll(st, o[k]), 0, 100); });
+    if (o.rank) g.rank = Math.max(1, g.rank + o.rank);
+    if (o.status) g.status = o.status;
+    if (o.turned !== undefined) { g.turned = !!o.turned; if (!o.turned) g.faction = 'none'; }
+    if (o.expose) { g.exposed = true; g.known.agent = 'yes'; g.known.arch = true; }
+    if (o.graduated) g.graduated = true;
+  }
+  var GSEL = {
+    any: function (g) { return galive(g); },
+    ally: function (g) { return galive(g) && !g.turned && g.loyalty >= 55; },
+    ally_court: function (g) { return (g.status === 'sponsored' || g.status === 'kept') && !g.turned && g.loyalty >= 55; },
+    sponsored: function (g) { return g.status === 'sponsored' && !g.turned; },
+    ambitious: function (g) { return g.status === 'sponsored' && !g.turned && g.ambition >= 60; },
+    rising: function (g) { return (g.status === 'sponsored' || g.status === 'kept') && !g.turned && g.favor >= 22; },
+    graduate: function (g) { return g.status === 'sponsored' && !g.turned && g.rank >= 3 && g.loyalty >= 62 && !g.graduated; },
+    turning: function (g) { return g.turned && !g.turnSeen && galive(g); },
+    rival_fav: function (g) { return g.status === 'kept' && g.favor >= 28 && (g.turned || g.agent || g.faction === 'empress' || g.faction === 'consort'); },
+    rejected_noble: function (g) { return g.status === 'rejected' && g.power >= 2 && g.revenge && !g.revengeSeen; },
+    maid_girl: function (g) { return g.status === 'maid' && g.loyalty >= 50; },
+    maid_spy: function (g) { return g.status === 'maid' && g.agent && !g.exposed; },
+  };
+  function pickGirl(st, sel, peek) {
+    var X = st.X; if (!X || !X.order) return null;
+    var f = GSEL[sel]; if (!f) return null;
+    var list = [], i;
+    for (i = 0; i < X.order.length; i++) { var g = X.girls[X.order[i]]; if (g && f(g)) { if (peek) return g; list.push(g); } }
+    if (!list.length) return null;
+    return list[Math.floor(rnd(st) * list.length)];
+  }
+  function xnEnv(st) {
+    var X = ensureX(st), n = 0, allies = 0, rivals = 0, sponsored = 0;
+    X.order.forEach(function (id) {
+      var g = X.girls[id]; if (!galive(g)) return;
+      n++; if (GSEL.ally(g)) allies++; if (g.turned || (g.agent && g.status === 'kept' && g.favor >= 30)) rivals++; if (g.status === 'sponsored') sponsored++;
+    });
+    var fg = X.focus && X.girls[X.focus];
+    var f = fg ? { status: fg.status, ambition: Math.round(fg.ambition), loyalty: Math.round(fg.loyalty), favor: Math.round(fg.favor), rank: fg.rank, agent: !!fg.agent, turned: !!fg.turned, arch: fg.arch, power: fg.power }
+      : { status: '', ambition: 0, loyalty: 0, favor: 0, rank: 0, agent: false, turned: false, arch: '', power: 0 };
+    return { pending: !!X.pending, n: n, allies: allies, rivals: rivals, sponsored: sponsored, batches: X.batches, quota: X.pending ? X.pending.quota - X.pending.sponsored : 0, f: f };
+  }
+  function xnFill(st, kind, idx) {
+    var X = st.X; if (!X) return kind ? '' : 'น้องใหม่';
+    if (idx) { var id = X.last && X.last.ids[+idx - 1]; return (id && X.girls[id]) ? X.girls[id].name : ''; }
+    var g = X.focus && X.girls[X.focus];
+    if (!g) return kind ? '' : 'น้องใหม่';
+    if (kind === 'RANK') return g.rank ? Q.RANKS[Math.min(9, g.rank)].th : 'ผู้เข้าคัดเลือก';
+    if (kind === 'CLAN') return g.clan;
+    return g.name;
+  }
+  function focusLook(st) { var X = st.X, g = X && X.focus && X.girls[X.focus]; return g ? g.look : null; }
+  function xnTick(st, rep) {
+    var X = ensureX(st), A = Q.XIUNU, notes = [];
+    if (st.rank >= 1 && !st.F.finale && st.t >= X.next) { newBatch(st); notes.push('รุ่นซิ่วหนี่ปีที่ ' + X.batches + ' เข้าวังแล้ว'); }
+    if (X.pending && st.t > X.pending.deadline) { autoResolve(st); notes.push('ฮองเฮาจัดสรรผู้เข้าคัดเลือกที่ท่านยังไม่ได้ตัดสิน'); }
+    var allyFav = 0, allyThr = 0, rivFav = 0, rivThr = 0, spyThr = 0;
+    X.order.forEach(function (id) {
+      var g = X.girls[id]; if (!galive(g)) return;
+      if (st.t % 4 === 0) g.age++;
+      if (g.status !== 'maid') {
+        var pot = (g.charm + g.talent) / 2;
+        g.favor = clampN(g.favor + Math.max(0, (pot - 30) / 12 * rnd(st) * 1.8) - 0.6, 0, 100);
+        var cap = Math.min(6, Math.max(1, st.rank - 1));
+        while (g.rank < cap && g.favor >= A.rankThr[g.rank]) {
+          g.rank++; g.favor -= 4;
+          if (g.status === 'sponsored' && !g.turned) notes.push(g.name + ' ในสังกัดได้เลื่อนเป็น' + Q.RANKS[g.rank].th);
+        }
+      }
+      if (g.arch === 'schemer' || g.agent) g.ambition = clampN(g.ambition + 1.2 * rnd(st), 0, 100);
+      else if (g.arch === 'highborn' || g.arch === 'beauty') g.ambition = clampN(g.ambition + 0.5 * rnd(st), 0, 100);
+      if (g.status === 'sponsored') g.loyalty = clampN(g.loyalty + ((g.ambition > 70 && g.rank >= st.rank - 2) ? -2.2 : 0.35), 0, 100);
+      else if (g.status === 'maid') g.loyalty = clampN(g.loyalty + 0.2, 0, 95);
+      else g.loyalty = clampN(g.loyalty + (g.loyalty > 40 ? -0.15 : 0.15), 0, 100);
+      if (!g.turned && g.status !== 'maid' && g.rank >= 2 && g.ambition >= 75 && g.loyalty < 45) {
+        g.turned = true; g.faction = g.agent || 'rival'; st.queue.push({ id: 'xn_turn', due: st.t });
+      }
+      if (!g.turned && g.loyalty >= 55) {
+        if (g.status === 'sponsored' && g.favor >= 20) allyFav += 0.25;
+        if ((g.status === 'sponsored' || g.status === 'maid') && g.loyalty >= 60) allyThr -= 0.35;
+      }
+      if ((g.turned || (g.agent && g.status === 'kept')) && g.favor >= 30 && g.rank <= st.rank) { rivFav -= 0.4; rivThr += 0.3; }
+      if (g.agent && !g.exposed && (g.status === 'sponsored' || g.status === 'maid')) spyThr += 0.4;
+    });
+    var fr = X.fr;
+    fr.favor = (fr.favor || 0) + clampN(allyFav, 0, 0.75) + clampN(rivFav, -1.2, 0);
+    fr.threat = (fr.threat || 0) + clampN(allyThr, -1.05, 0) + clampN(rivThr, 0, 0.9) + clampN(spyThr, 0, 0.8);
+    var out = {};
+    ['favor', 'threat'].forEach(function (k) { var v = fr[k], n = v >= 0 ? Math.floor(v) : Math.ceil(v); if (n) { fr[k] = v - n; out[k] = n; } });
+    if (out.favor) notes.push(out.favor > 0 ? 'สนมในสังกัดช่วยกราบทูลเรื่องดีๆ ของท่านแก่ฮ่องเต้ (ความโปรดปราน +' + out.favor + ')' : 'รัศมีของสนมหน้าใหม่บดบังท่านต่อพระเนตรฮ่องเต้ (ความโปรดปราน ' + out.favor + ')');
+    if (out.threat) notes.push(out.threat < 0 ? 'คนของท่านคอยดูต้นทางให้ ภัยรอบกายลดลง' : 'มีสายตาจากรุ่นใหม่จับจ้องท่านอยู่ (ภัยรอบกาย +' + out.threat + ')');
+    if (Object.keys(out).length) applyFx(st, out);
+    st.flash = null;
+    if (rep) rep.xn = notes;
+  }
+  function bucketAmb(v) { return v < 35 ? 0 : v < 65 ? 1 : 2; }
+  function xnCard(st, g) {
+    var A = Q.XIUNU, a = A.archetypes[g.arch], k = g.known || {};
+    var seen = (g.status === 'sponsored' || g.status === 'maid') && st.t - g.t0 >= 4;
+    var knowArch = !!k.arch || seen || g.turned;
+    var amb = k.ambition !== undefined ? k.ambition : ((g.status === 'sponsored' && st.t - g.t0 >= 8) || g.turned ? bucketAmb(g.ambition) : null);
+    var showLoy = g.status === 'sponsored' || g.status === 'maid' || !!k.done;
+    return { id: g.id, name: g.name, clan: g.clan, banner: g.banner, side: g.side, sideTh: A.sideTh[g.side], power: g.power, age: g.age, han: g.han, blurb: g.blurb,
+      status: g.status, statusTh: A.statusTh[g.status], rank: g.rank, rankTh: g.rank ? Q.RANKS[Math.min(9, g.rank)].th : 'ผู้เข้าคัดเลือก',
+      charm: g.charm, wit: g.wit, talent: g.talent, arch: knowArch ? g.arch : null, archTh: knowArch ? a.th : null, ambition: amb,
+      agentKnown: k.agent === 'yes' ? 'yes' : (k.agent === 'no' ? 'no' : null), agentTh: g.agent ? A.agentTh[g.agent] : null,
+      favor: Math.round(g.favor), loyalty: showLoy ? Math.round(g.loyalty) : null, turned: !!g.turned, giftOk: g.giftT !== st.t, look: g.look, batch: g.batch,
+      sponsorCost: sponsorCost(g), investigated: !!k.done, graduated: !!g.graduated };
+  }
+  function xiunu(st) {
+    var X = ensureX(st), P = X.pending, A = Q.XIUNU;
+    var cards = X.order.map(function (id) { return xnCard(st, X.girls[id]); });
+    var by = function (f) { return cards.filter(f); };
+    return {
+      batches: X.batches, nextIn: Math.max(0, X.next - st.t), silver: st.S.silver, investigateCost: A.investigateCost, giftCost: A.giftCost, participateRank: A.participateRank,
+      pending: P ? { no: P.no, deadlineIn: Math.max(0, P.deadline - st.t), quota: P.quota, left: P.quota - P.sponsored, ids: P.ids.slice() } : null,
+      pendingCards: P ? by(function (c) { return P.ids.indexOf(c.id) >= 0 && c.status === 'pending'; }) : [],
+      mine: by(function (c) { return c.status === 'sponsored' || c.status === 'maid'; }),
+      palace: by(function (c) { return c.status === 'kept'; }),
+      gone: by(function (c) { return c.status === 'rejected' || c.status === 'gone'; }),
+      all: cards,
+    };
+  }
+  /* validator helper: create one girl for every selector so xn events can be probed */
+  function xnProbe(st) {
+    var X = ensureX(st), mk = function (o) { var g = genGirl(st, X); X.girls[g.id] = g; X.order.push(g.id); Object.keys(o).forEach(function (k) { g[k] = o[k]; }); return g; };
+    mk({ status: 'sponsored', loyalty: 70, favor: 30, rank: 3, ambition: 65, turned: false, agent: null });
+    mk({ status: 'kept', turned: true, turnSeen: false, favor: 40, rank: 2, faction: 'consort' });
+    mk({ status: 'rejected', power: 3, revenge: true, clan: 'ว่านหยาน' });
+    mk({ status: 'maid', loyalty: 70, agent: null });
+    mk({ status: 'maid', loyalty: 55, agent: 'empress', exposed: false });
+    X.focus = X.order[0];
+    X.last = { no: 1, ids: X.order.slice(0, 3), t: st.t };
+    return X;
+  }
+
   /* ---------------- ranks ---------------- */
   function promote(st) {
     var from = st.rank; if (from >= 9) return;
@@ -446,6 +710,7 @@ var QL = (function () {
     var last = st.seen[ev.id];
     if (last !== undefined) { if (isOnce(ev)) return false; if (st.t - last < cooldownOf(ev)) return false; }
     if (ev.cond && !cond(ev.cond, st)) return false;
+    if (ev.girl && !pickGirl(st, ev.girl, true)) return false;
     return true;
   }
   function isGeneral(ev) { return ev.kind === 'random' && (!ev.tags || !ev.tags.length || ev.tags.indexOf('general') >= 0); }
@@ -532,6 +797,7 @@ var QL = (function () {
     if (st.t % 4 === 3 && st.rank <= 2) { st.S.health = clampStat('health', st.S.health - C.winterChill); rep.notes.push('ฤดูหนาวเยือกเย็นเกินกว่าเสื้อผ้าบางๆ จะต้านไหว'); }
     rep.healthDelta = st.S.health - h0;
     st.t++; st.sir++; st.ap = C.apPerSeason;
+    xnTick(st, rep);
     checkPromotion(st);
     if (!st.pendingEnding) { var se = systemEnd(st); if (se) st.pendingEnding = se; }
     beginSeason(st);
@@ -586,6 +852,13 @@ var QL = (function () {
   function startEvent(st, id) {
     var ev = EV[id];
     if (!ev) { warn('startEvent: unknown event', id); st.cur = null; return false; }
+    if (ev.girl) {
+      var gg = pickGirl(st, ev.girl);
+      if (!gg) { st.cur = null; return false; }
+      ensureX(st).focus = gg.id;
+      if (ev.girl === 'turning') { gg.turnSeen = true; if (pickGirl(st, 'turning', true)) st.queue.push({ id: 'xn_turn', due: st.t + 1 }); }
+      if (ev.girl === 'rejected_noble') gg.revengeSeen = true;
+    }
     st.seen[id] = st.t; st.stats.events++;
     st.cur = { ev: id, node: ev.start };
     if (ev.bg) st.scene.bg = ev.bg;
@@ -722,6 +995,7 @@ var QL = (function () {
     actions: actions, doAction: doAction, hub: hub,
     nextPending: nextPending, startEvent: startEvent, view: view, advance: advance, choose: choose, ackPromotion: ackPromotion,
     systemEnd: systemEnd, summary: summary, rnd: rnd,
+    xiunu: xiunu, xnInvestigate: xnInvestigate, xnDecide: xnDecide, xnGift: xnGift, xnDismiss: xnDismiss, focusLook: focusLook, ensureX: ensureX, xnProbe: xnProbe, xnQuota: xnQuota,
     wardrobe: wardrobe, wardrobeEff: wardrobeEff, equip: equip, unequip: unequip, buy: buy, give: giveItem, look: look, ensureW: ensureW, effLines: effLines,
     event: function (id) { return EV[id]; }, action: function (id) { return ACT[id]; },
   };

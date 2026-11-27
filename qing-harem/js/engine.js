@@ -570,7 +570,8 @@
     var st = Game.st, R = Q.RANKS[st.rank];
     var expr = (st.S.health < 30 || st.F.poisoned) ? 'sad' : (st.S.favor >= 50 ? 'smile' : 'neutral');
     var wsig = (QL.ensureW(st), Object.keys(st.W.eq).map(function (k) { return st.W.eq[k]; }).join(','));
-    var key = [st.rank, st.origin, expr, st.name, st.F.has_heir ? 1 : 0, st.F.poisoned ? 1 : 0, st.F.heir_name || '', wsig].join('|');
+    var xs = QL.ensureX(st), xsig = xs.batches + ':' + (xs.pending ? xs.pending.ids.length : 0);
+    var key = [st.rank, st.origin, expr, st.name, st.F.has_heir ? 1 : 0, st.F.poisoned ? 1 : 0, st.F.heir_name || '', wsig, xsig].join('|');
     var chips = '<span class="hc">อายุ ' + hub.date.age + '</span>';
     if (st.F.has_heir) chips += '<span class="hc heir">👶 ' + esc(typeof st.F.heir_name === 'string' ? st.F.heir_name : 'ทายาท') + '</span>';
     if (st.F.poisoned) chips += '<span class="hc poison">☠ ถูกพิษ</span>';
@@ -584,7 +585,8 @@
         '<div class="hero-info"><div class="hero-name">' + esc(st.name) + '</div>' +
         '<div class="hero-rank">' + seal(st.rank, 'sm') + '<span><b>' + esc(hub.rankTitle) + '</b><small>' + esc(R.zh) + '</small></span></div>' +
         '<div class="hero-hall">🏠 ' + esc(R.hall) + '</div><div class="hero-chips">' + chips + '</div>' +
-        '<button type="button" class="btn btn-ghost sm btn-wardrobe">👘 ตู้เสื้อผ้า</button></div>';
+        '<div class="hero-btns"><button type="button" class="btn btn-ghost sm btn-wardrobe">👘 ตู้เสื้อผ้า</button>' +
+        (xs.batches > 0 ? '<button type="button" class="btn btn-ghost sm btn-xiunu">📜 ซิ่วหนี่' + (xs.pending ? '<i class="xn-dot"></i>' : '') + '</button>' : '') + '</div></div>';
     });
   }
 
@@ -663,6 +665,7 @@
     var hub = QL.hub(st);
     $('#action-groups').classList.toggle('still', !!refresh);
     renderTop(hub); renderClimbStrip(hub); renderLadder(hub); renderHero(hub); renderStats(hub); renderRels(); renderActions(hub);
+    renderXnBanner();
     Seen.rank(st.rank);
     if (st.rank >= 1 && !refresh) tip('wd_intro', 'ท่านมี <b>ตู้เสื้อผ้า</b> แล้ว — เลือกชุด เครื่องหัว และเครื่องประดับได้ตามฐานะ ซื้อเพิ่มด้วยเงินตำลึง หรือรับเป็นของพระราชทานเมื่อเลื่อนขั้น เครื่องแต่งกายมีผลต่อการทอยเต๋าและความอิจฉาจากศัตรู', '.btn-wardrobe');
     if (!noSave && !st.cur && st.phase !== 'ended') Saves.save('auto', st);
@@ -731,6 +734,11 @@
   function onEndSeasonClick() {
     if (!Game._hubWait) return;
     var st = Game.st;
+    var xp = QL.ensureX(st).pending;
+    if (xp && xp.deadlineLeft === undefined && st.t >= xp.deadline && !FAST) {
+      confirmBox('ยังมีผู้เข้าคัดเลือกรอพิจารณา', 'ถ้าสิ้นสุดฤดูกาลนี้ ฮองเฮาจะจัดสรรผู้ที่ท่านยังไม่ได้ตัดสินใจให้เอง ต้องการไปพิจารณาก่อนหรือไม่?', 'ไปพิจารณา', 'สิ้นสุดฤดูกาลเลย').then(function (go) { if (go) openXiunu('pending'); else resolveHub({ type: 'end' }); });
+      return;
+    }
     if (st.ap > 0 && !FAST) {
       confirmBox('ยังเหลือแต้มกำลัง ' + st.ap + ' แต้ม', 'ต้องการสิ้นสุดฤดูกาลเลยหรือไม่? แต้มที่เหลือจะหายไป', 'สิ้นสุดฤดูกาล', 'อยู่ต่ออีกนิด').then(function (ok) { if (ok) resolveHub({ type: 'end' }); });
       return;
@@ -775,7 +783,7 @@
       }
       if (sp.key !== key) {
         var changed = sp.key !== '';
-        sp.el.innerHTML = portrait(ce.c, expr, { rank: st.rank, origin: st.origin, outfit: ce.c === 'player' });
+        sp.el.innerHTML = portrait(ce.c, expr, { rank: st.rank, origin: st.origin, outfit: ce.c === 'player' ? true : (ce.c === 'maiden' ? QL.focusLook(st) : undefined) });
         sp.key = key;
         if (changed) { sp.el.classList.remove('swap'); void sp.el.offsetWidth; sp.el.classList.add('swap'); }
       }
@@ -808,7 +816,7 @@
     nt.innerHTML = isNarr ? '' : '<span class="nt-name">' + esc(charName(c)) + '</span>' + ((C && C.zh && c !== 'player') ? '<span class="nt-zh">' + esc(C.zh) + '</span>' : '');
     nt.style.display = isNarr ? 'none' : '';
     var av = $('#speaker-avatar');
-    if (!isNarr && !onStage(c) && c !== 'player') { av.innerHTML = portrait(c, v.x || 'neutral', { bust: true }); av.classList.add('on'); Seen.char(c); }
+    if (!isNarr && !onStage(c) && c !== 'player') { av.innerHTML = portrait(c, v.x || 'neutral', { bust: true, outfit: c === 'maiden' ? QL.focusLook(Game.st) : undefined }); av.classList.add('on'); Seen.char(c); }
     else if (!isNarr && c === 'player' && !onStage('player')) { av.innerHTML = portrait('player', v.x || 'neutral', { bust: true, rank: Game.st.rank, origin: Game.st.origin, outfit: true }); av.classList.add('on'); }
     else { av.innerHTML = ''; av.classList.remove('on'); }
     $('#caption').classList.remove('on');
@@ -1128,6 +1136,7 @@
     if (rep.healthDelta) line('✚', 'สุขภาพ <b class="' + (rep.healthDelta > 0 ? 'up' : 'dn') + '">' + sign(rep.healthDelta) + '</b>', rep.healthDelta > 0 ? 'up' : 'dn');
     if (rep.threatDelta) line('⚠', 'ภัยรอบกาย <b class="' + (rep.threatDelta < 0 ? 'up' : 'dn') + '">' + sign(rep.threatDelta) + '</b>', rep.threatDelta < 0 ? 'up' : 'dn');
     (rep.notes || []).forEach(function (n) { line('✧', esc(n), 'note'); });
+    (rep.xn || []).forEach(function (n) { line('📜', esc(n), 'note'); });
     var foot = '';
     if (rep.promo) foot = '<div class="rp-foot promo">✦ ราชโองการเลื่อนขั้นกำลังมาถึง</div>';
     else if (rep.pending) foot = '<div class="rp-foot">มีเหตุการณ์รอท่านอยู่ในฤดูนี้ ' + rep.pending + ' เรื่อง</div>';
@@ -1415,6 +1424,7 @@
       '<section><h4>♥ ความโปรดปรานและความสัมพันธ์</h4><p>ความโปรดปรานของฮ่องเต้ <b>จางลงทุกฤดู</b> ต้องหมั่นสร้างโอกาสพบพระองค์ ส่วนฮองเฮา ไทเฮา และคนรอบตัว ล้วนมีผลต่อชะตาท่าน</p></section>' +
       '<section><h4>🎲 การเลือกและโอกาส</h4><p>ตัวเลือกที่มี <b>%</b> คือการทดสอบคุณสมบัติ ยิ่งสูงยิ่งสำเร็จง่าย · ป้าย <b>銀</b> คือเงินตำลึงที่ต้องจ่าย · ภัยรอบกายสูง เหตุร้ายจะมาบ่อยขึ้น</p></section>' +
       '<section><h4>👘 ตู้เสื้อผ้า</h4><p>กดปุ่ม <b>ตู้เสื้อผ้า</b> ในหน้าหลักเพื่อเลือก <b>ชุด · เครื่องหัว · สร้อยคอ · ต่างหู · ของติดตัว</b> ได้ตามฐานะ ลองสวมก่อนซื้อได้ รับของพระราชทานเมื่อเลื่อนขั้น และได้ของขวัญจากผู้คนในวัง ของแต่ละชิ้นเพิ่มโอกาสตอนทอยเต๋า (โฉมงาม พรสวรรค์ ปัญญา) หรือส่งผลต่อศักดิ์ศรีและภัยรอบกายทุกฤดู — ชุดหรูสะดุดตาช่วยให้ถูกจดจำ แต่ก็ล่อสายตาศัตรูด้วย · สวมชุด เครื่องหัว และเครื่องประดับโทนเดียวกันครบ จะได้โบนัสชุดเซ็ต</p></section>' +
+      '<section><h4>🏯 ซิ่วหนี่ — สนมรุ่นใหม่</h4><p>ทุก 3 ปีมี <b>รุ่นซิ่วหนี่</b> เข้าวัง เมื่อท่านถึงขั้น <b>เฟย</b> ท่านมีสิทธิ์พิจารณาผู้เข้าคัดเลือก: สืบประวัติ → <b>รับเข้าสังกัด</b> / <b>ปล่อยตามชะตา</b> / <b>ส่งเป็นนางกำนัลข้างกาย</b> / <b>คัดออก</b> สนมที่ท่านอุปถัมภ์อาจเป็นหูเป็นตาและกราบทูลแทนท่าน แต่บางคนทะเยอทะยานจนกลายเป็นคู่แข่ง — และบางคนคือสายสืบของคนอื่นตั้งแต่แรก ดูรายชื่อได้ที่ปุ่ม <b>📜 ซิ่วหนี่</b></p></section>' +
       '<section><h4>📜 ตอนจบ</h4><p>มีตอนจบมากมายตามวิถีที่ท่านเลือก ทั้งสุข เศร้า และสงบ ดูได้ที่ <b>จดหมายเหตุ</b> · ระบบบันทึกอัตโนมัติทุกครั้งที่กลับสู่หน้าวังหลัง</p></section>' +
       '<section><h4>⌨ ปุ่มลัด</h4><p><b>Space / Enter</b> ไปต่อ · <b>1–4</b> เลือกตัวเลือก · <b>Esc</b> เมนู</p></section>' +
       '<section class="credits"><h4>✦ เครดิต</h4><p>ลิขิตหงส์ · วังหลังต้าชิง<br>เกมกลยุทธ์ผสมวิชวลโนเวล ภาพและเสียงทั้งหมดสร้างด้วยโค้ด<br>เรื่องราวเป็นนิยายสมมติ — รัชศกเฉิงผิง ฮ่องเต้ ราชวงศ์ และตัวละครทั้งหมดไม่มีตัวตนจริง ชื่อสกุลแมนจูใช้เพื่อบรรยากาศเท่านั้น</p></section></div>';
@@ -1500,6 +1510,92 @@
     openModal({ title: 'ตู้เสื้อผ้า', cls: 'modal-wardrobe', tabs: tabs, start: slot || 'robe' });
   }
   Game.openWardrobe = openWardrobe;
+
+
+  /* ============================================================
+     11c. XIUNÜ (ซิ่วหนี่ — รุ่นสนมใหม่)
+     ============================================================ */
+  var AMB_TH = ['ต่ำ — ใจเรียบง่าย', 'ปานกลาง', 'สูง — หิวบันได'];
+  function renderXnBanner() {
+    var el = $('#xn-banner'), st = Game.st; if (!el || !st) return;
+    var x = QL.xiunu(st), P = x.pending;
+    if (!P || !x.pendingCards.length) { el.hidden = true; el.innerHTML = ''; return; }
+    el.hidden = false;
+    el.innerHTML = '<span class="xb-ico">📜</span><div class="xb-body"><b>รุ่นซิ่วหนี่ปีที่ ' + P.no + ' รอการพิจารณา</b><small>ผู้เข้าคัดเลือก ' + x.pendingCards.length + ' คน · ' + (P.deadlineIn > 0 ? 'ตัดสินใจได้อีก ' + P.deadlineIn + ' ฤดู' : 'ฤดูสุดท้ายที่ตัดสินใจได้') + ' · โควตารับเข้าสังกัด ' + P.left + '</small></div><button type="button" class="btn btn-primary sm btn-xiunu"><span>พิจารณา</span></button>';
+    tip('xn_intro', 'รุ่น <b>ซิ่วหนี่</b> (สตรีผู้เข้าคัดเลือก) เข้าวังแล้ว — ท่านมีสิทธิ์ช่วยพิจารณา สืบประวัติก่อนตัดสินใจได้ <b>รับเข้าสังกัด</b> (ได้พันธมิตรแต่เสี่ยงเลี้ยงคนที่ทะเยอทะยาน) · <b>ปล่อยตามชะตา</b> · <b>ส่งเป็นนางกำนัลข้างกาย</b> · <b>คัดออก</b> (ระวังตระกูลใหญ่จะผูกใจเจ็บ)', '#xn-banner .btn-xiunu');
+  }
+  function xnBust(c, big) { return portrait('maiden', 'neutral', { rank: 1, origin: 'noble', bust: true, outfit: c.look }); }
+  function xnMeter(label, v, cls) { return '<span class="xn-m ' + (cls || '') + '"><u>' + label + '</u><i style="--v:' + Math.max(0, Math.min(100, v)) + '%"></i><em>' + v + '</em></span>'; }
+  function xnCardHTML(c, mode, x) {
+    var tags = '<span class="xn-tag ' + (c.arch ? 'known' : '') + '">' + esc(c.archTh || 'นิสัยแท้ยังไม่แน่ชัด') + '</span>' +
+      '<span class="xn-tag">' + esc(c.sideTh) + '</span>' +
+      (c.ambition !== null && c.ambition !== undefined ? '<span class="xn-tag amb' + c.ambition + '">ทะเยอทะยาน: ' + esc(AMB_TH[c.ambition]) + '</span>' : '') +
+      (c.agentKnown === 'yes' ? '<span class="xn-tag bad">⚠ ' + esc(c.agentTh || 'สายสืบ') + '</span>' : c.agentKnown === 'no' ? '<span class="xn-tag good">ไม่พบสายสืบ</span>' : '') +
+      (c.turned ? '<span class="xn-tag bad">เป็นปฏิปักษ์ต่อท่าน</span>' : '') + (c.graduated ? '<span class="xn-tag good">ตอบแทนบุญคุณแล้ว</span>' : '');
+    var meters = '';
+    if (mode !== 'pending') meters = '<div class="xn-meters">' + xnMeter('โปรดปราน', c.favor, 'fav') + (c.loyalty !== null ? xnMeter('ภักดี', c.loyalty, 'loy') : '') + '</div>';
+    var act = '';
+    if (mode === 'pending') {
+      act += c.investigated ? '<span class="xn-done">✓ สืบประวัติแล้ว</span>' : '<button type="button" class="btn btn-ghost sm" data-a="inv" data-id="' + c.id + '"><span>🔍 สืบประวัติ · 銀' + x.investigateCost + '</span></button>';
+      act += '<button type="button" class="btn btn-primary sm" data-a="sponsor" data-id="' + c.id + '"' + (x.pending.left <= 0 ? ' disabled' : '') + '><span>🤝 รับเข้าสังกัด · 銀' + c.sponsorCost + '</span></button>' +
+        '<button type="button" class="btn btn-secondary sm" data-a="neutral" data-id="' + c.id + '"><span>ปล่อยตามชะตา</span></button>' +
+        '<button type="button" class="btn btn-secondary sm" data-a="maid" data-id="' + c.id + '"><span>ส่งเป็นนางกำนัลข้างกาย</span></button>' +
+        '<button type="button" class="btn btn-ghost sm dn" data-a="reject" data-id="' + c.id + '"><span>คัดออก</span></button>';
+    } else if (c.status === 'sponsored' || c.status === 'maid' || c.status === 'kept') {
+      if (!c.turned) act += '<button type="button" class="btn btn-ghost sm" data-a="gift" data-id="' + c.id + '"' + (c.giftOk ? '' : ' disabled') + '><span>🎁 ให้ของขวัญ · 銀' + x.giftCost + '</span></button>';
+      act += '<button type="button" class="btn btn-ghost sm dn" data-a="dismiss" data-id="' + c.id + '"><span>ตัดสัมพันธ์</span></button>';
+    }
+    var origin = c.clan === 'สามัญชน' ? 'ลูกสาวสามัญชน' : 'ตระกูล' + c.clan + (c.han ? ' (ฮั่นจวิน)' : ' · ' + c.banner);
+    return '<div class="xn-card ' + c.status + (c.turned ? ' turned' : '') + '"><div class="xn-ava">' + xnBust(c) + '</div><div class="xn-body">' +
+      '<div class="xn-head"><b>' + esc(c.name) + '</b><span class="xn-rk">' + esc(c.rankTh) + '</span><span class="xn-st">' + esc(c.statusTh) + '</span></div>' +
+      '<div class="xn-sub">' + esc(origin) + ' · อายุ ' + c.age + '</div><p class="xn-blurb">“' + esc(c.blurb) + '”</p>' +
+      '<div class="xn-bars">' + xnMeter('โฉม', c.charm) + xnMeter('ปัญญา', c.wit) + xnMeter('ศิลป์', c.talent) + '</div>' + meters +
+      '<div class="xn-tags">' + tags + '</div></div>' + (act ? '<div class="xn-act">' + act + '</div>' : '') + '</div>';
+  }
+  function renderXnTab(el, mode) {
+    var st = Game.st, x = QL.xiunu(st), list, head = '', empty = '';
+    if (mode === 'pending') {
+      list = x.pendingCards;
+      if (x.pending) head = '<div class="xn-head-bar"><span>รุ่นที่ <b>' + x.pending.no + '</b></span><span>โควตารับเข้าสังกัด <b>' + x.pending.left + '</b>/' + x.pending.quota + '</span><span>' + (x.pending.deadlineIn > 0 ? 'ตัดสินใจได้อีก <b>' + x.pending.deadlineIn + '</b> ฤดู' : '<b class="dn">ฤดูสุดท้าย</b>') + '</span><span class="wd-silver"><u>銀</u>' + x.silver + '</span></div>' +
+        '<p class="xn-note">ผู้เข้าคัดเลือกแต่ละคนมีความลับที่มองจากภายนอกไม่เห็น — บางคนเป็นสายของฮองเฮาหรือหวงกุ้ยเฟย บางคนซื่อตรงเกินกว่าจะอยู่รอดในวัง การ <b>สืบประวัติ</b> ช่วยให้เห็นความทะเยอทะยานและสายสืบ (แม่นยำตามปัญญาของท่าน)</p>';
+      empty = 'ไม่มีผู้เข้าคัดเลือกรอพิจารณาแล้ว';
+    } else if (mode === 'mine') { list = x.mine; empty = 'ยังไม่มีสนมในสังกัดของท่าน — เมื่อถึงขั้น ' + Q.RANKS[x.participateRank].th + ' ท่านจะมีสิทธิ์รับผู้เข้าคัดเลือกเข้าสังกัด'; }
+    else if (mode === 'palace') { list = x.palace; empty = 'ยังไม่มีสนมหน้าใหม่ในวังที่อยู่นอกสังกัดของท่าน'; head = '<p class="xn-note">รุ่นถัดไปจะเข้าวังในอีก <b>' + x.nextIn + '</b> ฤดู</p>'; }
+    else { list = x.gone; empty = 'ยังไม่มีใครถูกส่งกลับหรือจากไป'; }
+    el.innerHTML = head + '<div class="xn-list">' + (list.length ? list.map(function (c) { return xnCardHTML(c, mode, x); }).join('') : '<p class="mute xn-empty">' + esc(empty) + '</p>') + '</div>';
+    $$('[data-a]', el).forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (b.disabled) return;
+        var a = b.dataset.a, id = b.dataset.id, r;
+        function done(res, ok) {
+          if (!res.ok) { toast(res.why || 'ทำไม่ได้'); snd('fail'); return; }
+          snd(ok || 'pick'); if (res.note) toast(res.note);
+          try { renderHub(true, true); } catch (e) { /* ignore */ }
+          if (!st.cur && st.phase !== 'ended') Saves.save('auto', st);
+          var P = QL.xiunu(st).pending;
+          if (mode === 'pending' && (!P || !QL.xiunu(st).pendingCards.length)) { closeModal(); toast('พิจารณารุ่นซิ่วหนี่เสร็จสิ้น'); return; }
+          renderXnTab(el, mode);
+        }
+        if (a === 'inv') { done(QL.xnInvestigate(st, id), 'page'); return; }
+        if (a === 'gift') { done(QL.xnGift(st, id), 'chime'); return; }
+        if (a === 'sponsor') { done(QL.xnDecide(st, id, 'sponsor'), 'chime'); return; }
+        if (a === 'neutral') { done(QL.xnDecide(st, id, 'neutral'), 'page'); return; }
+        if (a === 'maid') { done(QL.xnDecide(st, id, 'maid'), 'pick'); return; }
+        if (a === 'reject') { confirmBox('คัดนางออก?', 'นางจะถูกส่งกลับบ้าน ถ้านางมาจากตระกูลใหญ่ ตระกูลนั้นจะจดจำเรื่องนี้ไว้', 'คัดออก', 'ยังก่อน').then(function (ok) { if (ok) done(QL.xnDecide(st, id, 'reject'), 'fail'); }); return; }
+        if (a === 'dismiss') { confirmBox('ตัดสัมพันธ์กับนาง?', 'นางจะจากสังกัดของท่านไปและจะไม่กลับมาอีก หากนางเคยภักดีต่อท่าน ท่านจะเสียชื่อเรื่องความใจดำ', 'ตัดสัมพันธ์', 'ยังก่อน').then(function (ok) { if (ok) done(QL.xnDismiss(st, id), 'fail'); }); }
+      });
+    });
+  }
+  function openXiunu(tab) {
+    var st = Game.st; if (!st) return;
+    var x = QL.xiunu(st), tabs = [];
+    if (x.pending && x.pendingCards.length) tabs.push({ id: 'pending', label: '📜 รอพิจารณา (' + x.pendingCards.length + ')', render: function (el) { renderXnTab(el, 'pending'); } });
+    tabs.push({ id: 'mine', label: '🤝 สังกัดของท่าน (' + x.mine.length + ')', render: function (el) { renderXnTab(el, 'mine'); } });
+    tabs.push({ id: 'palace', label: '🏯 ในวัง (' + x.palace.length + ')', render: function (el) { renderXnTab(el, 'palace'); } });
+    tabs.push({ id: 'gone', label: '🍂 จากไป (' + x.gone.length + ')', render: function (el) { renderXnTab(el, 'gone'); } });
+    openModal({ title: 'ซิ่วหนี่ · สตรีผู้เข้าคัดเลือก', cls: 'modal-xiunu', tabs: tabs, start: tab && tabs.some(function (t) { return t.id === tab; }) ? tab : tabs[0].id });
+  }
+  Game.openXiunu = openXiunu;
 
   function menuTabs(inGame) {
     var t = [{ id: 'save', label: inGame ? 'บันทึก' : 'โหลดเกม', render: tabSaves }];
@@ -1626,7 +1722,10 @@
     $$('#hub-tabs button').forEach(function (b) { b.onclick = function () { snd('page'); setHubTab(b.dataset.tab); }; });
     $('#climb-strip').onclick = function () { setHubTab('ladder'); };
     $('#btn-menu').onclick = function () { openMenu(); };
-    document.addEventListener('click', function (e) { var b = e.target && e.target.closest ? e.target.closest('.btn-wardrobe') : null; if (b) { e.preventDefault(); openWardrobe(); } });
+    document.addEventListener('click', function (e) {
+      var b = e.target && e.target.closest ? e.target.closest('.btn-wardrobe') : null; if (b) { e.preventDefault(); openWardrobe(); return; }
+      var xb = e.target && e.target.closest ? e.target.closest('.btn-xiunu') : null; if (xb) { e.preventDefault(); openXiunu(); }
+    });
     $('#btn-end-season').onclick = onEndSeasonClick;
     $('#action-groups').addEventListener('click', function (e) {
       var b = e.target.closest ? e.target.closest('.action-card') : null;

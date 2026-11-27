@@ -46,10 +46,11 @@ dups.forEach(d => E('duplicate', 'event id registered twice: ' + d));
 const KINDS = ['random', 'chapter', 'chain', 'festival', 'promo', 'ending'];
 const NODE_KEYS = ['who', 'x', 'text', 'card', 'bg', 'cast', 'fx', 'next', 'jump', 'choices', 'branch', 'promote', 'demote', 'ending'];
 const CHOICE_KEYS = ['text', 'cond', 'req', 'why', 'hint', 'cost', 'fx', 'check', 'win', 'lose', 'winFx', 'loseFx', 'next', 'jump'];
-const EV_KEYS = ['id', 'kind', 'title', 'minRank', 'maxRank', 'tags', 'season', 'weight', 'cond', 'trigger', 'prio', 'once', 'cooldown', 'bg', 'cast', 'start', 'nodes', 'ending', 'desc', '__file'];
-const FX_KEYS = Q.STAT_KEYS.concat(['rel', 'set', 'unset', 'inc', 'queue', 'ap', 'log', 'note', 'give']);
+const EV_KEYS = ['id', 'kind', 'title', 'minRank', 'maxRank', 'tags', 'season', 'weight', 'cond', 'trigger', 'prio', 'once', 'cooldown', 'bg', 'cast', 'start', 'nodes', 'ending', 'desc', 'girl', '__file'];
+const FX_KEYS = Q.STAT_KEYS.concat(['rel', 'set', 'unset', 'inc', 'queue', 'ap', 'log', 'note', 'give', 'xn']);
 const WHO = ['narrator'].concat(Object.keys(Q.CHARS).filter(k => k !== 'narrator'));
-const PLACEHOLDERS = ['PLAYER', 'RANK', 'HEIR', 'YEAR', 'SEASON'];
+const PLACEHOLDERS = ['PLAYER', 'RANK', 'HEIR', 'YEAR', 'SEASON', 'XN', 'XNRANK', 'XNCLAN', 'XN1', 'XN2', 'XN3'];
+const GIRL_SEL = ['any', 'ally', 'ally_court', 'sponsored', 'ambitious', 'rising', 'graduate', 'turning', 'rival_fav', 'rejected_noble', 'maid_girl', 'maid_spy'];
 const THAI = /[฀-๿]/;
 const ids = new Set(Q.events.map(e => e.id));
 const flagsRead = new Map(), flagsSet = new Set(Q.GLOBAL_FLAGS || []);
@@ -102,6 +103,13 @@ function checkFx(where, fx, label) {
     } else if (k === 'give') {
       if (!Array.isArray(v)) E(where, label + '.give must be an array of wardrobe item ids');
       else v.forEach(id => { if (!(Q.WARDROBE && Q.WARDROBE.byId[id])) E(where, label + '.give unknown wardrobe item "' + id + '"'); });
+    } else if (k === 'xn') {
+      if (!v || typeof v !== 'object') { E(where, label + '.xn must be an object'); continue; }
+      Object.keys(v).forEach(x => {
+        if (['loyalty', 'ambition', 'favor', 'rank', 'status', 'turned', 'expose', 'graduated'].indexOf(x) < 0) E(where, label + '.xn unknown key "' + x + '"');
+        else if (x === 'status' && ['gone', 'rejected', 'maid', 'sponsored', 'kept'].indexOf(v[x]) < 0) E(where, label + '.xn.status invalid');
+        else if (['loyalty', 'ambition', 'favor'].indexOf(x) >= 0) { const n = Array.isArray(v[x]) ? v[x] : [v[x]]; if (n.some(q => typeof q !== 'number')) E(where, label + '.xn.' + x + ' must be number or [min,max]'); }
+      });
     } else if (k === 'ap') { if (typeof v !== 'number') E(where, label + '.ap must be number'); }
     else if (k === 'log' || k === 'note') { if (typeof v !== 'string') E(where, label + '.' + k + ' must be a string'); else checkText(where, v, label + '.' + k, 140); }
   }
@@ -129,6 +137,7 @@ Q.events.forEach(ev => {
   if (ev.season) { if (!Array.isArray(ev.season) || ev.season.some(s => !(s >= 0 && s <= 3))) E(W0, 'season must be array of 0..3'); }
   if (ev.weight !== undefined && !(typeof ev.weight === 'number' && ev.weight > 0)) E(W0, 'weight must be > 0');
   checkCond(W0, ev.cond, 'cond'); checkCond(W0, ev.trigger, 'trigger');
+  if (ev.girl !== undefined && GIRL_SEL.indexOf(ev.girl) < 0) E(W0, 'unknown girl selector "' + ev.girl + '" (use ' + GIRL_SEL.join('|') + ')');
   if (ev.kind === 'chapter' && !ev.trigger) W(W0, 'chapter without trigger will never start by itself (only via queue/jump)');
   if (ev.kind === 'festival' && !ev.season) E(W0, 'festival needs season:[..]');
   if (ev.kind === 'promo' && !/^promo_[1-8]_[2-9]$/.test(ev.id)) E(W0, 'promo id must be promo_<from>_<to>');
@@ -245,6 +254,7 @@ Q.events.forEach(ev => {
     Q.STAT_KEYS.forEach(k => { st.S[k] = k === 'silver' ? Math.floor(rng() * 400) : Math.floor(rng() * 101); });
     Q.REL_KEYS.forEach(k => { st.R[k] = Math.floor(rng() * 160) - 60; });
     flagNames.forEach(n => { if (rng() < 0.5) st.F[n] = true; });
+    if (ev.girl || /XN|maiden|"xn"/.test(JSON.stringify(ev))) QL.xnProbe(st);
     try {
       QL.startEvent(st, ev.id);
       let steps = 0, v;

@@ -65,7 +65,7 @@ var _artRender = (function () {
   function render(charId, expr, opts) {
     opts = opts || {};
     var rank = Math.max(0, Math.min(9, opts.rank | 0)), origin = opts.origin || 'noble';
-    var prof = profileFor(charId, rank, origin, charId === 'player' ? opts.outfit : null);
+    var prof = profileFor(charId, rank, origin, (charId === 'player' || charId === 'maiden') ? opts.outfit : null);
     var X = E[expr] || E.neutral;
     return build(prof, X, E[expr] ? expr : 'neutral', opts, charId);
   }
@@ -1268,6 +1268,36 @@ var _artRender = (function () {
     P.head = function (c) { return headSideCoils(c, { y: 106, dx: 68, r: 21, tie: '#a88a68' }); };
     return P;
   })();
+
+
+  /* ---- generated new concubines (xiunü): look spec from logic.js genLook() ---- */
+  CHARS.maiden = function (rank, origin, L) {
+    L = L || { skin: '#f8dcc6', hair: '#1b1724', hairHi: '#8a88b0', iris: '#8a5430', robe: { col: '#f2a9bc', trim: '#b83a66', pat: 'flower', patCol: '#e07a98' }, flowers: '#ee7f9a', style: 'buns', han: true, fw: 67, jw: 20, blush: .18 };
+    var rb = L.robe, P = tmplF({
+      skinTone: L.skin, face: { fw: L.fw, chin: 255, cy: 157, jw: L.jw }, neck: { w: 18, base: 282 },
+      eye: { iris: L.iris, y: 175, ex: 37, sx: 1.14, sy: 1.34, tilt: .4, shadow: '#f0b0a0', makeup: .25 },
+      brow: { y: 149, len: 43, t: 2.9, arch: 1 }, mouth: { y: 229, col: '#d6606e', open: true, w: 1 }, nose: { y: 206, w: .88 },
+      cheek: '#f28c88', cheekY: 202, blush0: L.blush, cheekRx: 22, hair: { col: L.hair, hi: L.hairHi }, happyEyes: true
+    });
+    if (L.mole) P.mole = [200 + 44, 214];
+    P.back = function (c) { return L.han ? hairBack(c, { top: 58, wd: 12, long: 430, lw: 8 }) : hairBack(c, { top: 56, wd: 12 }); };
+    P.pre = function (c) { return L.han ? crossCollar(c, { col: lt(rb.col, .1), inner: '#fff6ea', trim: rb.trim, y: 260 }) : standCollar(c, { col: lt(rb.col, .35), trim: GOLD, y: 262 }); };
+    P.body = function (c) {
+      if (L.han) return hanBody(c, { sh: 102, col: rb.col, pat: rb.pat, patCol: rb.patCol, patOp: .45, sash: '#f6d680', ribbon: rb.trim });
+      return robeBody(c, { sh: 108, col: rb.col, pat: rb.pat, patCol: rb.patCol, patOp: .5 }) + robeTrims(c, { sh: 108, trim: rb.trim, trim2: GOLD, lapel: true, sleeveBand: rb.trim });
+    };
+    P.hairFront = function (c) {
+      return L.han ? hairFront(c, { top: 62, peak: 0, hl: 112, lockLen: 40, lockW: 6, tipY: 196 }) + bangs(c, { y: 124 }) : hairFront(c, { top: 58, peak: 5, lockLen: 36, tipY: 198 });
+    };
+    P.head = function (c) {
+      var fl = L.flowers, leaf = '#4a9a70';
+      if (L.style === 'buns') return headRingBuns(c, { y: 74, dx: 60, r: 26, ribbon: rb.trim, flower: fl });
+      if (L.style === 'coils') return headSideCoils(c, { y: 106, dx: 68, r: 21, tie: rb.trim });
+      if (L.style === 'qitou') return headQitou(c, { lvl: 3, board: '#201a2e', flowers: fl, silk: rb.trim, leaf: leaf, pinHead: 'pearl', accent: '#f4d672' });
+      return headWings(c, { y: 72, w: 58 }) + cluster(c, 200 - 50, 90, [[0, 0, 1.2, fl, 0], [12, -8, .8, lt(fl, .3), 40]], leaf) + hairpin(c, 200 + 26, 98, 200 + 62, 62, 'pearl', [3, 30]);
+    };
+    return P;
+  };
 
   /* =================== MALE / OTHER CAST =================== */
   function earsSVG(c) {

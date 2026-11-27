@@ -434,3 +434,59 @@ Q.WARDROBE = (function () {
   items.forEach(function (i) { byId[i.id] = i; });
   return { slots: slots, styles: styles, sets: sets, items: items, byId: byId, kits: kits, price: PRICE };
 })();
+
+/* =============================================================
+   XIUNÜ (秀女) — รุ่นสนมใหม่ที่เข้าวังทุก 3 ปี
+   - ทุก `interval` ฤดู มีรุ่นใหม่ 2–3 คน (สร้างแบบสุ่มโดย logic.js จากตารางนี้)
+   - ผู้เล่นขั้น >= participateRank ร่วมพิจารณา: สืบประวัติ / รับไว้ในสังกัด / ปล่อยตามชะตา / ส่งเป็นนางกำนัลข้างกาย / คัดออก
+   - เนื้อเรื่องอ้างถึงสนมคนหนึ่งได้ด้วยฟิลด์ event.girl ('ally','sponsored','ambitious','rising','graduate','turning','rival_fav',
+     'rejected_noble','maid_girl','maid_spy','any') + placeholder {{XN}} {{XNRANK}} {{XNCLAN}} {{XN1}}..{{XN3}} + cast c:'maiden'
+   - fx.xn: { loyalty, ambition, favor (number|[a,b]), rank:+1, status:'gone'|'rejected'|'maid'|'sponsored'|'kept', turned:bool, expose:true, graduated:true }
+   - ตัวแปร X ในเงื่อนไข: X.pending X.n X.allies X.rivals X.sponsored X.batches X.quota
+   ============================================================= */
+Q.CHARS.maiden = { th: '{{XN}}', short: '{{XN}}', zh: '秀女', color: '#d9788a', role: 'สนมหน้าใหม่' };
+Q.XIUNU = {
+  interval: 12, firstAt: 12, batchSize: [2, 3], participateRank: 5, deadline: 2,
+  quota: { 5: 1, 6: 1, 7: 2, 8: 2 },
+  investigateCost: 30, giftCost: 40,
+  rankThr: [0, 12, 24, 38, 52, 66, 80],            // girl's favor needed to climb from rank index
+  names: ['เหยาหรง', 'หลิงเอ๋อ', 'ซูหนิง', 'เยี่ยนฮวา', 'จินเหมย', 'หมิงจู', 'อวี้เหิง', 'ปี้เสียน', 'เสี่ยวเหลียน', 'หนิงซวง', 'ลู่เหวย', 'ฝูหรง', 'เจียอี๋', 'จวินหลาน',
+          'รั่วซี', 'ซินอวี่', 'เหวินจิ้ง', 'ชูหยุน', 'ฮุ่ยหราน', 'เหลียนเอ๋อ', 'ซานซาน', 'หวั่นอิน', 'ยู่เยี่ยน', 'ไป๋เหอ', 'อวิ๋นเจา', 'ถิงอวี้', 'เมิ่งเหยา', 'ซื่อหนิง', 'ชิงหลัน',
+          'เสวี่ยหาน', 'ชุนหรง', 'เฟิ่งหลิง', 'จิ่นซิ่ว', 'อานหรง', 'เสียนอวี่', 'ตงเหมย', 'หย่าหนาน', 'ซูเยว่', 'เหม่ยหลิน', 'หลันเอ๋อ'],
+  manchu: [
+    { th: 'เหอเสอหลี่', side: 'civil', power: 2 }, { th: 'ท่งเจีย', side: 'civil', power: 3 }, { th: 'ตงเอ๋อ', side: 'neutral', power: 2 },
+    { th: 'ว่านหยาน', side: 'military', power: 3 }, { th: 'อู๋ซูหลี่', side: 'military', power: 2 }, { th: 'อาลู่เทอ', side: 'neutral', power: 1 },
+  ],
+  han: [
+    { th: 'หลี่', side: 'civil', power: 1 }, { th: 'จาง', side: 'civil', power: 1 }, { th: 'หวัง', side: 'neutral', power: 1 }, { th: 'เฉิน', side: 'civil', power: 2 },
+    { th: 'หลิน', side: 'neutral', power: 1 }, { th: 'สวี', side: 'civil', power: 1 }, { th: 'โจว', side: 'neutral', power: 1 }, { th: 'เกา', side: 'military', power: 1 },
+  ],
+  banners: ['ธงเหลืองขลิบ', 'ธงขาวขลิบ', 'ธงแดงขลิบ', 'ธงน้ำเงินขลิบ', 'ธงเหลือง', 'ธงขาว'],
+  sideTh: { civil: 'ฝ่ายขุนนางพลเรือน', military: 'ฝ่ายทหาร', neutral: 'ไม่ฝักใฝ่ฝ่ายใด' },
+  agentTh: { empress: 'สายของฮองเฮา', consort: 'สายของหวงกุ้ยเฟย' },
+  statusTh: { pending: 'รอพิจารณา', kept: 'อยู่ในวัง', sponsored: 'ในสังกัดของท่าน', maid: 'นางกำนัลข้างกาย', rejected: 'ถูกส่งกลับ', gone: 'จากไปแล้ว' },
+  archetypes: {
+    bright:   { th: 'สดใสซื่อตรง', weight: 22, charm: [48, 72], wit: [28, 48], talent: [35, 62], ambition: [5, 28], loyalty: [48, 66], agentP: 0.05, style: ['buns', 'wings'],
+                blurbs: ['พูดตรงเสียจนผู้ใหญ่ขมวดคิ้ว แต่ยิ้มเมื่อไหร่ทั้งห้องก็เบาลง', 'ซุกซนเกินกว่าจะเป็นสนมได้ ทว่าตาใสราวไม่เคยเห็นอะไรเลวร้าย', 'ถามทุกอย่างที่คนอื่นไม่กล้าถาม และจดจำทุกคำตอบ'] },
+    schemer:  { th: 'เจ้าเล่ห์แยบยล', weight: 18, charm: [50, 75], wit: [62, 86], talent: [40, 65], ambition: [66, 92], loyalty: [30, 50], agentP: 0.75, style: ['wings', 'qitou'],
+                blurbs: ['ยิ้มได้พอดีทุกครั้ง เหมือนซ้อมหน้ากระจกมาหลายปี', 'ถ้อยคำทุกคำเรียงสวยเกินไป เหมือนเตรียมมาให้ใครสักคนฟัง', 'สายตาวูบหนึ่งตอนที่ใครเอ่ยถึงฮองเฮา — สั้นเกินกว่าจะแน่ใจ'] },
+    artist:   { th: 'กวีและนักดนตรี', weight: 16, charm: [45, 68], wit: [45, 68], talent: [68, 92], ambition: [20, 50], loyalty: [42, 62], agentP: 0.12, style: ['buns', 'coils'],
+                blurbs: ['ปลายนิ้วเปื้อนหมึกอยู่เสมอ และไม่เคยสนใจ', 'ฮัมทำนองที่ไม่มีใครเคยได้ยินระหว่างรอเรียกชื่อ', 'จับจ้องของสวยๆ ในห้องโถงมากกว่าผู้คน'] },
+    highborn: { th: 'ธิดาตระกูลใหญ่', weight: 16, charm: [50, 75], wit: [42, 66], talent: [40, 62], ambition: [52, 82], loyalty: [28, 45], agentP: 0.45, style: ['qitou'],
+                blurbs: ['เงยหน้าสูงจนผู้ติดตามต้องเดินชิดซ้ายขวา', 'ทักทายขุนนางหญิงด้วยท่าทีของคนที่รู้ว่าพ่อของตนสำคัญแค่ไหน', 'บ่าวถือถุงของนางสองคน แม้ในมือนางไม่มีอะไรเลย'] },
+    humble:   { th: 'ลูกสาวสามัญชน', weight: 16, charm: [38, 58], wit: [45, 68], talent: [30, 55], ambition: [8, 32], loyalty: [52, 72], agentP: 0.03, style: ['coils', 'buns'],
+                blurbs: ['มือหยาบกว่าสาวคนอื่นแต่ยืนตรงกว่าทุกคน', 'ไม่พูดมากแต่จดจำทุกชื่อที่ได้ยิน', 'กำชายแขนเสื้อที่ซ่อมแล้วซ่อมอีก แต่ไม่ซ่อนมันไว้'] },
+    beauty:   { th: 'งามล้ำเลิศ', weight: 12, charm: [78, 96], wit: [30, 55], talent: [40, 66], ambition: [40, 72], loyalty: [34, 54], agentP: 0.2, style: ['wings', 'qitou'],
+                blurbs: ['ผู้คนในห้องโถงเงียบลงครู่หนึ่งเมื่อนางเดินเข้ามา', 'งามจนฮองเฮาทรงเหลือบมองถึงสองครั้ง', 'ไม่รู้ว่าตนเองงามแค่ไหน — หรือรู้ดีเกินไป'] },
+  },
+  /* appearance palettes for generated portraits */
+  skin: ['#fbe5d4', '#f8dcc6', '#f2d0b4', '#efcfae', '#f6dfcc'],
+  hair: [['#1b1724', '#8a88b0'], ['#2e2020', '#a08078'], ['#3a2418', '#a87850'], ['#241a2a', '#7a6a9a']],
+  iris: ['#8a5430', '#6a4630', '#4a3a5a', '#5a4a30', '#3a4a5a'],
+  robes: [
+    { col: '#f2a9bc', trim: '#b83a66', pat: 'flower', patCol: '#e07a98', fl: '#ee7f9a' }, { col: '#a9d4de', trim: '#3f7f9a', pat: 'bamboo', patCol: '#78b0c4', fl: '#f4f8ff' },
+    { col: '#f6c3b2', trim: '#c95a58', pat: 'flower', patCol: '#e8928a', fl: '#ff8f78' }, { col: '#c8aad6', trim: '#7a5a9a', pat: 'dots', patCol: '#a384bc', fl: '#d8b8ff' },
+    { col: '#c0e2d4', trim: '#4f8f86', pat: 'bamboo', patCol: '#8fc2b2', fl: '#f4f0e6' }, { col: '#f2d98a', trim: '#b8862a', pat: 'cloud', patCol: '#fff0b0', fl: '#ffd870' },
+    { col: '#e5708c', trim: '#8a2a52', pat: 'cloud', patCol: '#f6b4c4', fl: '#ff9ab4' }, { col: '#7ea8e2', trim: '#2f5fa8', pat: 'cloud', patCol: '#cfe0ff', fl: '#e8f0ff' },
+  ],
+};

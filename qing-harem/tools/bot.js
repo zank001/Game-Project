@@ -65,6 +65,20 @@ function pickAction(st, acts) {
   return cand[i];
 }
 
+function xnPolicy(st) {
+  const x0 = QL.xiunu(st); if (!x0.pending) return;
+  x0.pendingCards.forEach(card => {
+    const pick = ch => QL.xnDecide(st, card.id, ch);
+    if (POLICY === 'random') { const opts = ['sponsor', 'neutral', 'maid', 'reject']; let r = pick(opts[Math.floor(rr() * 4)]); if (!r.ok) pick('neutral'); return; }
+    if (st.S.silver > 120) QL.xnInvestigate(st, card.id);
+    const c = QL.xiunu(st).pendingCards.find(q => q.id === card.id) || card;
+    if (c.agentKnown === 'yes' && c.power < 2) { pick('reject'); return; }
+    if (c.agentKnown === 'yes') { pick('neutral'); return; }
+    if ((c.ambition === 0 || c.ambition === null) && (c.arch === 'humble' || c.arch === 'bright' || c.arch === 'artist')) { if (!pick('sponsor').ok) pick('maid'); return; }
+    if (c.ambition === 2) { pick(c.power >= 2 ? 'neutral' : 'reject'); return; }
+    if (!pick('sponsor').ok) pick('neutral');
+  });
+}
 const seenGlobal = {};
 const statLog = {}, favSrc = {};
 function runGame(origin, seed) {
@@ -102,13 +116,14 @@ function runGame(origin, seed) {
       if (st.phase === 'ended') break;
       rankSeasons[st.rank] = (rankSeasons[st.rank] || 0) + 1;
       (statLog[st.rank] = statLog[st.rank] || []).push({ f: st.S.favor, p: st.S.prestige, h: st.S.health, th: st.S.threat, s: st.S.silver, sir: st.sir });
+      xnPolicy(st);
       QL.endSeason(st);
     }
   } catch (e) { return { crash: e.message, st }; }
   return { st, rankSeasons };
 }
 
-const blocked = {}, seenJump = {};
+const blocked = {}, seenJump = {}, xnAgg = {};
 const origins = ORIGIN === 'all' ? ['noble', 'scholar', 'maid'] : [ORIGIN];
 const endings = {}, ranks = {}, byOrigin = {}, crashes = [], seasonsAtRank = {}, stuck = [];
 let n = 0, summit = 0, totalSeasons = 0;
@@ -119,6 +134,7 @@ for (let i = 0; i < RUNS; i++) {
   if (r.crash) { crashes.push(origin + '#' + seed + ': ' + r.crash); continue; }
   const st = r.st;
   Object.keys(st.seen).forEach(id => { if (!seenJump[id]) seenJump[id] = 0; seenJump[id]++; });
+  if (st.X) { Object.values(st.X.girls).forEach(g => { xnAgg[g.status] = (xnAgg[g.status] || 0) + 1; if (g.turned) xnAgg.turned = (xnAgg.turned || 0) + 1; if (g.agent) xnAgg.agent = (xnAgg.agent || 0) + 1; if (g.graduated) xnAgg.graduated = (xnAgg.graduated || 0) + 1; }); xnAgg.batches = (xnAgg.batches || 0) + st.X.batches; }
   endings[st.ending || '(none)'] = (endings[st.ending || '(none)'] || 0) + 1;
   ranks[st.rank] = (ranks[st.rank] || 0) + 1;
   (byOrigin[origin] = byOrigin[origin] || { n: 0, summit: 0, ranks: 0 }).n++;
@@ -137,6 +153,10 @@ if (!TRACE) {
   console.log('\nMean seasons spent per rank:'); Object.keys(seasonsAtRank).sort().forEach(k => { const a = seasonsAtRank[k]; console.log('  rank ' + k + ': ' + (a.reduce((x, y) => x + y, 0) / a.length).toFixed(1) + ' (n=' + a.length + ')'); });
   if (Object.keys(blocked).length) { console.log('\nRuns that did not reach the summit:'); Object.keys(blocked).sort((x, y) => blocked[y] - blocked[x]).slice(0, 14).forEach(k => console.log('  ' + String(blocked[k]).padStart(4) + '  ' + k)); }
   if (arg('seen', '')) { const pre = arg('seen', '').split(','); console.log('\nEvent play counts for prefixes ' + pre.join(',') + ':'); Q.events.filter(e => pre.some(p => e.id.startsWith(p))).forEach(e => console.log('  ' + String(seenJump[e.id] || 0).padStart(5) + '  ' + e.id + ' [' + e.kind + ']')); }
+  if (flag('xn')) {
+    console.log('\nXiunü summary (all runs): girls by final status / hostile / allies');
+    console.log('  ' + JSON.stringify(xnAgg));
+  }
   if (flag('favsrc')) {
     const rows = Object.keys(favSrc).map(k => ({ id: k, tag: ((QL.event(k) || {}).tags || ['-']).join(','), kind: (QL.event(k) || {}).kind, ...favSrc[k], fpp: favSrc[k].f / Math.max(1, favSrc[k].plays), ppp: favSrc[k].p / Math.max(1, favSrc[k].plays) }));
     const agg = {}; rows.forEach(r => { const key = r.rank + ' ' + (r.kind === 'random' ? r.tag : r.kind); const o = (agg[key] = agg[key] || { f: 0, p: 0, plays: 0 }); o.f += r.f; o.p += r.p; o.plays += r.plays; });

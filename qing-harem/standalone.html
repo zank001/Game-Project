@@ -1048,6 +1048,67 @@ body[data-screen="hub-screen"] .tip-root { top: calc(142px + var(--st)); }
   .wd-worn, .wd-lock { flex: 1 1 auto; text-align: left; }
 }
 
+/* ============================================================
+   XIUNÜ (ซิ่วหนี่)
+   ============================================================ */
+.hero-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.hero-btns .btn-wardrobe { margin-top: 0; }
+.btn-xiunu { position: relative; min-height: 38px; padding: 5px 14px; font-size: 14px; }
+.xn-dot { position: absolute; top: 3px; right: 5px; width: 10px; height: 10px; border-radius: 50%; background: #ff4d5e; box-shadow: 0 0 0 2px rgba(20, 8, 12, .9), 0 0 10px #ff4d5e; animation: xnPulse 1.6s ease-in-out infinite; }
+@keyframes xnPulse { 50% { transform: scale(1.35); opacity: .75; } }
+.xn-banner { display: flex; align-items: center; gap: 12px; margin: 0 0 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--gold); background: linear-gradient(180deg, rgba(217, 164, 65, .26), rgba(217, 164, 65, .08)); box-shadow: 0 0 18px rgba(217, 164, 65, .18); }
+.xn-banner[hidden] { display: none; }
+.xb-ico { font-size: 26px; flex: none; }
+.xb-body { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.xb-body b { font-family: var(--font-th); font-size: 15.5px; color: var(--gold-xl); }
+.xb-body small { color: var(--cream-d); font-size: 12.5px; line-height: 1.4; }
+.modal-xiunu .modal-body { padding: 12px 14px 18px; }
+.modal-xiunu .mtab { padding: 8px 12px; font-size: 14px; }
+.xn-head-bar { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; padding: 8px 12px; margin-bottom: 8px; border-radius: 10px; background: rgba(20, 8, 12, .55); border: 1px solid var(--gold-faint); font-size: 14px; color: var(--cream); }
+.xn-head-bar b { color: var(--gold-xl); }
+.xn-head-bar .dn { color: #f2a79a; }
+.xn-note { margin: 0 2px 10px; font-size: 12.5px; line-height: 1.55; color: var(--cream-d); }
+.xn-list { display: flex; flex-direction: column; gap: 10px; }
+.xn-empty { padding: 26px 8px; text-align: center; line-height: 1.6; }
+.xn-card { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 4px 14px; padding: 12px; border-radius: 12px; background: linear-gradient(180deg, rgba(62, 22, 32, .85), rgba(30, 11, 17, .92)); border: 1px solid var(--gold-faint); }
+.xn-card.sponsored { border-color: var(--gold-dim); }
+.xn-card.maid { border-color: rgba(143, 216, 192, .5); }
+.xn-card.turned { border-color: rgba(230, 100, 90, .6); box-shadow: inset 0 0 0 1px rgba(230, 100, 90, .25); }
+.xn-card.rejected, .xn-card.gone { opacity: .72; }
+.xn-ava { width: 96px; aspect-ratio: 1; overflow: hidden; border-radius: 50%; border: 2px solid rgba(255, 240, 192, .55); background: radial-gradient(circle at 50% 30%, #6a2a3a, #2a0f18); }
+.xn-ava svg { width: 100%; height: 100%; display: block; }
+.xn-body { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.xn-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.xn-head b { font-family: var(--font-th); font-size: 17px; color: var(--gold-xl); }
+.xn-rk { font-size: 12.5px; color: #bfe3d6; }
+.xn-st { font-size: 11.5px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--gold-faint); color: var(--cream-d); background: rgba(0, 0, 0, .3); }
+.xn-sub { font-size: 12.5px; color: var(--cream-d); }
+.xn-blurb { margin: 0; font-size: 13px; line-height: 1.5; color: var(--cream); font-style: italic; }
+.xn-bars, .xn-meters { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.xn-m { display: inline-grid; grid-template-columns: auto 64px auto; align-items: center; gap: 5px; font-size: 11.5px; color: var(--cream-d); }
+.xn-m u { text-decoration: none; }
+.xn-m i { display: block; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--gold) var(--v), rgba(255, 255, 255, .12) var(--v)); }
+.xn-m.fav i { background: linear-gradient(90deg, #d6436a var(--v), rgba(255, 255, 255, .12) var(--v)); }
+.xn-m.loy i { background: linear-gradient(90deg, #4c9a7a var(--v), rgba(255, 255, 255, .12) var(--v)); }
+.xn-m em { font-style: normal; color: var(--cream); min-width: 20px; text-align: right; }
+.xn-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.xn-tag { font-size: 11.5px; padding: 1px 9px; border-radius: 999px; background: rgba(0, 0, 0, .35); border: 1px solid var(--gold-faint); color: var(--cream-d); }
+.xn-tag.known { color: var(--gold-xl); border-color: var(--gold-dim); }
+.xn-tag.amb0 { color: #a9e2b0; } .xn-tag.amb2 { color: #f2a79a; }
+.xn-tag.good { color: #a9e2b0; border-color: rgba(120, 200, 140, .4); }
+.xn-tag.bad { color: #f2a79a; border-color: rgba(230, 120, 100, .45); }
+.xn-act { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; padding-top: 6px; border-top: 1px dashed var(--gold-faint); }
+.xn-act .btn { min-height: 38px; padding: 5px 12px; font-size: 13.5px; }
+.xn-act .btn.dn { color: #f2a79a; }
+.xn-act .btn[disabled] { opacity: .45; pointer-events: none; }
+.xn-done { align-self: center; font-size: 12.5px; color: #a9e2b0; padding: 0 6px; }
+@media (max-width: 720px) {
+  .xn-card { grid-template-columns: 72px minmax(0, 1fr); gap: 4px 10px; padding: 10px; }
+  .xn-ava { width: 72px; }
+  .xn-banner { padding: 8px 10px; }
+  .xn-act .btn { flex: 1 1 auto; }
+}
+
 </style>
 </head>
 <body>
@@ -1161,6 +1222,7 @@ body[data-screen="hub-screen"] .tip-root { top: calc(142px + var(--st)); }
       <section id="panel-actions" class="panel panel-actions" aria-label="การกระทำ">
         <div class="actions-scroll">
           <div id="hero" class="hero"></div>
+          <div id="xn-banner" class="xn-banner" hidden></div>
           <div id="action-groups" class="action-groups"></div>
         </div>
         <div class="end-wrap">
@@ -1714,6 +1776,62 @@ Q.WARDROBE = (function () {
   return { slots: slots, styles: styles, sets: sets, items: items, byId: byId, kits: kits, price: PRICE };
 })();
 
+/* =============================================================
+   XIUNÜ (秀女) — รุ่นสนมใหม่ที่เข้าวังทุก 3 ปี
+   - ทุก `interval` ฤดู มีรุ่นใหม่ 2–3 คน (สร้างแบบสุ่มโดย logic.js จากตารางนี้)
+   - ผู้เล่นขั้น >= participateRank ร่วมพิจารณา: สืบประวัติ / รับไว้ในสังกัด / ปล่อยตามชะตา / ส่งเป็นนางกำนัลข้างกาย / คัดออก
+   - เนื้อเรื่องอ้างถึงสนมคนหนึ่งได้ด้วยฟิลด์ event.girl ('ally','sponsored','ambitious','rising','graduate','turning','rival_fav',
+     'rejected_noble','maid_girl','maid_spy','any') + placeholder {{XN}} {{XNRANK}} {{XNCLAN}} {{XN1}}..{{XN3}} + cast c:'maiden'
+   - fx.xn: { loyalty, ambition, favor (number|[a,b]), rank:+1, status:'gone'|'rejected'|'maid'|'sponsored'|'kept', turned:bool, expose:true, graduated:true }
+   - ตัวแปร X ในเงื่อนไข: X.pending X.n X.allies X.rivals X.sponsored X.batches X.quota
+   ============================================================= */
+Q.CHARS.maiden = { th: '{{XN}}', short: '{{XN}}', zh: '秀女', color: '#d9788a', role: 'สนมหน้าใหม่' };
+Q.XIUNU = {
+  interval: 12, firstAt: 12, batchSize: [2, 3], participateRank: 5, deadline: 2,
+  quota: { 5: 1, 6: 1, 7: 2, 8: 2 },
+  investigateCost: 30, giftCost: 40,
+  rankThr: [0, 12, 24, 38, 52, 66, 80],            // girl's favor needed to climb from rank index
+  names: ['เหยาหรง', 'หลิงเอ๋อ', 'ซูหนิง', 'เยี่ยนฮวา', 'จินเหมย', 'หมิงจู', 'อวี้เหิง', 'ปี้เสียน', 'เสี่ยวเหลียน', 'หนิงซวง', 'ลู่เหวย', 'ฝูหรง', 'เจียอี๋', 'จวินหลาน',
+          'รั่วซี', 'ซินอวี่', 'เหวินจิ้ง', 'ชูหยุน', 'ฮุ่ยหราน', 'เหลียนเอ๋อ', 'ซานซาน', 'หวั่นอิน', 'ยู่เยี่ยน', 'ไป๋เหอ', 'อวิ๋นเจา', 'ถิงอวี้', 'เมิ่งเหยา', 'ซื่อหนิง', 'ชิงหลัน',
+          'เสวี่ยหาน', 'ชุนหรง', 'เฟิ่งหลิง', 'จิ่นซิ่ว', 'อานหรง', 'เสียนอวี่', 'ตงเหมย', 'หย่าหนาน', 'ซูเยว่', 'เหม่ยหลิน', 'หลันเอ๋อ'],
+  manchu: [
+    { th: 'เหอเสอหลี่', side: 'civil', power: 2 }, { th: 'ท่งเจีย', side: 'civil', power: 3 }, { th: 'ตงเอ๋อ', side: 'neutral', power: 2 },
+    { th: 'ว่านหยาน', side: 'military', power: 3 }, { th: 'อู๋ซูหลี่', side: 'military', power: 2 }, { th: 'อาลู่เทอ', side: 'neutral', power: 1 },
+  ],
+  han: [
+    { th: 'หลี่', side: 'civil', power: 1 }, { th: 'จาง', side: 'civil', power: 1 }, { th: 'หวัง', side: 'neutral', power: 1 }, { th: 'เฉิน', side: 'civil', power: 2 },
+    { th: 'หลิน', side: 'neutral', power: 1 }, { th: 'สวี', side: 'civil', power: 1 }, { th: 'โจว', side: 'neutral', power: 1 }, { th: 'เกา', side: 'military', power: 1 },
+  ],
+  banners: ['ธงเหลืองขลิบ', 'ธงขาวขลิบ', 'ธงแดงขลิบ', 'ธงน้ำเงินขลิบ', 'ธงเหลือง', 'ธงขาว'],
+  sideTh: { civil: 'ฝ่ายขุนนางพลเรือน', military: 'ฝ่ายทหาร', neutral: 'ไม่ฝักใฝ่ฝ่ายใด' },
+  agentTh: { empress: 'สายของฮองเฮา', consort: 'สายของหวงกุ้ยเฟย' },
+  statusTh: { pending: 'รอพิจารณา', kept: 'อยู่ในวัง', sponsored: 'ในสังกัดของท่าน', maid: 'นางกำนัลข้างกาย', rejected: 'ถูกส่งกลับ', gone: 'จากไปแล้ว' },
+  archetypes: {
+    bright:   { th: 'สดใสซื่อตรง', weight: 22, charm: [48, 72], wit: [28, 48], talent: [35, 62], ambition: [5, 28], loyalty: [48, 66], agentP: 0.05, style: ['buns', 'wings'],
+                blurbs: ['พูดตรงเสียจนผู้ใหญ่ขมวดคิ้ว แต่ยิ้มเมื่อไหร่ทั้งห้องก็เบาลง', 'ซุกซนเกินกว่าจะเป็นสนมได้ ทว่าตาใสราวไม่เคยเห็นอะไรเลวร้าย', 'ถามทุกอย่างที่คนอื่นไม่กล้าถาม และจดจำทุกคำตอบ'] },
+    schemer:  { th: 'เจ้าเล่ห์แยบยล', weight: 18, charm: [50, 75], wit: [62, 86], talent: [40, 65], ambition: [66, 92], loyalty: [30, 50], agentP: 0.75, style: ['wings', 'qitou'],
+                blurbs: ['ยิ้มได้พอดีทุกครั้ง เหมือนซ้อมหน้ากระจกมาหลายปี', 'ถ้อยคำทุกคำเรียงสวยเกินไป เหมือนเตรียมมาให้ใครสักคนฟัง', 'สายตาวูบหนึ่งตอนที่ใครเอ่ยถึงฮองเฮา — สั้นเกินกว่าจะแน่ใจ'] },
+    artist:   { th: 'กวีและนักดนตรี', weight: 16, charm: [45, 68], wit: [45, 68], talent: [68, 92], ambition: [20, 50], loyalty: [42, 62], agentP: 0.12, style: ['buns', 'coils'],
+                blurbs: ['ปลายนิ้วเปื้อนหมึกอยู่เสมอ และไม่เคยสนใจ', 'ฮัมทำนองที่ไม่มีใครเคยได้ยินระหว่างรอเรียกชื่อ', 'จับจ้องของสวยๆ ในห้องโถงมากกว่าผู้คน'] },
+    highborn: { th: 'ธิดาตระกูลใหญ่', weight: 16, charm: [50, 75], wit: [42, 66], talent: [40, 62], ambition: [52, 82], loyalty: [28, 45], agentP: 0.45, style: ['qitou'],
+                blurbs: ['เงยหน้าสูงจนผู้ติดตามต้องเดินชิดซ้ายขวา', 'ทักทายขุนนางหญิงด้วยท่าทีของคนที่รู้ว่าพ่อของตนสำคัญแค่ไหน', 'บ่าวถือถุงของนางสองคน แม้ในมือนางไม่มีอะไรเลย'] },
+    humble:   { th: 'ลูกสาวสามัญชน', weight: 16, charm: [38, 58], wit: [45, 68], talent: [30, 55], ambition: [8, 32], loyalty: [52, 72], agentP: 0.03, style: ['coils', 'buns'],
+                blurbs: ['มือหยาบกว่าสาวคนอื่นแต่ยืนตรงกว่าทุกคน', 'ไม่พูดมากแต่จดจำทุกชื่อที่ได้ยิน', 'กำชายแขนเสื้อที่ซ่อมแล้วซ่อมอีก แต่ไม่ซ่อนมันไว้'] },
+    beauty:   { th: 'งามล้ำเลิศ', weight: 12, charm: [78, 96], wit: [30, 55], talent: [40, 66], ambition: [40, 72], loyalty: [34, 54], agentP: 0.2, style: ['wings', 'qitou'],
+                blurbs: ['ผู้คนในห้องโถงเงียบลงครู่หนึ่งเมื่อนางเดินเข้ามา', 'งามจนฮองเฮาทรงเหลือบมองถึงสองครั้ง', 'ไม่รู้ว่าตนเองงามแค่ไหน — หรือรู้ดีเกินไป'] },
+  },
+  /* appearance palettes for generated portraits */
+  skin: ['#fbe5d4', '#f8dcc6', '#f2d0b4', '#efcfae', '#f6dfcc'],
+  hair: [['#1b1724', '#8a88b0'], ['#2e2020', '#a08078'], ['#3a2418', '#a87850'], ['#241a2a', '#7a6a9a']],
+  iris: ['#8a5430', '#6a4630', '#4a3a5a', '#5a4a30', '#3a4a5a'],
+  robes: [
+    { col: '#f2a9bc', trim: '#b83a66', pat: 'flower', patCol: '#e07a98', fl: '#ee7f9a' }, { col: '#a9d4de', trim: '#3f7f9a', pat: 'bamboo', patCol: '#78b0c4', fl: '#f4f8ff' },
+    { col: '#f6c3b2', trim: '#c95a58', pat: 'flower', patCol: '#e8928a', fl: '#ff8f78' }, { col: '#c8aad6', trim: '#7a5a9a', pat: 'dots', patCol: '#a384bc', fl: '#d8b8ff' },
+    { col: '#c0e2d4', trim: '#4f8f86', pat: 'bamboo', patCol: '#8fc2b2', fl: '#f4f0e6' }, { col: '#f2d98a', trim: '#b8862a', pat: 'cloud', patCol: '#fff0b0', fl: '#ffd870' },
+    { col: '#e5708c', trim: '#8a2a52', pat: 'cloud', patCol: '#f6b4c4', fl: '#ff9ab4' }, { col: '#7ea8e2', trim: '#2f5fa8', pat: 'cloud', patCol: '#cfe0ff', fl: '#e8f0ff' },
+  ],
+};
+
 </script>
 <script>
 /* ===== js/logic.js ===== */
@@ -1872,14 +1990,15 @@ var QL = (function () {
   function envOf(st, needW) {
     var e = { S: st.S, F: st.F, R: st.R, rank: st.rank, sir: st.sir, season: st.t % 4,
               year: Math.floor(st.t / 4) + 1, t: st.t, age: C.startAge + Math.floor(st.t / 4), origin: st.origin };
-    if (needW) e.W = wardrobeEnv(st);
+    if (needW && needW !== 'X') e.W = wardrobeEnv(st);
+    if (needW === 'X' || needW === 'WX') e.X = xnEnv(st);
     return e;
   }
-  var USES_W = /\bW\b/;
+  var USES_W = /\bW\b/, USES_X = /\bX\b/;
   function cond(expr, st) {
     if (expr === undefined || expr === null || expr === '' || expr === true) return true;
     if (expr === false) return false;
-    try { return !!evalAst(getAst(expr), envOf(st, USES_W.test(expr))); }
+    try { var uw = USES_W.test(expr), ux = USES_X.test(expr); return !!evalAst(getAst(expr), envOf(st, uw && ux ? 'WX' : ux ? 'X' : uw)); }
     catch (e) { if (strict) throw e; warn('[cond]', expr, e.message); return false; }
   }
 
@@ -1896,7 +2015,8 @@ var QL = (function () {
       .replace(/\{\{RANK\}\}/g, rankTitle(st))
       .replace(/\{\{HEIR\}\}/g, (st.F && typeof st.F.heir_name === 'string' && st.F.heir_name) || 'องค์ชาย')
       .replace(/\{\{YEAR\}\}/g, String(Math.floor(st.t / 4) + 1))
-      .replace(/\{\{SEASON\}\}/g, Q.SEASONS[st.t % 4]);
+      .replace(/\{\{SEASON\}\}/g, Q.SEASONS[st.t % 4])
+      .replace(/\{\{XN(RANK|CLAN)?([123])?\}\}/g, function (m, kind, idx) { return xnFill(st, kind, idx); });
   }
   function dateInfo(st) {
     var year = Math.floor(st.t / 4) + 1, season = st.t % 4;
@@ -1925,7 +2045,7 @@ var QL = (function () {
     Object.keys(Q.INIT_FLAGS).forEach(function (k) { st.F[k] = Q.INIT_FLAGS[k]; });
     Object.keys(o.start.F || {}).forEach(function (k) { st.F[k] = o.start.F[k]; });
     if (opts.gift && Q.GIFTS[opts.gift]) applyFx(st, Q.GIFTS[opts.gift].fx);
-    ensureW(st);
+    ensureW(st); ensureX(st);
     st.flash = null;
     return st;
   }
@@ -1964,6 +2084,7 @@ var QL = (function () {
     if (fx.queue) fx.queue.forEach(function (q) { st.queue.push({ id: q.id, due: st.t + 1 + (q['in'] || 0) }); });
     if (fx.ap) st.ap = Math.max(0, st.ap + fx.ap);
     if (fx.give) fx.give.forEach(function (id) { giveItem(st, id); });
+    if (fx.xn) applyXn(st, fx.xn);
     if (fx.log) st.log.push({ t: st.t, text: fill(st, fx.log) });
     if (fx.note) { var f = st.flash || (st.flash = { S: {}, R: {}, notes: [] }); f.notes.push(fill(st, fx.note)); }
   }
@@ -2108,6 +2229,267 @@ var QL = (function () {
              silver: st.S.silver, sets: Q.WARDROBE.sets };
   }
 
+
+  /* ---------------- xiunü (秀女) — new-concubine batches ---------------- */
+  function ensureX(st) {
+    if (!st.X || typeof st.X !== 'object') st.X = { next: Q.XIUNU.firstAt, batches: 0, seq: 0, girls: {}, order: [], pending: null, focus: null, last: null, fr: {} };
+    var X = st.X;
+    if (!X.girls) X.girls = {}; if (!X.order) X.order = []; if (!X.fr) X.fr = {};
+    return X;
+  }
+  function clampN(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function pickOf(st, arr) { return arr[Math.floor(rnd(st) * arr.length)]; }
+  function rr(st, r) { return ri(st, r[0], r[1]); }
+  function galive(g) { return g.status === 'kept' || g.status === 'sponsored' || g.status === 'maid'; }
+  function genLook(st, arch, han) {
+    var A = Q.XIUNU, r = pickOf(st, A.robes), h = pickOf(st, A.hair);
+    return { skin: pickOf(st, A.skin), hair: h[0], hairHi: h[1], iris: pickOf(st, A.iris), robe: { col: r.col, trim: r.trim, pat: r.pat, patCol: r.patCol },
+             flowers: r.fl, style: pickOf(st, arch.style), han: han, fw: ri(st, 64, 70), jw: ri(st, 18, 23), mole: rnd(st) < 0.18, blush: ri(st, 12, 26) / 100 };
+  }
+  function pickAgent(st, g, arch) {
+    if (rnd(st) >= arch.agentP) return null;
+    var opts = [];
+    if (!st.F.empress_down) opts.push('empress');
+    if (!st.F.niohuru_down) opts.push('consort');
+    if (g.arch === 'highborn') { var pref = g.side === 'military' ? 'consort' : g.side === 'civil' ? 'empress' : null; if (pref && opts.indexOf(pref) >= 0) return pref; }
+    return opts.length ? pickOf(st, opts) : null;
+  }
+  function genGirl(st, X) {
+    var A = Q.XIUNU, keys = Object.keys(A.archetypes), tot = 0, key = keys[0], i;
+    keys.forEach(function (k) { tot += A.archetypes[k].weight; });
+    var r = rnd(st) * tot;
+    for (i = 0; i < keys.length; i++) { r -= A.archetypes[keys[i]].weight; if (r <= 0) { key = keys[i]; break; } }
+    var arch = A.archetypes[key];
+    var han = (key === 'bright' || key === 'artist' || key === 'humble') ? rnd(st) < 0.65 : rnd(st) < 0.35;
+    var clan = key === 'humble' ? { th: 'สามัญชน', side: 'neutral', power: 0 }
+      : key === 'highborn' ? pickOf(st, A.manchu.filter(function (c) { return c.power >= 2; })) : pickOf(st, han ? A.han : A.manchu);
+    var used = {}; X.order.forEach(function (id) { used[X.girls[id].name] = 1; });
+    var pool = A.names.filter(function (n) { return !used[n]; }); if (!pool.length) pool = A.names;
+    var g = { id: 'x' + (++X.seq), name: pickOf(st, pool), clan: clan.th, side: clan.side, power: clan.power, han: han, banner: pickOf(st, A.banners),
+      age: ri(st, 15, 17), arch: key, t0: st.t, batch: X.batches, charm: rr(st, arch.charm), wit: rr(st, arch.wit), talent: rr(st, arch.talent),
+      ambition: rr(st, arch.ambition), loyalty: rr(st, arch.loyalty), favor: 0, rank: 0, status: 'pending', agent: null, faction: 'none',
+      turned: false, known: {}, blurb: pickOf(st, arch.blurbs), look: null };
+    g.agent = pickAgent(st, g, arch);
+    g.look = genLook(st, arch, han);
+    return g;
+  }
+  function sponsorCost(g) { return g.arch === 'humble' ? 40 : 60 + 40 * g.power; }
+  function xnQuota(st) { var q = Q.XIUNU.quota; return q[Math.min(8, Math.max(0, st.rank))] || 0; }
+  function newBatch(st) {
+    var X = ensureX(st), A = Q.XIUNU, n = rr(st, A.batchSize), ids = [], i;
+    X.batches++;
+    for (i = 0; i < n; i++) { var g = genGirl(st, X); X.girls[g.id] = g; X.order.push(g.id); ids.push(g.id); }
+    X.last = { no: X.batches, ids: ids, t: st.t };
+    X.next = st.t + A.interval;
+    st.F.xn_fresh = true;
+    if (st.rank >= A.participateRank) X.pending = { no: X.batches, ids: ids, deadline: st.t + A.deadline, quota: xnQuota(st), sponsored: 0 };
+    else autoPlace(st, ids);
+    return ids;
+  }
+  function autoPlace(st, ids) {
+    var X = ensureX(st);
+    ids.forEach(function (id) { var g = X.girls[id]; if (g.status !== 'pending') return; g.status = 'kept'; g.rank = 1; g.faction = g.agent || 'none'; });
+  }
+  function autoResolve(st) { var X = ensureX(st), P = X.pending; if (!P) return; autoPlace(st, P.ids); X.pending = null; }
+  function xnInvestigate(st, id) {
+    var X = ensureX(st), g = X.girls[id], cost = Q.XIUNU.investigateCost;
+    if (!g || g.status !== 'pending') return { ok: false, why: 'ไม่สามารถสืบประวัติได้' };
+    if (g.known.done) return { ok: false, why: 'สืบประวัติผู้นี้ไปแล้ว' };
+    if (st.S.silver < cost) return { ok: false, why: 'เงินตำลึงไม่พอ' };
+    st.flash = null; applyFx(st, { silver: -cost });
+    var p = clampN(0.5 + (st.S.wit - 45) / 80, 0.3, 0.95);
+    g.known.done = true; g.known.arch = true;
+    var b = g.ambition < 35 ? 0 : g.ambition < 65 ? 1 : 2;
+    if (rnd(st) > p) b = clampN(b + (rnd(st) < 0.5 ? -1 : 1), 0, 2);
+    g.known.ambition = b;
+    g.known.agent = (rnd(st) < p * 0.85) ? (g.agent ? 'yes' : 'no') : null;
+    return { ok: true, flash: st.flash };
+  }
+  function xnDecide(st, id, choice) {
+    var X = ensureX(st), P = X.pending, g = X.girls[id], note = '';
+    if (!P || !g || g.status !== 'pending' || P.ids.indexOf(id) < 0) return { ok: false, why: 'ไม่อยู่ในรายชื่อที่รอพิจารณา' };
+    st.flash = null;
+    if (choice === 'sponsor') {
+      var cost = sponsorCost(g);
+      if (P.sponsored >= P.quota) return { ok: false, why: 'โควตารับเข้าสังกัดของรุ่นนี้เต็มแล้ว' };
+      if (st.S.silver < cost) return { ok: false, why: 'เงินตำลึงไม่พอ (ต้องใช้ ' + cost + ' ตำลึง)' };
+      applyFx(st, { silver: -cost, prestige: g.power >= 2 ? 2 : 1 });
+      g.status = 'sponsored'; g.rank = 1; g.loyalty = clampN(g.loyalty + 22, 0, 100); P.sponsored++;
+      note = g.name + ' เข้าสังกัดของท่าน และจะจดจำว่าใครยื่นมือให้';
+    } else if (choice === 'neutral') {
+      g.status = 'kept'; g.rank = 1; g.faction = g.agent || 'none';
+      note = g.name + ' ถูกจัดเข้าวังตามชะตา';
+    } else if (choice === 'maid') {
+      g.status = 'maid'; g.loyalty = clampN(g.loyalty + 35, 0, 100); g.faction = 'none';
+      note = g.name + ' มาเป็นนางกำนัลข้างกายท่าน';
+    } else if (choice === 'reject') {
+      g.status = 'rejected';
+      if (g.power >= 2) { g.revenge = true; applyFx(st, { threat: g.power >= 3 ? 4 : 2 }); note = 'ตระกูล' + g.clan + 'จะจดจำเรื่องนี้'; }
+      if (g.arch === 'humble') { applyFx(st, { virtue: -2 }); note = g.name + ' ถูกส่งกลับสู่ความยากจน'; }
+      if (g.agent && g.known.agent === 'yes') { applyFx(st, { prestige: 2, threat: -2 }); note = 'ท่านปัดสายสืบออกจากวังได้ก่อนที่นางจะเข้ามา'; }
+      if (!note) note = g.name + ' ถูกส่งกลับบ้าน';
+    } else return { ok: false, why: 'คำสั่งไม่ถูกต้อง' };
+    g.decided = true;
+    if (P.ids.every(function (i) { return X.girls[i].status !== 'pending'; })) X.pending = null;
+    flashNote(st, note);
+    return { ok: true, note: note, flash: st.flash };
+  }
+  function xnGift(st, id) {
+    var X = ensureX(st), g = X.girls[id], cost = Q.XIUNU.giftCost;
+    if (!g || !galive(g) || g.turned) return { ok: false, why: 'ไม่สามารถมอบของขวัญให้ได้' };
+    if (g.giftT === st.t) return { ok: false, why: 'มอบของขวัญแก่นางแล้วในฤดูนี้' };
+    if (st.S.silver < cost) return { ok: false, why: 'เงินตำลึงไม่พอ' };
+    st.flash = null; applyFx(st, { silver: -cost });
+    g.loyalty = clampN(g.loyalty + (g.agent ? 3 : 6), 0, 100); g.giftT = st.t;
+    return { ok: true, flash: st.flash };
+  }
+  function xnDismiss(st, id) {
+    var X = ensureX(st), g = X.girls[id];
+    if (!g || !galive(g)) return { ok: false, why: 'ไม่สามารถทำได้' };
+    st.flash = null;
+    var wasLoyal = !g.turned && g.loyalty >= 60 && !g.agent;
+    g.status = 'gone';
+    if (g.turned) applyFx(st, { threat: -2 }); else if (g.agent) applyFx(st, { threat: -1 });
+    if (wasLoyal) applyFx(st, { virtue: -2 });
+    return { ok: true, flash: st.flash };
+  }
+  function applyXn(st, o) {
+    var X = ensureX(st), g = X.focus && X.girls[X.focus];
+    if (!g) return;
+    ['loyalty', 'ambition', 'favor'].forEach(function (k) { if (o[k] !== undefined) g[k] = clampN(g[k] + roll(st, o[k]), 0, 100); });
+    if (o.rank) g.rank = Math.max(1, g.rank + o.rank);
+    if (o.status) g.status = o.status;
+    if (o.turned !== undefined) { g.turned = !!o.turned; if (!o.turned) g.faction = 'none'; }
+    if (o.expose) { g.exposed = true; g.known.agent = 'yes'; g.known.arch = true; }
+    if (o.graduated) g.graduated = true;
+  }
+  var GSEL = {
+    any: function (g) { return galive(g); },
+    ally: function (g) { return galive(g) && !g.turned && g.loyalty >= 55; },
+    ally_court: function (g) { return (g.status === 'sponsored' || g.status === 'kept') && !g.turned && g.loyalty >= 55; },
+    sponsored: function (g) { return g.status === 'sponsored' && !g.turned; },
+    ambitious: function (g) { return g.status === 'sponsored' && !g.turned && g.ambition >= 60; },
+    rising: function (g) { return (g.status === 'sponsored' || g.status === 'kept') && !g.turned && g.favor >= 22; },
+    graduate: function (g) { return g.status === 'sponsored' && !g.turned && g.rank >= 3 && g.loyalty >= 62 && !g.graduated; },
+    turning: function (g) { return g.turned && !g.turnSeen && galive(g); },
+    rival_fav: function (g) { return g.status === 'kept' && g.favor >= 28 && (g.turned || g.agent || g.faction === 'empress' || g.faction === 'consort'); },
+    rejected_noble: function (g) { return g.status === 'rejected' && g.power >= 2 && g.revenge && !g.revengeSeen; },
+    maid_girl: function (g) { return g.status === 'maid' && g.loyalty >= 50; },
+    maid_spy: function (g) { return g.status === 'maid' && g.agent && !g.exposed; },
+  };
+  function pickGirl(st, sel, peek) {
+    var X = st.X; if (!X || !X.order) return null;
+    var f = GSEL[sel]; if (!f) return null;
+    var list = [], i;
+    for (i = 0; i < X.order.length; i++) { var g = X.girls[X.order[i]]; if (g && f(g)) { if (peek) return g; list.push(g); } }
+    if (!list.length) return null;
+    return list[Math.floor(rnd(st) * list.length)];
+  }
+  function xnEnv(st) {
+    var X = ensureX(st), n = 0, allies = 0, rivals = 0, sponsored = 0;
+    X.order.forEach(function (id) {
+      var g = X.girls[id]; if (!galive(g)) return;
+      n++; if (GSEL.ally(g)) allies++; if (g.turned || (g.agent && g.status === 'kept' && g.favor >= 30)) rivals++; if (g.status === 'sponsored') sponsored++;
+    });
+    var fg = X.focus && X.girls[X.focus];
+    var f = fg ? { status: fg.status, ambition: Math.round(fg.ambition), loyalty: Math.round(fg.loyalty), favor: Math.round(fg.favor), rank: fg.rank, agent: !!fg.agent, turned: !!fg.turned, arch: fg.arch, power: fg.power }
+      : { status: '', ambition: 0, loyalty: 0, favor: 0, rank: 0, agent: false, turned: false, arch: '', power: 0 };
+    return { pending: !!X.pending, n: n, allies: allies, rivals: rivals, sponsored: sponsored, batches: X.batches, quota: X.pending ? X.pending.quota - X.pending.sponsored : 0, f: f };
+  }
+  function xnFill(st, kind, idx) {
+    var X = st.X; if (!X) return kind ? '' : 'น้องใหม่';
+    if (idx) { var id = X.last && X.last.ids[+idx - 1]; return (id && X.girls[id]) ? X.girls[id].name : ''; }
+    var g = X.focus && X.girls[X.focus];
+    if (!g) return kind ? '' : 'น้องใหม่';
+    if (kind === 'RANK') return g.rank ? Q.RANKS[Math.min(9, g.rank)].th : 'ผู้เข้าคัดเลือก';
+    if (kind === 'CLAN') return g.clan;
+    return g.name;
+  }
+  function focusLook(st) { var X = st.X, g = X && X.focus && X.girls[X.focus]; return g ? g.look : null; }
+  function xnTick(st, rep) {
+    var X = ensureX(st), A = Q.XIUNU, notes = [];
+    if (st.rank >= 1 && !st.F.finale && st.t >= X.next) { newBatch(st); notes.push('รุ่นซิ่วหนี่ปีที่ ' + X.batches + ' เข้าวังแล้ว'); }
+    if (X.pending && st.t > X.pending.deadline) { autoResolve(st); notes.push('ฮองเฮาจัดสรรผู้เข้าคัดเลือกที่ท่านยังไม่ได้ตัดสิน'); }
+    var allyFav = 0, allyThr = 0, rivFav = 0, rivThr = 0, spyThr = 0;
+    X.order.forEach(function (id) {
+      var g = X.girls[id]; if (!galive(g)) return;
+      if (st.t % 4 === 0) g.age++;
+      if (g.status !== 'maid') {
+        var pot = (g.charm + g.talent) / 2;
+        g.favor = clampN(g.favor + Math.max(0, (pot - 30) / 12 * rnd(st) * 1.8) - 0.6, 0, 100);
+        var cap = Math.min(6, Math.max(1, st.rank - 1));
+        while (g.rank < cap && g.favor >= A.rankThr[g.rank]) {
+          g.rank++; g.favor -= 4;
+          if (g.status === 'sponsored' && !g.turned) notes.push(g.name + ' ในสังกัดได้เลื่อนเป็น' + Q.RANKS[g.rank].th);
+        }
+      }
+      if (g.arch === 'schemer' || g.agent) g.ambition = clampN(g.ambition + 1.2 * rnd(st), 0, 100);
+      else if (g.arch === 'highborn' || g.arch === 'beauty') g.ambition = clampN(g.ambition + 0.5 * rnd(st), 0, 100);
+      if (g.status === 'sponsored') g.loyalty = clampN(g.loyalty + ((g.ambition > 70 && g.rank >= st.rank - 2) ? -2.2 : 0.35), 0, 100);
+      else if (g.status === 'maid') g.loyalty = clampN(g.loyalty + 0.2, 0, 95);
+      else g.loyalty = clampN(g.loyalty + (g.loyalty > 40 ? -0.15 : 0.15), 0, 100);
+      if (!g.turned && g.status !== 'maid' && g.rank >= 2 && g.ambition >= 75 && g.loyalty < 45) {
+        g.turned = true; g.faction = g.agent || 'rival'; st.queue.push({ id: 'xn_turn', due: st.t });
+      }
+      if (!g.turned && g.loyalty >= 55) {
+        if (g.status === 'sponsored' && g.favor >= 20) allyFav += 0.25;
+        if ((g.status === 'sponsored' || g.status === 'maid') && g.loyalty >= 60) allyThr -= 0.35;
+      }
+      if ((g.turned || (g.agent && g.status === 'kept')) && g.favor >= 30 && g.rank <= st.rank) { rivFav -= 0.4; rivThr += 0.3; }
+      if (g.agent && !g.exposed && (g.status === 'sponsored' || g.status === 'maid')) spyThr += 0.4;
+    });
+    var fr = X.fr;
+    fr.favor = (fr.favor || 0) + clampN(allyFav, 0, 0.75) + clampN(rivFav, -1.2, 0);
+    fr.threat = (fr.threat || 0) + clampN(allyThr, -1.05, 0) + clampN(rivThr, 0, 0.9) + clampN(spyThr, 0, 0.8);
+    var out = {};
+    ['favor', 'threat'].forEach(function (k) { var v = fr[k], n = v >= 0 ? Math.floor(v) : Math.ceil(v); if (n) { fr[k] = v - n; out[k] = n; } });
+    if (out.favor) notes.push(out.favor > 0 ? 'สนมในสังกัดช่วยกราบทูลเรื่องดีๆ ของท่านแก่ฮ่องเต้ (ความโปรดปราน +' + out.favor + ')' : 'รัศมีของสนมหน้าใหม่บดบังท่านต่อพระเนตรฮ่องเต้ (ความโปรดปราน ' + out.favor + ')');
+    if (out.threat) notes.push(out.threat < 0 ? 'คนของท่านคอยดูต้นทางให้ ภัยรอบกายลดลง' : 'มีสายตาจากรุ่นใหม่จับจ้องท่านอยู่ (ภัยรอบกาย +' + out.threat + ')');
+    if (Object.keys(out).length) applyFx(st, out);
+    st.flash = null;
+    if (rep) rep.xn = notes;
+  }
+  function bucketAmb(v) { return v < 35 ? 0 : v < 65 ? 1 : 2; }
+  function xnCard(st, g) {
+    var A = Q.XIUNU, a = A.archetypes[g.arch], k = g.known || {};
+    var seen = (g.status === 'sponsored' || g.status === 'maid') && st.t - g.t0 >= 4;
+    var knowArch = !!k.arch || seen || g.turned;
+    var amb = k.ambition !== undefined ? k.ambition : ((g.status === 'sponsored' && st.t - g.t0 >= 8) || g.turned ? bucketAmb(g.ambition) : null);
+    var showLoy = g.status === 'sponsored' || g.status === 'maid' || !!k.done;
+    return { id: g.id, name: g.name, clan: g.clan, banner: g.banner, side: g.side, sideTh: A.sideTh[g.side], power: g.power, age: g.age, han: g.han, blurb: g.blurb,
+      status: g.status, statusTh: A.statusTh[g.status], rank: g.rank, rankTh: g.rank ? Q.RANKS[Math.min(9, g.rank)].th : 'ผู้เข้าคัดเลือก',
+      charm: g.charm, wit: g.wit, talent: g.talent, arch: knowArch ? g.arch : null, archTh: knowArch ? a.th : null, ambition: amb,
+      agentKnown: k.agent === 'yes' ? 'yes' : (k.agent === 'no' ? 'no' : null), agentTh: g.agent ? A.agentTh[g.agent] : null,
+      favor: Math.round(g.favor), loyalty: showLoy ? Math.round(g.loyalty) : null, turned: !!g.turned, giftOk: g.giftT !== st.t, look: g.look, batch: g.batch,
+      sponsorCost: sponsorCost(g), investigated: !!k.done, graduated: !!g.graduated };
+  }
+  function xiunu(st) {
+    var X = ensureX(st), P = X.pending, A = Q.XIUNU;
+    var cards = X.order.map(function (id) { return xnCard(st, X.girls[id]); });
+    var by = function (f) { return cards.filter(f); };
+    return {
+      batches: X.batches, nextIn: Math.max(0, X.next - st.t), silver: st.S.silver, investigateCost: A.investigateCost, giftCost: A.giftCost, participateRank: A.participateRank,
+      pending: P ? { no: P.no, deadlineIn: Math.max(0, P.deadline - st.t), quota: P.quota, left: P.quota - P.sponsored, ids: P.ids.slice() } : null,
+      pendingCards: P ? by(function (c) { return P.ids.indexOf(c.id) >= 0 && c.status === 'pending'; }) : [],
+      mine: by(function (c) { return c.status === 'sponsored' || c.status === 'maid'; }),
+      palace: by(function (c) { return c.status === 'kept'; }),
+      gone: by(function (c) { return c.status === 'rejected' || c.status === 'gone'; }),
+      all: cards,
+    };
+  }
+  /* validator helper: create one girl for every selector so xn events can be probed */
+  function xnProbe(st) {
+    var X = ensureX(st), mk = function (o) { var g = genGirl(st, X); X.girls[g.id] = g; X.order.push(g.id); Object.keys(o).forEach(function (k) { g[k] = o[k]; }); return g; };
+    mk({ status: 'sponsored', loyalty: 70, favor: 30, rank: 3, ambition: 65, turned: false, agent: null });
+    mk({ status: 'kept', turned: true, turnSeen: false, favor: 40, rank: 2, faction: 'consort' });
+    mk({ status: 'rejected', power: 3, revenge: true, clan: 'ว่านหยาน' });
+    mk({ status: 'maid', loyalty: 70, agent: null });
+    mk({ status: 'maid', loyalty: 55, agent: 'empress', exposed: false });
+    X.focus = X.order[0];
+    X.last = { no: 1, ids: X.order.slice(0, 3), t: st.t };
+    return X;
+  }
+
   /* ---------------- ranks ---------------- */
   function promote(st) {
     var from = st.rank; if (from >= 9) return;
@@ -2165,6 +2547,7 @@ var QL = (function () {
     var last = st.seen[ev.id];
     if (last !== undefined) { if (isOnce(ev)) return false; if (st.t - last < cooldownOf(ev)) return false; }
     if (ev.cond && !cond(ev.cond, st)) return false;
+    if (ev.girl && !pickGirl(st, ev.girl, true)) return false;
     return true;
   }
   function isGeneral(ev) { return ev.kind === 'random' && (!ev.tags || !ev.tags.length || ev.tags.indexOf('general') >= 0); }
@@ -2251,6 +2634,7 @@ var QL = (function () {
     if (st.t % 4 === 3 && st.rank <= 2) { st.S.health = clampStat('health', st.S.health - C.winterChill); rep.notes.push('ฤดูหนาวเยือกเย็นเกินกว่าเสื้อผ้าบางๆ จะต้านไหว'); }
     rep.healthDelta = st.S.health - h0;
     st.t++; st.sir++; st.ap = C.apPerSeason;
+    xnTick(st, rep);
     checkPromotion(st);
     if (!st.pendingEnding) { var se = systemEnd(st); if (se) st.pendingEnding = se; }
     beginSeason(st);
@@ -2305,6 +2689,13 @@ var QL = (function () {
   function startEvent(st, id) {
     var ev = EV[id];
     if (!ev) { warn('startEvent: unknown event', id); st.cur = null; return false; }
+    if (ev.girl) {
+      var gg = pickGirl(st, ev.girl);
+      if (!gg) { st.cur = null; return false; }
+      ensureX(st).focus = gg.id;
+      if (ev.girl === 'turning') { gg.turnSeen = true; if (pickGirl(st, 'turning', true)) st.queue.push({ id: 'xn_turn', due: st.t + 1 }); }
+      if (ev.girl === 'rejected_noble') gg.revengeSeen = true;
+    }
     st.seen[id] = st.t; st.stats.events++;
     st.cur = { ev: id, node: ev.start };
     if (ev.bg) st.scene.bg = ev.bg;
@@ -2441,6 +2832,7 @@ var QL = (function () {
     actions: actions, doAction: doAction, hub: hub,
     nextPending: nextPending, startEvent: startEvent, view: view, advance: advance, choose: choose, ackPromotion: ackPromotion,
     systemEnd: systemEnd, summary: summary, rnd: rnd,
+    xiunu: xiunu, xnInvestigate: xnInvestigate, xnDecide: xnDecide, xnGift: xnGift, xnDismiss: xnDismiss, focusLook: focusLook, ensureX: ensureX, xnProbe: xnProbe, xnQuota: xnQuota,
     wardrobe: wardrobe, wardrobeEff: wardrobeEff, equip: equip, unequip: unequip, buy: buy, give: giveItem, look: look, ensureW: ensureW, effLines: effLines,
     event: function (id) { return EV[id]; }, action: function (id) { return ACT[id]; },
   };
@@ -25042,6 +25434,300 @@ Q.add([
 ]);
 
 </script>
+<script>
+/* ===== js/data/c21_xiunu.js ===== */
+/* =============================================================
+   c21_xiunu.js — ซิ่วหนี่ (秀女) · เหตุการณ์ของรุ่นสนมใหม่
+   ใช้ฟิลด์ girl (เลือกสนมที่เข้าเงื่อนไขมาเป็น {{XN}}), cast c:'maiden', fx.xn (แก้ค่าของสนมคนนั้น), ตัวแปร X / X.f
+   xn_batch_arrival   รุ่นใหม่เข้าวัง (chapter · trigger F.xn_fresh)
+   xn_ally_tea        น้องในสังกัดมาเยี่ยม                  (girl ally)
+   xn_favor_rise      น้องได้รับความโปรดปราน                 (girl rising)
+   xn_ambition_hint   เงาของความทะเยอทะยาน                  (girl ambitious)
+   xn_turn            หักหลัง                              (chain · girl turning)
+   xn_rival_beauty    คู่แข่งหน้าใหม่                        (girl rival_fav)
+   xn_family_revenge  ตระกูลที่ถูกคัดออกแก้แค้น              (girl rejected_noble)
+   xn_maid_secret     นางกำนัลข้างกายนำข่าวมาบอก             (girl maid_girl)
+   xn_maid_spy        ตาของคนอื่นในห้องของท่าน               (girl maid_spy)
+   xn_graduate        ตอบแทนบุญคุณ                          (girl graduate)
+   xn_mentor          น้องขอคำแนะนำ                         (girl ally)
+   xn_gossip_batch    ข่าวลือรุ่นใหม่                        (general)
+   ============================================================= */
+Q.add([
+
+  /* ---------- 1. รุ่นซิ่วหนี่เข้าวัง ---------- */
+  {
+    id: 'xn_batch_arrival', kind: 'chapter', title: 'รุ่นซิ่วหนี่เข้าวัง', prio: 40, once: false, cooldown: 6,
+    minRank: 1, maxRank: 8, trigger: 'F.xn_fresh && !F.finale',
+    bg: 'selection_hall', cast: [{ c: 'mama', pos: 'center', x: 'neutral' }],
+    start: 'n0',
+    nodes: {
+      n0: { card: 'รุ่นซิ่วหนี่ใหม่เข้าวังแล้ว', fx: { unset: ['xn_fresh'] }, next: 'n1' },
+      n1: { branch: [{ cond: 'rank >= 5', next: 'h1' }, { next: 'w1' }] },
+      w1: { who: 'narrator', text: 'ขบวนรถม้าของสตรีผู้เข้าคัดเลือกรุ่นใหม่ผ่านประตูใหญ่มาตั้งแต่ฟ้าสาง ท่านยืนมองจากระเบียงยาวพร้อมสนมคนอื่นๆ เสียงกระซิบดังตามรอยล้อรถ — {{XN1}}, {{XN2}} ... ชื่อใหม่ที่เพิ่งถูกเขียนลงในทะเบียน', next: 'w2' },
+      w2: { who: 'mama', x: 'neutral', text: 'ทุกปีที่มีรุ่นใหม่ เก้าอี้ในวังหลังไม่เคยเพิ่มขึ้นสักตัว มีแต่คนที่ต้องการนั่งเพิ่มขึ้นเท่านั้น จำไว้นะ เด็กน้อย', next: 'w3' },
+      w3: { who: 'narrator', text: 'ท่านจะรับมือกับสายตาของสตรีหน้าใหม่เหล่านี้อย่างไร?',
+        choices: [
+          { text: 'มองด้วยความสงบ จดจำใบหน้าไว้ทุกคน', fx: { wit: 1 }, next: 'wend' },
+          { text: 'เป็นฝ่ายส่งยิ้มทักทายคนแรก', fx: { virtue: 1, prestige: 1 }, next: 'wend' },
+          { text: 'ถอยกลับเข้าตำหนัก ปล่อยให้พวกนางได้เจอผู้อื่นก่อน', fx: { threat: -1 }, next: 'wend' },
+        ] },
+      wend: { who: 'narrator', text: 'ในวังหลัง ปีที่มีหน้าใหม่ มักเป็นปีที่เรื่องเล่าเก่าๆ ถูกเขียนต่อ — และหลายเรื่องเป็นเรื่องของคนที่ยังไม่รู้ตัวว่าจะมีบทบาทอะไร' },
+      h1: { who: 'narrator', bg: 'kunning', text: 'ฮองเฮาทรงมอบทะเบียนรุ่นใหม่มาให้ท่านด้วยพระองค์เอง ตามธรรมเนียม ฐานันดรระดับท่านมีสิทธิ์ช่วยพิจารณา ใครควรอยู่ ใครควรไป และใครควรได้ที่พึ่ง ชื่อ {{XN1}}, {{XN2}} ... เรียงอยู่ในกระดาษสีแดง', next: 'h2' },
+      h2: { who: 'empress', x: 'smile', cast: [{ c: 'empress', pos: 'center', x: 'smile' }], text: 'น้องสาวคงรู้ ผู้ที่เราเลือกวันนี้ คือคนที่จะยืนอยู่ข้างเรา หรือข้างหลังเรา ไปอีกสิบปี ... ข้าไม่ได้ขอให้น้องเลือกถูกต้อง ข้าแค่ขอให้น้องเลือกอย่างรู้ตัว', next: 'h3' },
+      h3: { who: 'narrator', text: 'ท่านเปิดหน้าจอ "ซิ่วหนี่" จากปุ่มในหน้าหลักเพื่อพิจารณาผู้เข้าคัดเลือกแต่ละคน — สืบประวัติ รับเข้าสังกัด ปล่อยตามชะตา หรือคัดออก',
+        fx: { note: 'เปิดปุ่ม 📜 ซิ่วหนี่ ในหน้าหลักเพื่อพิจารณาผู้เข้าคัดเลือก' } },
+    },
+  },
+
+  /* ---------- 2. น้องในสังกัดมาเยี่ยม ---------- */
+  {
+    id: 'xn_ally_tea', kind: 'random', title: 'ชาของน้องใหม่', girl: 'ally_court',
+    minRank: 3, maxRank: 8, weight: 8, cooldown: 10,
+    bg: 'chamber_mid', cast: [{ c: 'maiden', pos: 'center', x: 'smile' }],
+    start: 'n1',
+    nodes: {
+      n1: { who: 'maiden', x: 'smile', text: 'ท่าน{{RANK}}เจ้าคะ หม่อมฉันทำขนมไส้ถั่วแดงมาถวายเอง หน้าตาไม่งามนัก แต่ข้ามหมู่ตำหนักมาด้วยความตั้งใจจริง', next: 'n2' },
+      n2: { who: 'narrator', text: '{{XN}} วางตะกร้าไม้ไผ่ลงบนโต๊ะอย่างระมัดระวัง นางไม่ได้นั่งลงจนกว่าท่านจะผายมือเชิญ แววตาของนางมีบางอย่างที่ยังไม่ผ่านการฝึกให้ซ่อน',
+        choices: [
+          { text: 'ชวนนางนั่งคุย ฟังข่าวจากตำหนักของนาง', fx: { wit: 1, threat: -2, xn: { loyalty: 3 } }, next: 'n3a' },
+          { text: 'สอนมารยาทและคำพูดที่ปลอดภัยในวังให้นาง', fx: { prestige: 1, xn: { loyalty: 5, ambition: -2 } }, next: 'n3b' },
+          { text: 'มอบของขวัญเล็กๆ ตอบแทนน้ำใจ', cost: { silver: 30 }, fx: { xn: { loyalty: 7 } }, next: 'n3c' },
+        ] },
+      n3a: { who: 'maiden', x: 'neutral', text: 'หม่อมฉันได้ยินมาว่ามีคนตั้งใจเดินผ่านตำหนักท่านบ่อยเกินไปเมื่อวันก่อน ... อาจเป็นแค่ความบังเอิญเจ้าค่ะ แต่หม่อมฉันคิดว่าท่านควรรู้', next: 'n4' },
+      n3b: { who: 'maiden', x: 'shy', text: 'หม่อมฉันจะจดไว้ในใจเจ้าค่ะ ... ไม่มีใครเคยสอนหม่อมฉันตรงๆ ว่าอะไรควรพูดและอะไรไม่ควร ทุกคนแค่มองแล้วหัวเราะ', next: 'n4' },
+      n3c: { who: 'maiden', x: 'surprised', text: 'เกินกว่าที่หม่อมฉันคู่ควรแล้วเจ้าค่ะ! ... หม่อมฉันจะไม่ลืมเลย ไม่ว่าวันไหนจะเป็นอย่างไร', next: 'n4' },
+      n4: { who: 'narrator', text: 'เมื่อ{{XN}}กลับไป กลิ่นถั่วแดงหวานๆ ยังค้างอยู่ในห้อง ท่านนึกขึ้นได้ว่าการมีคนที่แวะมาโดยไม่ต้องการอะไรในทันที เป็นสิ่งที่ในวังนี้หาได้ยากมาก' },
+    },
+  },
+
+  /* ---------- 3. น้องได้รับความโปรดปราน ---------- */
+  {
+    id: 'xn_favor_rise', kind: 'random', title: 'ดาวดวงใหม่', girl: 'rising',
+    minRank: 3, maxRank: 8, weight: 8, cooldown: 10,
+    bg: 'corridor', cast: [{ c: 'maiden', pos: 'center', x: 'shy' }],
+    start: 'n1',
+    nodes: {
+      n1: { who: 'maiden', x: 'shy', text: 'ท่าน{{RANK}}เจ้าคะ เมื่อคืนฝ่าบาททรงเรียกหม่อมฉันไปเฝ้า ... หม่อมฉันไม่รู้ว่าควรพูดอะไรกับท่านดี', next: 'n2' },
+      n2: { who: 'narrator', text: 'ทั่วทั้งระเบียงรู้เรื่องนี้ก่อนที่นางจะเดินมาถึงเสียอีก {{XNRANK}}ผู้นี้เพิ่งเป็นข่าวไปทั่ววัง และท่านเป็นคนแรกที่นางเลือกมาหาด้วยตัวเอง',
+        choices: [
+          { text: 'แสดงความยินดี และมอบของขวัญแก่นาง', cost: { silver: 40 }, fx: { prestige: 1, xn: { loyalty: 8 } }, next: 'n3a' },
+          { text: 'เตือนนางถึงหลุมพรางที่มาพร้อมความโปรดปราน', hint: 'ต้องใช้ปัญญา', check: { stat: 'wit', dc: 45 }, win: 'n3b', lose: 'n3c' },
+          { text: 'ตอบรับเย็นชา — "ยินดีด้วย" แล้วเดินผ่านไป', fx: { xn: { loyalty: -6 }, virtue: -1 }, next: 'n3d' },
+        ] },
+      n3a: { who: 'maiden', x: 'smile', text: 'ท่านใจดีเกินไปแล้วเจ้าค่ะ ... ไม่มีใครในวังนี้ยินดีกับหม่อมฉันตรงๆ เลย นอกจากท่าน', fx: { favor: 1 }, next: 'n4' },
+      n3b: { who: 'maiden', x: 'surprised', text: 'ท่านพูดถูกทุกข้อเลยเจ้าค่ะ ... เมื่อคืนมีคนส่งขนมมาให้หม่อมฉัน หม่อมฉันกินไปแล้วหนึ่งชิ้น ก่อนที่จะนึกถึงคำเตือนของท่าน', fx: { wit: 1, virtue: 1, xn: { loyalty: 9 } }, next: 'n4' },
+      n3c: { who: 'maiden', x: 'neutral', text: 'หม่อมฉันจะระวังเจ้าค่ะ ... แต่หม่อมฉันไม่แน่ใจว่าท่านกำลังเตือน หรือกำลังกลัวหม่อมฉันกันแน่', fx: { xn: { loyalty: -2 } }, next: 'n4' },
+      n3d: { who: 'narrator', text: 'ท่านเดินผ่านไปโดยไม่หันกลับ แต่สัมผัสได้ว่าสายตาของนางมองตามหลังท่านจนเลี้ยวมุมเสา', next: 'n4' },
+      n4: { who: 'narrator', text: 'ในวังหลัง ดวงดาวดวงใหม่ที่ขึ้นสูงเร็ว จะมีสองประเภท — ดวงที่เป็นแสงนำทาง และดวงที่เป็นแสงเผา ไม่มีใครรู้ว่าดวงนี้เป็นอย่างไหนจนกว่าฤดูหนาวจะมาถึง' },
+    },
+  },
+
+  /* ---------- 4. เงาของความทะเยอทะยาน ---------- */
+  {
+    id: 'xn_ambition_hint', kind: 'random', title: 'ถ้อยคำที่ไม่ได้ถามตรงๆ', girl: 'ambitious',
+    minRank: 4, maxRank: 8, weight: 7, cooldown: 12,
+    bg: 'garden', cast: [{ c: 'maiden', pos: 'center', x: 'smile' }],
+    start: 'n1',
+    nodes: {
+      n1: { who: 'maiden', x: 'smile', text: 'ท่าน{{RANK}}เจ้าคะ หม่อมฉันได้ยินว่าเฟยที่ตำหนักตะวันออกเพิ่งทรงประชวร ... ถ้าตำแหน่งว่าง ท่านคิดว่าผู้ที่ได้เลื่อนขั้นจะเป็นใครเจ้าคะ', next: 'n2' },
+      n2: { who: 'narrator', text: 'คำถามเหมือนไร้เดียงสา แต่ท่านสังเกตว่านางไม่เคยถามว่า "ท่านเป็นอย่างไรบ้าง" ในช่วงหลังเลย ทุกคำถามของ{{XN}} ล้วนพาไปสู่ตำแหน่งที่อยู่สูงขึ้นไปอีกขั้น',
+        choices: [
+          { text: '"คนที่รู้จักรอ" — ปลอบนางว่าอย่าใจร้อน', hint: 'พยายามกดความทะเยอทะยานลง', check: { stat: ['virtue', 'wit'], dc: 48 }, win: 'n3a', lose: 'n3b' },
+          { text: 'สนับสนุนนางตรงๆ — "คนมีฝีมือสมควรได้ขึ้น"', fx: { xn: { ambition: 10, loyalty: 3 } }, next: 'n3c' },
+          { text: 'ทดสอบนาง ด้วยการแต่งเรื่องว่ามีใครบางคนกำลังจะเลื่อนขั้น', hint: 'ดูปฏิกิริยา', check: { stat: 'wit', dc: 42 }, win: 'n3d', lose: 'n3e' },
+        ] },
+      n3a: { who: 'maiden', x: 'shy', text: 'หม่อมฉันขอโทษเจ้าค่ะ ... หม่อมฉันรีบร้อนไปจริงๆ ท่านเป็นผู้ที่เห็นไกลกว่าหม่อมฉันเสมอ', fx: { xn: { ambition: -10, loyalty: 4 } }, next: 'n4' },
+      n3b: { who: 'maiden', x: 'neutral', text: 'ค่ะ ... หม่อมฉันเข้าใจแล้ว (แต่รอยยิ้มของนางเรียบเกินกว่าจะเป็นความเข้าใจ)', fx: { xn: { loyalty: -5 } }, next: 'n4' },
+      n3c: { who: 'maiden', x: 'smile', text: 'ท่านพูดถูกจริงๆ เจ้าค่ะ ... หม่อมฉันจะไม่ลืมคำนี้ ว่าท่านเป็นคนแรกที่บอกว่าหม่อมฉันควรได้ขึ้น', next: 'n4' },
+      n3d: { who: 'narrator', text: 'ใบหน้าของนางไม่ไหวเลยสักน้อย แต่ปลายนิ้วที่กำผ้าเช็ดหน้าบีบแน่นจนซีด ท่านรู้ในทันทีว่านางไม่ได้เพียงอยากขึ้น — นางกำลังนับว่าใครอยู่ขวางทาง', fx: { wit: 1, xn: { ambition: 3, loyalty: -3 } }, next: 'n4' },
+      n3e: { who: 'maiden', x: 'neutral', text: 'จริงหรือเจ้าคะ? ... ท่านรู้จากใครหรือเจ้าคะ (นางถามเร็วเกินไป และท่านยังหาไม่เจอว่านางหมายถึงอะไร)', fx: { xn: { loyalty: -2 } }, next: 'n4' },
+      n4: { who: 'narrator', text: 'ลมพัดกลีบดอกไม้ผ่านระหว่างท่านสองคน ท่านรู้ว่าบางคนที่ท่านยื่นมือช่วยไว้ ในที่สุดก็อาจเป็นคนที่ท่านต้องผลักออกจากบันไดด้วยมือเดียวกัน' },
+    },
+  },
+
+  /* ---------- 5. หักหลัง ---------- */
+  {
+    id: 'xn_turn', kind: 'chain', title: 'ใบหน้าที่เปลี่ยนไป', girl: 'turning',
+    minRank: 2, maxRank: 8,
+    bg: 'corridor', cast: [{ c: 'maiden', pos: 'center', x: 'smirk' }],
+    start: 'n1',
+    nodes: {
+      n1: { who: 'maiden', x: 'smirk', text: 'ท่าน{{RANK}}เจ้าคะ หม่อมฉันได้เป็น{{XNRANK}}แล้ว ... คงไม่ต้องเรียกท่านว่า "พี่" ในที่แจ้งอีกต่อไปกระมัง', next: 'n2' },
+      n2: { branch: [{ cond: "X.f.status == 'sponsored'", next: 'n2s' }, { next: 'n2k' }] },
+      n2s: { who: 'narrator', text: 'ผู้คนที่เดินผ่านระเบียงชะลอฝีเท้าโดยไม่เสแสร้ง {{XN}}ไม่ได้ลดเสียงลงเลย — นางตั้งใจให้ทุกคนได้ยิน เด็กสาวที่เคยยืนเกาะชายแขนเสื้อของท่านในวันแรก กำลังบอกคนทั้งวังว่านางไม่ต้องการร่มของท่านอีกแล้ว', next: 'n2c' },
+      n2k: { who: 'narrator', text: 'ผู้คนที่เดินผ่านระเบียงชะลอฝีเท้าโดยไม่เสแสร้ง {{XN}}ไม่ได้ลดเสียงลงเลย — นางตั้งใจให้ทุกคนได้ยิน สตรีที่ท่านแทบไม่เคยได้พูดด้วยคนนี้ กำลังประกาศต่อทั้งวังว่าในสายตาของนาง ท่านเป็นเพียงบันไดขั้นหนึ่งที่รอวันก้าวข้าม', next: 'n2c' },
+      n2c: { who: 'narrator', text: 'ท่านจะรับมือกับนางอย่างไร?',
+        choices: [
+          { text: 'โต้กลับต่อหน้าคนทั้งระเบียงด้วยถ้อยคำที่คมและสุภาพ', hint: 'เสี่ยงแต่ถ้าชนะ นางจะเสียหน้า', check: { stat: ['wit', 'prestige'], dc: 52, mods: [{ cond: 'R.empress >= 25', add: 6 }] }, win: 'n3a', lose: 'n3b' },
+          { text: 'พูดกับนางเงียบๆ ในที่ลับ ให้โอกาสนางกลับตัว', hint: 'ได้ผลถ้านางยังมีความละอาย', check: { stat: ['virtue', 'charm'], dc: 50 }, win: 'n3c', lose: 'n3d' },
+          { text: 'ไม่ตอบ — ปล่อยให้ผู้คนเห็นว่าท่านไม่ถือสา', fx: { threat: 2, favor: -1, xn: { favor: 3 } }, next: 'n3e' },
+        ] },
+      n3a: { who: 'narrator', text: 'ประโยคสุดท้ายของท่านวางลงเบาๆ เหมือนกลีบดอกไม้ แต่ทุกคนในระเบียงจำได้ว่ามันคือมีด ใบหน้าของ{{XN}}แดงก่ำ และเป็นนางที่ต้องก้มหน้าถอยออกไปก่อน', fx: { prestige: 2, threat: -2, xn: { favor: -10, loyalty: -5, status: 'gone' } }, next: 'n4' },
+      n3b: { who: 'narrator', text: 'ท่านตอบช้าไปครึ่งจังหวะ และนางไม่พลาดโอกาสนั้น เสียงหัวเราะเบาๆ จากหมู่สนมที่ยืนอยู่ปลายระเบียงบอกท่านว่าวันนี้ท่านแพ้', fx: { prestige: -2, threat: 2, xn: { favor: 3 } }, next: 'n4' },
+      n3c: { who: 'maiden', x: 'sad', text: 'หม่อมฉัน ... ขอโทษเจ้าค่ะ ไม่มีใครในวังนี้เคยพูดกับหม่อมฉันตรงๆ แบบนี้มาก่อนเลย หม่อมฉัน ... สับสนไปเอง', fx: { virtue: 1, xn: { turned: false, loyalty: 18, ambition: -15, graduated: true } }, next: 'n4' },
+      n3d: { who: 'maiden', x: 'smirk', text: 'ท่านพูดเหมือนคนที่กำลังกลัวหม่อมฉัน ... ไม่ต้องกลัวหรอกเจ้าค่ะ หม่อมฉันจะทำให้ท่านชินกับมันเอง', fx: { threat: 3, xn: { loyalty: -5 } }, next: 'n4' },
+      n3e: { who: 'narrator', text: 'ความเงียบของท่านถูกผู้คนอ่านเป็นความอ่อนแอเสียครึ่ง และเป็นความเมตตาอีกครึ่ง ท่านไม่แน่ใจว่าส่วนไหนจะอยู่ได้นานกว่า', next: 'n4' },
+      n4: { who: 'narrator', text: 'ในวังหลัง บทเรียนที่เจ็บที่สุดไม่ใช่การถูกศัตรูหักหลัง แต่คือการเห็นคนหน้าใหม่เรียนรู้ได้เร็วว่าทางลัดสู่ที่สูง คือการเหยียบคนที่เคยอยู่สูงกว่า' },
+    },
+  },
+
+  /* ---------- 6. คู่แข่งหน้าใหม่ ---------- */
+  {
+    id: 'xn_rival_beauty', kind: 'random', title: 'ดอกไม้ที่บานเร็ว', girl: 'rival_fav',
+    minRank: 3, maxRank: 8, weight: 8, cooldown: 12,
+    bg: 'banquet', cast: [{ c: 'maiden', pos: 'right', x: 'smile' }],
+    start: 'n1',
+    nodes: {
+      n1: { who: 'narrator', text: 'ในงานเลี้ยงเย็นนี้ ฮ่องเต้ทรงเลื่อนพระเนตรไปยังโต๊ะท้ายห้องถึงสามครั้ง ที่นั่งนั้นคือที่ของ{{XNRANK}}{{XN}} สตรีผู้อยู่ในวังได้ไม่นานแต่ใครๆ ก็รู้ว่านางคือดาวดวงใหม่', next: 'n2' },
+      n2: { who: 'maiden', x: 'smile', text: 'ท่าน{{RANK}}เจ้าคะ หม่อมฉันได้ยินว่าฝ่าบาททรงชอบกลอนของท่านมาก ถ้าท่านมีเวลา หม่อมฉันอยากขอเรียนด้วยเจ้าค่ะ', next: 'n3' },
+      n3: { who: 'narrator', text: 'ถ้อยคำสุภาพยอดเยี่ยม แต่ท่านรู้ว่าตระกูลของนางคือใคร และใครส่งนางมาเข้าวัง นางอาจจริงใจ หรืออาจกำลังวัดความแข็งแรงของท่าน',
+        choices: [
+          { text: 'ตอบรับด้วยรอยยิ้ม — ผู้ที่เรียนจากท่านก็เป็นพวกท่าน', hint: 'ผูกมิตรกับคู่แข่ง', check: { stat: 'wit', dc: 54 }, win: 'n4a', lose: 'n4b' },
+          { text: 'แสดงความสามารถให้ฮ่องเต้ทรงเห็น เพื่อเรียกพระเนตรคืน', hint: 'แข่งกันตรงๆ', check: { stat: ['charm', 'talent'], dc: 50 }, win: 'n4c', lose: 'n4d' },
+          { text: 'วางแผนตัดความโปรดปรานของนางอย่างเงียบๆ', cost: { silver: 60 }, hint: 'เสี่ยงและทำลายคุณธรรม', fx: { virtue: -2, threat: 3, xn: { favor: -12 } }, next: 'n4e' },
+        ] },
+      n4a: { who: 'maiden', x: 'surprised', text: 'ท่านใจกว้างจริงๆ เจ้าค่ะ ... ไม่มีสนมคนไหนเคยตอบรับหม่อมฉันแบบนี้เลย', fx: { prestige: 1, xn: { loyalty: 15, turned: false } }, next: 'n5' },
+      n4b: { who: 'maiden', x: 'smirk', text: 'ขอบพระคุณเจ้าค่ะ ... (นางจดทุกถ้อยคำของท่านไว้ในใจ ไม่ใช่เพื่อเรียนรู้ แต่เพื่อใช้)', fx: { threat: 2 }, next: 'n5' },
+      n4c: { who: 'narrator', text: 'เสียงพิณของท่านเรียกพระเนตรกลับมาได้ทั้งห้อง ฮ่องเต้ทรงยกถ้วยสุราขึ้นตอบเงียบๆ {{XN}}ก้มหน้ายิ้มบางๆ ราวกับนางเรียนรู้บางสิ่งที่ตั้งใจจะเรียน', fx: { favor: 5, prestige: 1 }, next: 'n5' },
+      n4d: { who: 'narrator', text: 'พิณของท่านผิดจังหวะเพียงห้องเดียว แต่ในห้องที่ทุกคนฟังอย่างตั้งใจ ห้องเดียวก็พอแล้ว {{XN}}ปรบมือให้ท่านก่อนใครเพื่อน อย่างอ่อนโยนที่สุดเท่าที่การดูถูกจะอ่อนโยนได้', fx: { favor: -2, prestige: -1 }, next: 'n5' },
+      n4e: { who: 'narrator', text: 'อีกสองสามวันต่อมา มีข่าวลือเรื่องที่{{XN}}เคยพูดผิดต่อหน้าไทเฮา ไม่มีใครรู้ว่าเริ่มจากใคร ท่านนั่งดื่มชาเงียบๆ และไม่เคยเอ่ยปากถึงมันกับใครอีก', next: 'n5' },
+      n5: { who: 'narrator', text: 'งานเลี้ยงสิ้นสุดเมื่อโคมดวงสุดท้ายหมดน้ำมัน ท่านเดินกลับตำหนักพร้อมเข้าใจว่าในวังหลัง ผู้ที่เก่งที่สุดไม่ใช่ผู้ที่ชนะการแข่งขัน แต่คือผู้ที่เลือกได้ว่าจะแข่งหรือไม่' },
+    },
+  },
+
+  /* ---------- 7. ตระกูลที่ถูกคัดออกแก้แค้น ---------- */
+  {
+    id: 'xn_family_revenge', kind: 'random', title: 'ฎีกาจากตระกูลที่ถูกลืม', girl: 'rejected_noble',
+    minRank: 5, maxRank: 8, weight: 9, cooldown: 20,
+    bg: 'kunning', cast: [{ c: 'empress', pos: 'center', x: 'neutral' }],
+    start: 'n1',
+    nodes: {
+      n1: { who: 'empress', x: 'neutral', text: 'น้องสาว ข้าได้รับฎีกาจากตระกูล{{XNCLAN}} เขากล่าวหาว่าน้องกลั่นแกล้งธิดาของเขาตอนคัดเลือก และตัดโอกาสที่นางควรได้', next: 'n2' },
+      n2: { who: 'narrator', text: 'ฎีกาฉบับนั้นเขียนด้วยลายมือของขุนนางที่รู้จักใช้ถ้อยคำ ไม่ได้ขอให้ท่านถูกลงโทษ เพียงขอ "ความเป็นธรรม" และขอให้ท่านอธิบายต่อหน้าทุกคน ซึ่งเป็นวิธีที่แสบที่สุดเท่าที่ศัตรูจะเลือกได้',
+        choices: [
+          { text: 'ตอบด้วยหลักฐานและเหตุผลที่ท่านใช้ตัดสินใจครั้งนั้น', hint: 'ถ้าท่านสืบประวัติไว้จะได้เปรียบ', check: { stat: 'wit', dc: 52, mods: [{ cond: 'R.empress >= 25', add: 6 }, { cond: 'F.xn_tip', add: 6 }] }, win: 'n3a', lose: 'n3b' },
+          { text: 'ส่งของกำนัลและจดหมายขออภัยให้ตระกูลนั้น', cost: { silver: 140 }, fx: { threat: -3, virtue: 1 }, next: 'n3c' },
+          { text: 'กราบทูลไทเฮาให้ตัดสินแทน', req: 'R.dowager >= 30 && !F.dowager_dead', why: 'ไทเฮายังไม่ไว้ใจท่านมากพอ', fx: { rel: { dowager: -2 }, threat: -2 }, next: 'n3d' },
+        ] },
+      n3a: { who: 'empress', x: 'smile', text: 'เหตุผลของน้องรัดกุมนัก ข้าจะให้คนเรียนเขาว่าฎีกาฉบับนี้ไม่มีมูล ... ตระกูลนั้นจะได้เรียนรู้ว่าไม่ควรเล่นปากกากับน้องง่ายๆ', fx: { prestige: 2, threat: -2 }, next: 'n4' },
+      n3b: { who: 'empress', x: 'neutral', text: 'ข้าเชื่อน้อง แต่ข้าอธิบายแทนน้องได้ไม่หมด ... คนที่ได้ยินครึ่งเดียวจะเล่าต่อครึ่งเดียว', fx: { prestige: -3, threat: 3 }, next: 'n4' },
+      n3c: { who: 'empress', x: 'smile', text: 'การกำนัลที่ฉลาดที่สุด คือกำนัลที่ทำให้คนอีกฝั่งไม่ต้องเสียหน้า ... ข้าจะรับเรื่องนี้ไว้', next: 'n4' },
+      n3d: { who: 'narrator', text: 'ไทเฮาทรงฟังเพียงสองประโยค แล้วตรัสสั้นๆ ว่า "ตระกูลเขามีเกียรติมากเกินกว่าจะหมดเกียรติเพราะธิดาคนเดียว" และทุกอย่างก็จบลงด้วยถ้อยคำเพียงนั้น', next: 'n4' },
+      n4: { who: 'narrator', text: 'ท่านเดินออกจากตำหนักขุนหนิงพร้อมบทเรียนเก่าที่ลืมง่ายที่สุด — ทุกคนที่ถูกปฏิเสธ ล้วนมีตระกูลที่ยังจำชื่อท่านได้' },
+    },
+  },
+
+  /* ---------- 8. นางกำนัลข้างกายนำข่าวมาบอก ---------- */
+  {
+    id: 'xn_maid_secret', kind: 'random', title: 'คำกระซิบข้างหมอน', girl: 'maid_girl',
+    minRank: 4, maxRank: 8, weight: 8, cooldown: 14,
+    bg: 'chamber_mid', cast: [{ c: 'maiden', pos: 'center', x: 'shy' }],
+    start: 'n1',
+    nodes: {
+      n1: { who: 'maiden', x: 'shy', text: 'ท่านเจ้าคะ ... เมื่อคืนหม่อมฉันตื่นไปตักน้ำ แล้วเห็นขันทีสองคนยืนหน้าตำหนักข้างๆ พวกเขาพูดถึง "ถ้วยชา" และ "วันพรุ่งนี้" หม่อมฉันไม่รู้ว่าสำคัญหรือเปล่า', next: 'n2' },
+      n2: { who: 'narrator', text: 'นางกำนัลที่ท่านเลือกไว้ข้างกายเป็นเด็กตัวเล็กที่เดินเท้าเบาเหมือนแมว ท่านเคยเสียดายความสามารถของนางที่ถูกจัดเป็นแค่คนรับใช้ ตอนนี้ท่านเข้าใจแล้วว่าสายตาของคนข้างล่างเห็นสิ่งที่คนข้างบนมองข้าม',
+        choices: [
+          { text: 'ตอบแทนนางอย่างงาม และสั่งตรวจถ้วยชาทุกใบพรุ่งนี้', cost: { silver: 30 }, fx: { threat: -6, set: ['xn_tip'], xn: { loyalty: 10 } }, next: 'n3a' },
+          { text: 'ขอบใจและเก็บเรื่องนี้เป็นความลับ ไม่ให้ใครรู้ว่าท่านรู้', fx: { threat: -4, wit: 1, set: ['xn_tip'], xn: { loyalty: 5 } }, next: 'n3b' },
+          { text: 'ใช้ข่าวนี้ลงมือก่อน — ส่งคนไปตามขันทีทั้งสอง', hint: 'ได้ผลเร็วแต่เสี่ยงทำให้ตื่นตัว', check: { stat: 'wit', dc: 50 }, win: 'n3c', lose: 'n3d' },
+        ] },
+      n3a: { who: 'maiden', x: 'surprised', text: 'ท่านให้หม่อมฉันมากเกินไปแล้วเจ้าค่ะ ... หม่อมฉันแค่ทำสิ่งที่ควรทำ', next: 'n4' },
+      n3b: { who: 'maiden', x: 'smile', text: 'หม่อมฉันไม่เคยเห็นท่านตกใจเลย ... ท่านเหมือนรู้ทุกอย่างอยู่แล้ว', next: 'n4' },
+      n3c: { who: 'narrator', text: 'ขันทีทั้งสองถูกจับได้ในคืนนั้นพร้อมผงยาเล็กน้อยในแขนเสื้อ ไม่มีใครกล้าพูดว่ามีเรื่องของท่านอยู่ในนั้น แต่ทั้งตำหนักรู้ว่าท่านรู้ก่อนเสมอ', fx: { prestige: 2, threat: -5, virtue: -1, xn: { loyalty: 6 } }, next: 'n4' },
+      n3d: { who: 'narrator', text: 'ขันทีทั้งสองหายตัวไปก่อนรุ่งสาง ราวกับมีคนบอกล่วงหน้า ท่านรู้ว่าคนที่ท่านเตือนได้ก็ได้ยินเสียงการเตรียมตัวของท่านเช่นกัน', fx: { threat: 2, xn: { loyalty: 2 }, set: ['xn_tip'] }, next: 'n4' },
+      n4: { who: 'narrator', text: 'ในห้องนั้น เสียงหายใจของนางกำนัลเด็กที่หลับอยู่บนเสื่อใกล้ประตู คือสิ่งที่ปลอดภัยที่สุดที่ท่านเคยมี' },
+    },
+  },
+
+  /* ---------- 9. ตาของคนอื่นในห้อง ---------- */
+  {
+    id: 'xn_maid_spy', kind: 'random', title: 'จดหมายที่ถูกเปิด', girl: 'maid_spy',
+    minRank: 5, maxRank: 8, weight: 9, cooldown: 14,
+    bg: 'chamber_mid', cast: [{ c: 'maiden', pos: 'center', x: 'neutral' }],
+    start: 'n1',
+    nodes: {
+      n1: { who: 'narrator', text: 'ตรามัดจดหมายที่ท่านปิดไว้เมื่อวาน เอียงไปทางซ้ายเล็กน้อย ท่านจำได้ว่าตอนผูกมันเป็นรอยเอียงขวา เพียงรอยเดียวที่ผิด ไม่มีใครสังเกตได้ นอกจากคนที่ฝึกมาเพื่อสังเกตสิ่งเหล่านี้', next: 'n2' },
+      n2: { who: 'narrator', text: 'คนเดียวที่เข้ามาในห้องหลังท่านปิดประตู คือ{{XN}} นางกำนัลที่ท่านเลือกไว้ข้างกายตอนซิ่วหนี่ ใบหน้าของนางซื่อ มือเรียบร้อย และไม่มีร่องรอยของความผิดอะไรเลย',
+        choices: [
+          { text: 'เรียกนางมาซักถามตรงๆ พร้อมตราที่เอียง', hint: 'ได้ผลถ้านางประหม่า', check: { stat: 'wit', dc: 48, mods: [{ cond: 'X.f.agent', add: 8 }] }, win: 'n3a', lose: 'n3b' },
+          { text: 'แกล้งทำเป็นไม่รู้ และเขียนจดหมายปลอมให้นางเปิดอ่าน', hint: 'เสี่ยงแต่ได้เปรียบ', check: { stat: 'wit', dc: 55 }, win: 'n3c', lose: 'n3d' },
+          { text: 'ปลดนางออกอย่างเงียบๆ โดยไม่อธิบาย', fx: { threat: -2, xn: { status: 'gone', expose: true } }, next: 'n3e' },
+        ] },
+      n3a: { who: 'maiden', x: 'cry', text: 'หม่อมฉันขอโทษเจ้าค่ะ! ... หม่อมฉันไม่มีทางเลือก ท่านเป็นคนพามาเข้าวัง แต่ครอบครัวหม่อมฉัน ... ไม่ใช่ของท่าน', fx: { prestige: 1, threat: -3, xn: { status: 'gone', expose: true } }, next: 'n4' },
+      n3b: { who: 'maiden', x: 'surprised', text: 'ตราเอียงหรือเจ้าคะ? หม่อมฉันไม่ได้สังเกตเลยเจ้าค่ะ บางทีลมพัดกระมัง', fx: { threat: 2, xn: { loyalty: -2 } }, next: 'n4' },
+      n3c: { who: 'narrator', text: 'สามวันต่อมา มีคนในตำหนักขุนหนิงเอ่ยถึง "เรื่องที่ท่านเขียนถึงน้องสาวที่บ้าน" อย่างเผลอตัว เรื่องนั้นไม่เคยมีอยู่จริง ท่านยิ้มบางๆ และจดชื่อที่ได้ยินไว้ในใจ', fx: { wit: 2, threat: -5, xn: { expose: true, status: 'gone' } }, next: 'n4' },
+      n3d: { who: 'narrator', text: 'จดหมายปลอมของท่านถูกอ่านและถูกส่งต่อ แต่ผู้รับไม่ตอบสนองตามที่ท่านหวัง ราวกับมีใครบอกพวกเขาว่าให้ระวังกับดักเสียก่อน', fx: { threat: 3, wit: -1 }, next: 'n4' },
+      n3e: { who: 'narrator', text: 'ท่านเลือกปลดนางโดยไม่พูดสักคำ นางกราบลาด้วยรอยยิ้มที่ไม่เปลี่ยนแปลงเลย ท่านไม่แน่ใจว่านั่นคือความบริสุทธิ์ หรือความชำนาญของผู้ที่ฝึกมาอย่างดีที่สุด', next: 'n4' },
+      n4: { who: 'narrator', text: 'ในวังหลัง ผู้ที่น่ากลัวที่สุดไม่ใช่ศัตรูที่ยืนอยู่ตรงหน้า แต่คือผู้ที่ท่านเป็นคนเชิญเข้าห้องนอนด้วยตัวเอง' },
+    },
+  },
+
+  /* ---------- 10. ตอบแทนบุญคุณ ---------- */
+  {
+    id: 'xn_graduate', kind: 'random', title: 'บุญคุณที่ไม่ลืม', girl: 'graduate',
+    minRank: 4, maxRank: 8, weight: 9, once: true,
+    bg: 'chamber_mid', cast: [{ c: 'maiden', pos: 'center', x: 'smile' }],
+    start: 'n1',
+    nodes: {
+      n1: { who: 'maiden', x: 'smile', text: 'ท่าน{{RANK}}เจ้าคะ วันนี้หม่อมฉันเป็น{{XNRANK}}แล้ว ... ตั้งแต่วันที่ท่านชี้นิ้วเลือกหม่อมฉันจากทะเบียนผู้เข้าคัดเลือก หม่อมฉันนับวันรอเวลานี้มาตลอด', next: 'n2' },
+      n2: { who: 'narrator', text: '{{XN}}คุกเข่าลงกลางห้อง ไม่ได้ก้มศีรษะอย่างกราบไหว้ แต่ก้มอย่างผู้ที่ตั้งใจจะส่งมอบบางสิ่ง ที่อยู่ในมือเล็กๆ ของนางตอนนี้ คือสิ่งที่ท่านต้องเลือกรับ',
+        choices: [
+          { text: 'รับ "ปากเสียง" — ให้นางกราบทูลเรื่องดีๆ ของท่านต่อฮ่องเต้', fx: { favor: 7, xn: { graduated: true } }, next: 'n3a' },
+          { text: 'รับเงินทองจากสินสอดของนาง เพื่อใช้ในวังหลัง', fx: { silver: 160, xn: { graduated: true } }, next: 'n3b' },
+          { text: 'รับ "ข่าว" — ให้นางเล่าทุกสิ่งที่ได้ยินในตำหนักของนาง', fx: { wit: 2, threat: -3, set: ['xn_tip'], xn: { graduated: true } }, next: 'n3c' },
+          { text: 'ปฏิเสธทั้งหมด — "จงเป็นสุข นั่นคือบุญคุณที่ข้าต้องการ"', fx: { virtue: 3, prestige: 2, xn: { loyalty: 20, graduated: true } }, next: 'n3d' },
+        ] },
+      n3a: { who: 'maiden', x: 'smile', text: 'หม่อมฉันจะทูลเรื่องของท่านทุกครั้งที่ได้อยู่ต่อพระพักตร์เจ้าค่ะ ... ไม่ต้องมากเกินจริง เพียงพูดความจริงที่คนอื่นหลงลืมเท่านั้น', next: 'n4' },
+      n3b: { who: 'maiden', x: 'neutral', text: 'เงินพวกนี้เป็นของที่ครอบครัวหม่อมฉันออมไว้เจ้าค่ะ ... ท่านไม่ต้องรู้สึกลำบากใจ หม่อมฉันเต็มใจให้', next: 'n4' },
+      n3c: { who: 'maiden', x: 'smirk', text: 'ท่านฉลาดจริงๆ เจ้าค่ะ ... หม่อมฉันจะเป็นหูเป็นตาให้ท่านเท่าที่เกียรติของหม่อมฉันจะอนุญาต', next: 'n4' },
+      n3d: { who: 'maiden', x: 'cry', text: '... ท่านเป็นคนแรกในชีวิตที่ไม่ขออะไรจากหม่อมฉันเลย ... หม่อมฉันจะจำท่านไปตลอดชีวิตเจ้าค่ะ', next: 'n4' },
+      n4: { who: 'narrator', text: 'บุญคุณในวังหลังมีสองชนิด — ชนิดที่ถูกชดใช้ด้วยของมีค่า และชนิดที่ถูกเก็บไว้เป็นสมบัติข้างใน ท่านรู้ว่าวันนี้ท่านได้เห็นชนิดหลังเกิดขึ้นเป็นครั้งแรก' },
+    },
+  },
+
+  /* ---------- 11. น้องขอคำแนะนำ ---------- */
+  {
+    id: 'xn_mentor', kind: 'random', title: 'บทเรียนจากพี่หญิง', girl: 'ally_court',
+    minRank: 4, maxRank: 8, weight: 7, cooldown: 12,
+    bg: 'pavilion_lake', cast: [{ c: 'maiden', pos: 'center', x: 'neutral' }],
+    start: 'n1',
+    nodes: {
+      n1: { who: 'maiden', x: 'neutral', text: 'ท่าน{{RANK}}เจ้าคะ หม่อมฉันไม่รู้ว่าควรวางตัวอย่างไรต่อหน้าฝ่าบาท ... บางครั้งหม่อมฉันกลัวจนพูดไม่ออก บางครั้งก็พูดมากเกินไป', next: 'n2' },
+      n2: { who: 'narrator', text: 'ลมจากทะเลสาบพัดผ่านศาลาเล็ก {{XN}}นั่งลงข้างท่านโดยไม่รอเชิญ และท่านตระหนักว่านี่คือครั้งแรกที่นางไม่ได้หันซ้ายหันขวาก่อนนั่ง ท่านกำลังจะเลือกว่าจะสอนนางให้เป็นคนแบบใด',
+        choices: [
+          { text: 'สอนให้อ่อนโยนและซื่อสัตย์ — ความจริงใจคือเกราะที่ดีที่สุด', fx: { virtue: 1, xn: { ambition: -5, loyalty: 4 } }, next: 'n3a' },
+          { text: 'สอนให้อ่านใจคนและเก็บคำพูด — ในวังนี้ความรู้คือชีวิต', fx: { wit: 1, virtue: -1, xn: { ambition: 8, loyalty: 2 } }, next: 'n3b' },
+          { text: 'บอกให้นางหาทางของตัวเอง — ท่านเป็นได้แค่กระจกส่องหน้า', fx: { xn: { loyalty: 1 } }, next: 'n3c' },
+        ] },
+      n3a: { who: 'maiden', x: 'smile', text: 'หม่อมฉันจะพยายามเจ้าค่ะ ... แต่ถ้าวันหนึ่งหม่อมฉันล้มเหลว ท่านอย่าผิดหวังนะเจ้าคะ', next: 'n4' },
+      n3b: { who: 'maiden', x: 'smirk', text: 'หม่อมฉันเข้าใจแล้วเจ้าค่ะ ... สิ่งที่ท่านสอน คือสิ่งที่ไม่มีใครเขียนไว้ในตำราของวังหลัง', next: 'n4' },
+      n3c: { who: 'maiden', x: 'sad', text: 'ค่ะ ... หม่อมฉันเข้าใจ ท่านไม่ต้องห่วง', next: 'n4' },
+      n4: { who: 'narrator', text: 'เมื่อนางจากไป ท่านนั่งอยู่ในศาลาจนพระอาทิตย์ตก คิดว่าคำสอนทุกคำที่ท่านให้ใครไป ล้วนเป็นเมล็ดที่ท่านไม่รู้เลยว่าจะงอกเป็นต้นอะไร' },
+    },
+  },
+
+  /* ---------- 12. ข่าวลือรุ่นใหม่ ---------- */
+  {
+    id: 'xn_gossip_batch', kind: 'random', title: 'เสียงซุบซิบเรื่องรุ่นใหม่',
+    minRank: 1, maxRank: 8, weight: 7, cooldown: 10, cond: 'X.batches >= 1 && X.n >= 1',
+    bg: 'corridor', cast: [{ c: 'eunuch', pos: 'center', x: 'smirk' }],
+    start: 'n1',
+    nodes: {
+      n1: { who: 'eunuch', x: 'smirk', text: 'ท่านทราบหรือยังขอรับ ว่ารุ่นซิ่วหนี่ปีนี้มีคนหนึ่งที่ฝ่าบาททรงถามถึงชื่อตั้งแต่วันแรก ... ข้าน้อยไม่กล้าเอ่ยว่าใคร แต่หูของข้าน้อยฟังเก่ง', next: 'n2' },
+      n2: { who: 'narrator', text: 'จางฝูยื่นหน้ามาเกือบชิดท่าน ก่อนจะถอยออกพร้อมรอยยิ้มชนิดที่ทำให้ท่านไม่แน่ใจว่าเขากำลังขายข่าว หรือกำลังหยั่งเสียงของท่านเองกันแน่',
+        choices: [
+          { text: 'จ่ายค่าข่าวเล็กน้อยเพื่อฟังต่อ', cost: { silver: 25 }, fx: { wit: 1, rel: { eunuch: 3 } }, next: 'n3a' },
+          { text: 'ปฏิเสธนิ่มๆ — "ข้าไม่ชอบฟังเรื่องที่ยังไม่มีใครเลือกเล่า"', fx: { virtue: 1, threat: -1 }, next: 'n3b' },
+        ] },
+      n3a: { who: 'eunuch', x: 'smile', text: 'ขอบพระคุณขอรับ ... ข่าวว่านางไม่ได้งามที่สุดในรุ่น แต่เป็นคนเดียวที่เมื่อฮ่องเต้ตรัสถาม นางตอบโดยไม่หลบสายตา ท่านลองคิดดูว่านั่นหมายถึงอะไร', next: 'n4' },
+      n3b: { who: 'eunuch', x: 'neutral', text: 'ท่านระวังตัวอย่างนี้ก็ดีแล้วขอรับ ... ข้าน้อยจะไปเล่าให้คนที่ไม่ระวังตัวฟังแทน', next: 'n4' },
+      n4: { who: 'narrator', text: 'ข่าวลือเดินทางเร็วกว่าความจริงเสมอ และมักเดินออกจากวังก่อนที่ใครจะรู้ว่ามันเริ่มต้นที่ไหน' },
+    },
+  },
+
+]);
+
+</script>
 <!-- DATA:END -->
 <script>
 /* ===== js/art_chars.js ===== */
@@ -25112,7 +25798,7 @@ var _artRender = (function () {
   function render(charId, expr, opts) {
     opts = opts || {};
     var rank = Math.max(0, Math.min(9, opts.rank | 0)), origin = opts.origin || 'noble';
-    var prof = profileFor(charId, rank, origin, charId === 'player' ? opts.outfit : null);
+    var prof = profileFor(charId, rank, origin, (charId === 'player' || charId === 'maiden') ? opts.outfit : null);
     var X = E[expr] || E.neutral;
     return build(prof, X, E[expr] ? expr : 'neutral', opts, charId);
   }
@@ -26315,6 +27001,36 @@ var _artRender = (function () {
     P.head = function (c) { return headSideCoils(c, { y: 106, dx: 68, r: 21, tie: '#a88a68' }); };
     return P;
   })();
+
+
+  /* ---- generated new concubines (xiunü): look spec from logic.js genLook() ---- */
+  CHARS.maiden = function (rank, origin, L) {
+    L = L || { skin: '#f8dcc6', hair: '#1b1724', hairHi: '#8a88b0', iris: '#8a5430', robe: { col: '#f2a9bc', trim: '#b83a66', pat: 'flower', patCol: '#e07a98' }, flowers: '#ee7f9a', style: 'buns', han: true, fw: 67, jw: 20, blush: .18 };
+    var rb = L.robe, P = tmplF({
+      skinTone: L.skin, face: { fw: L.fw, chin: 255, cy: 157, jw: L.jw }, neck: { w: 18, base: 282 },
+      eye: { iris: L.iris, y: 175, ex: 37, sx: 1.14, sy: 1.34, tilt: .4, shadow: '#f0b0a0', makeup: .25 },
+      brow: { y: 149, len: 43, t: 2.9, arch: 1 }, mouth: { y: 229, col: '#d6606e', open: true, w: 1 }, nose: { y: 206, w: .88 },
+      cheek: '#f28c88', cheekY: 202, blush0: L.blush, cheekRx: 22, hair: { col: L.hair, hi: L.hairHi }, happyEyes: true
+    });
+    if (L.mole) P.mole = [200 + 44, 214];
+    P.back = function (c) { return L.han ? hairBack(c, { top: 58, wd: 12, long: 430, lw: 8 }) : hairBack(c, { top: 56, wd: 12 }); };
+    P.pre = function (c) { return L.han ? crossCollar(c, { col: lt(rb.col, .1), inner: '#fff6ea', trim: rb.trim, y: 260 }) : standCollar(c, { col: lt(rb.col, .35), trim: GOLD, y: 262 }); };
+    P.body = function (c) {
+      if (L.han) return hanBody(c, { sh: 102, col: rb.col, pat: rb.pat, patCol: rb.patCol, patOp: .45, sash: '#f6d680', ribbon: rb.trim });
+      return robeBody(c, { sh: 108, col: rb.col, pat: rb.pat, patCol: rb.patCol, patOp: .5 }) + robeTrims(c, { sh: 108, trim: rb.trim, trim2: GOLD, lapel: true, sleeveBand: rb.trim });
+    };
+    P.hairFront = function (c) {
+      return L.han ? hairFront(c, { top: 62, peak: 0, hl: 112, lockLen: 40, lockW: 6, tipY: 196 }) + bangs(c, { y: 124 }) : hairFront(c, { top: 58, peak: 5, lockLen: 36, tipY: 198 });
+    };
+    P.head = function (c) {
+      var fl = L.flowers, leaf = '#4a9a70';
+      if (L.style === 'buns') return headRingBuns(c, { y: 74, dx: 60, r: 26, ribbon: rb.trim, flower: fl });
+      if (L.style === 'coils') return headSideCoils(c, { y: 106, dx: 68, r: 21, tie: rb.trim });
+      if (L.style === 'qitou') return headQitou(c, { lvl: 3, board: '#201a2e', flowers: fl, silk: rb.trim, leaf: leaf, pinHead: 'pearl', accent: '#f4d672' });
+      return headWings(c, { y: 72, w: 58 }) + cluster(c, 200 - 50, 90, [[0, 0, 1.2, fl, 0], [12, -8, .8, lt(fl, .3), 40]], leaf) + hairpin(c, 200 + 26, 98, 200 + 62, 62, 'pearl', [3, 30]);
+    };
+    return P;
+  };
 
   /* =================== MALE / OTHER CAST =================== */
   function earsSVG(c) {
@@ -29940,7 +30656,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { Sound: S
     var st = Game.st, R = Q.RANKS[st.rank];
     var expr = (st.S.health < 30 || st.F.poisoned) ? 'sad' : (st.S.favor >= 50 ? 'smile' : 'neutral');
     var wsig = (QL.ensureW(st), Object.keys(st.W.eq).map(function (k) { return st.W.eq[k]; }).join(','));
-    var key = [st.rank, st.origin, expr, st.name, st.F.has_heir ? 1 : 0, st.F.poisoned ? 1 : 0, st.F.heir_name || '', wsig].join('|');
+    var xs = QL.ensureX(st), xsig = xs.batches + ':' + (xs.pending ? xs.pending.ids.length : 0);
+    var key = [st.rank, st.origin, expr, st.name, st.F.has_heir ? 1 : 0, st.F.poisoned ? 1 : 0, st.F.heir_name || '', wsig, xsig].join('|');
     var chips = '<span class="hc">อายุ ' + hub.date.age + '</span>';
     if (st.F.has_heir) chips += '<span class="hc heir">👶 ' + esc(typeof st.F.heir_name === 'string' ? st.F.heir_name : 'ทายาท') + '</span>';
     if (st.F.poisoned) chips += '<span class="hc poison">☠ ถูกพิษ</span>';
@@ -29954,7 +30671,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { Sound: S
         '<div class="hero-info"><div class="hero-name">' + esc(st.name) + '</div>' +
         '<div class="hero-rank">' + seal(st.rank, 'sm') + '<span><b>' + esc(hub.rankTitle) + '</b><small>' + esc(R.zh) + '</small></span></div>' +
         '<div class="hero-hall">🏠 ' + esc(R.hall) + '</div><div class="hero-chips">' + chips + '</div>' +
-        '<button type="button" class="btn btn-ghost sm btn-wardrobe">👘 ตู้เสื้อผ้า</button></div>';
+        '<div class="hero-btns"><button type="button" class="btn btn-ghost sm btn-wardrobe">👘 ตู้เสื้อผ้า</button>' +
+        (xs.batches > 0 ? '<button type="button" class="btn btn-ghost sm btn-xiunu">📜 ซิ่วหนี่' + (xs.pending ? '<i class="xn-dot"></i>' : '') + '</button>' : '') + '</div></div>';
     });
   }
 
@@ -30033,6 +30751,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { Sound: S
     var hub = QL.hub(st);
     $('#action-groups').classList.toggle('still', !!refresh);
     renderTop(hub); renderClimbStrip(hub); renderLadder(hub); renderHero(hub); renderStats(hub); renderRels(); renderActions(hub);
+    renderXnBanner();
     Seen.rank(st.rank);
     if (st.rank >= 1 && !refresh) tip('wd_intro', 'ท่านมี <b>ตู้เสื้อผ้า</b> แล้ว — เลือกชุด เครื่องหัว และเครื่องประดับได้ตามฐานะ ซื้อเพิ่มด้วยเงินตำลึง หรือรับเป็นของพระราชทานเมื่อเลื่อนขั้น เครื่องแต่งกายมีผลต่อการทอยเต๋าและความอิจฉาจากศัตรู', '.btn-wardrobe');
     if (!noSave && !st.cur && st.phase !== 'ended') Saves.save('auto', st);
@@ -30101,6 +30820,11 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { Sound: S
   function onEndSeasonClick() {
     if (!Game._hubWait) return;
     var st = Game.st;
+    var xp = QL.ensureX(st).pending;
+    if (xp && xp.deadlineLeft === undefined && st.t >= xp.deadline && !FAST) {
+      confirmBox('ยังมีผู้เข้าคัดเลือกรอพิจารณา', 'ถ้าสิ้นสุดฤดูกาลนี้ ฮองเฮาจะจัดสรรผู้ที่ท่านยังไม่ได้ตัดสินใจให้เอง ต้องการไปพิจารณาก่อนหรือไม่?', 'ไปพิจารณา', 'สิ้นสุดฤดูกาลเลย').then(function (go) { if (go) openXiunu('pending'); else resolveHub({ type: 'end' }); });
+      return;
+    }
     if (st.ap > 0 && !FAST) {
       confirmBox('ยังเหลือแต้มกำลัง ' + st.ap + ' แต้ม', 'ต้องการสิ้นสุดฤดูกาลเลยหรือไม่? แต้มที่เหลือจะหายไป', 'สิ้นสุดฤดูกาล', 'อยู่ต่ออีกนิด').then(function (ok) { if (ok) resolveHub({ type: 'end' }); });
       return;
@@ -30145,7 +30869,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { Sound: S
       }
       if (sp.key !== key) {
         var changed = sp.key !== '';
-        sp.el.innerHTML = portrait(ce.c, expr, { rank: st.rank, origin: st.origin, outfit: ce.c === 'player' });
+        sp.el.innerHTML = portrait(ce.c, expr, { rank: st.rank, origin: st.origin, outfit: ce.c === 'player' ? true : (ce.c === 'maiden' ? QL.focusLook(st) : undefined) });
         sp.key = key;
         if (changed) { sp.el.classList.remove('swap'); void sp.el.offsetWidth; sp.el.classList.add('swap'); }
       }
@@ -30178,7 +30902,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { Sound: S
     nt.innerHTML = isNarr ? '' : '<span class="nt-name">' + esc(charName(c)) + '</span>' + ((C && C.zh && c !== 'player') ? '<span class="nt-zh">' + esc(C.zh) + '</span>' : '');
     nt.style.display = isNarr ? 'none' : '';
     var av = $('#speaker-avatar');
-    if (!isNarr && !onStage(c) && c !== 'player') { av.innerHTML = portrait(c, v.x || 'neutral', { bust: true }); av.classList.add('on'); Seen.char(c); }
+    if (!isNarr && !onStage(c) && c !== 'player') { av.innerHTML = portrait(c, v.x || 'neutral', { bust: true, outfit: c === 'maiden' ? QL.focusLook(Game.st) : undefined }); av.classList.add('on'); Seen.char(c); }
     else if (!isNarr && c === 'player' && !onStage('player')) { av.innerHTML = portrait('player', v.x || 'neutral', { bust: true, rank: Game.st.rank, origin: Game.st.origin, outfit: true }); av.classList.add('on'); }
     else { av.innerHTML = ''; av.classList.remove('on'); }
     $('#caption').classList.remove('on');
@@ -30498,6 +31222,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { Sound: S
     if (rep.healthDelta) line('✚', 'สุขภาพ <b class="' + (rep.healthDelta > 0 ? 'up' : 'dn') + '">' + sign(rep.healthDelta) + '</b>', rep.healthDelta > 0 ? 'up' : 'dn');
     if (rep.threatDelta) line('⚠', 'ภัยรอบกาย <b class="' + (rep.threatDelta < 0 ? 'up' : 'dn') + '">' + sign(rep.threatDelta) + '</b>', rep.threatDelta < 0 ? 'up' : 'dn');
     (rep.notes || []).forEach(function (n) { line('✧', esc(n), 'note'); });
+    (rep.xn || []).forEach(function (n) { line('📜', esc(n), 'note'); });
     var foot = '';
     if (rep.promo) foot = '<div class="rp-foot promo">✦ ราชโองการเลื่อนขั้นกำลังมาถึง</div>';
     else if (rep.pending) foot = '<div class="rp-foot">มีเหตุการณ์รอท่านอยู่ในฤดูนี้ ' + rep.pending + ' เรื่อง</div>';
@@ -30785,6 +31510,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { Sound: S
       '<section><h4>♥ ความโปรดปรานและความสัมพันธ์</h4><p>ความโปรดปรานของฮ่องเต้ <b>จางลงทุกฤดู</b> ต้องหมั่นสร้างโอกาสพบพระองค์ ส่วนฮองเฮา ไทเฮา และคนรอบตัว ล้วนมีผลต่อชะตาท่าน</p></section>' +
       '<section><h4>🎲 การเลือกและโอกาส</h4><p>ตัวเลือกที่มี <b>%</b> คือการทดสอบคุณสมบัติ ยิ่งสูงยิ่งสำเร็จง่าย · ป้าย <b>銀</b> คือเงินตำลึงที่ต้องจ่าย · ภัยรอบกายสูง เหตุร้ายจะมาบ่อยขึ้น</p></section>' +
       '<section><h4>👘 ตู้เสื้อผ้า</h4><p>กดปุ่ม <b>ตู้เสื้อผ้า</b> ในหน้าหลักเพื่อเลือก <b>ชุด · เครื่องหัว · สร้อยคอ · ต่างหู · ของติดตัว</b> ได้ตามฐานะ ลองสวมก่อนซื้อได้ รับของพระราชทานเมื่อเลื่อนขั้น และได้ของขวัญจากผู้คนในวัง ของแต่ละชิ้นเพิ่มโอกาสตอนทอยเต๋า (โฉมงาม พรสวรรค์ ปัญญา) หรือส่งผลต่อศักดิ์ศรีและภัยรอบกายทุกฤดู — ชุดหรูสะดุดตาช่วยให้ถูกจดจำ แต่ก็ล่อสายตาศัตรูด้วย · สวมชุด เครื่องหัว และเครื่องประดับโทนเดียวกันครบ จะได้โบนัสชุดเซ็ต</p></section>' +
+      '<section><h4>🏯 ซิ่วหนี่ — สนมรุ่นใหม่</h4><p>ทุก 3 ปีมี <b>รุ่นซิ่วหนี่</b> เข้าวัง เมื่อท่านถึงขั้น <b>เฟย</b> ท่านมีสิทธิ์พิจารณาผู้เข้าคัดเลือก: สืบประวัติ → <b>รับเข้าสังกัด</b> / <b>ปล่อยตามชะตา</b> / <b>ส่งเป็นนางกำนัลข้างกาย</b> / <b>คัดออก</b> สนมที่ท่านอุปถัมภ์อาจเป็นหูเป็นตาและกราบทูลแทนท่าน แต่บางคนทะเยอทะยานจนกลายเป็นคู่แข่ง — และบางคนคือสายสืบของคนอื่นตั้งแต่แรก ดูรายชื่อได้ที่ปุ่ม <b>📜 ซิ่วหนี่</b></p></section>' +
       '<section><h4>📜 ตอนจบ</h4><p>มีตอนจบมากมายตามวิถีที่ท่านเลือก ทั้งสุข เศร้า และสงบ ดูได้ที่ <b>จดหมายเหตุ</b> · ระบบบันทึกอัตโนมัติทุกครั้งที่กลับสู่หน้าวังหลัง</p></section>' +
       '<section><h4>⌨ ปุ่มลัด</h4><p><b>Space / Enter</b> ไปต่อ · <b>1–4</b> เลือกตัวเลือก · <b>Esc</b> เมนู</p></section>' +
       '<section class="credits"><h4>✦ เครดิต</h4><p>ลิขิตหงส์ · วังหลังต้าชิง<br>เกมกลยุทธ์ผสมวิชวลโนเวล ภาพและเสียงทั้งหมดสร้างด้วยโค้ด<br>เรื่องราวเป็นนิยายสมมติ — รัชศกเฉิงผิง ฮ่องเต้ ราชวงศ์ และตัวละครทั้งหมดไม่มีตัวตนจริง ชื่อสกุลแมนจูใช้เพื่อบรรยากาศเท่านั้น</p></section></div>';
@@ -30870,6 +31596,92 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { Sound: S
     openModal({ title: 'ตู้เสื้อผ้า', cls: 'modal-wardrobe', tabs: tabs, start: slot || 'robe' });
   }
   Game.openWardrobe = openWardrobe;
+
+
+  /* ============================================================
+     11c. XIUNÜ (ซิ่วหนี่ — รุ่นสนมใหม่)
+     ============================================================ */
+  var AMB_TH = ['ต่ำ — ใจเรียบง่าย', 'ปานกลาง', 'สูง — หิวบันได'];
+  function renderXnBanner() {
+    var el = $('#xn-banner'), st = Game.st; if (!el || !st) return;
+    var x = QL.xiunu(st), P = x.pending;
+    if (!P || !x.pendingCards.length) { el.hidden = true; el.innerHTML = ''; return; }
+    el.hidden = false;
+    el.innerHTML = '<span class="xb-ico">📜</span><div class="xb-body"><b>รุ่นซิ่วหนี่ปีที่ ' + P.no + ' รอการพิจารณา</b><small>ผู้เข้าคัดเลือก ' + x.pendingCards.length + ' คน · ' + (P.deadlineIn > 0 ? 'ตัดสินใจได้อีก ' + P.deadlineIn + ' ฤดู' : 'ฤดูสุดท้ายที่ตัดสินใจได้') + ' · โควตารับเข้าสังกัด ' + P.left + '</small></div><button type="button" class="btn btn-primary sm btn-xiunu"><span>พิจารณา</span></button>';
+    tip('xn_intro', 'รุ่น <b>ซิ่วหนี่</b> (สตรีผู้เข้าคัดเลือก) เข้าวังแล้ว — ท่านมีสิทธิ์ช่วยพิจารณา สืบประวัติก่อนตัดสินใจได้ <b>รับเข้าสังกัด</b> (ได้พันธมิตรแต่เสี่ยงเลี้ยงคนที่ทะเยอทะยาน) · <b>ปล่อยตามชะตา</b> · <b>ส่งเป็นนางกำนัลข้างกาย</b> · <b>คัดออก</b> (ระวังตระกูลใหญ่จะผูกใจเจ็บ)', '#xn-banner .btn-xiunu');
+  }
+  function xnBust(c, big) { return portrait('maiden', 'neutral', { rank: 1, origin: 'noble', bust: true, outfit: c.look }); }
+  function xnMeter(label, v, cls) { return '<span class="xn-m ' + (cls || '') + '"><u>' + label + '</u><i style="--v:' + Math.max(0, Math.min(100, v)) + '%"></i><em>' + v + '</em></span>'; }
+  function xnCardHTML(c, mode, x) {
+    var tags = '<span class="xn-tag ' + (c.arch ? 'known' : '') + '">' + esc(c.archTh || 'นิสัยแท้ยังไม่แน่ชัด') + '</span>' +
+      '<span class="xn-tag">' + esc(c.sideTh) + '</span>' +
+      (c.ambition !== null && c.ambition !== undefined ? '<span class="xn-tag amb' + c.ambition + '">ทะเยอทะยาน: ' + esc(AMB_TH[c.ambition]) + '</span>' : '') +
+      (c.agentKnown === 'yes' ? '<span class="xn-tag bad">⚠ ' + esc(c.agentTh || 'สายสืบ') + '</span>' : c.agentKnown === 'no' ? '<span class="xn-tag good">ไม่พบสายสืบ</span>' : '') +
+      (c.turned ? '<span class="xn-tag bad">เป็นปฏิปักษ์ต่อท่าน</span>' : '') + (c.graduated ? '<span class="xn-tag good">ตอบแทนบุญคุณแล้ว</span>' : '');
+    var meters = '';
+    if (mode !== 'pending') meters = '<div class="xn-meters">' + xnMeter('โปรดปราน', c.favor, 'fav') + (c.loyalty !== null ? xnMeter('ภักดี', c.loyalty, 'loy') : '') + '</div>';
+    var act = '';
+    if (mode === 'pending') {
+      act += c.investigated ? '<span class="xn-done">✓ สืบประวัติแล้ว</span>' : '<button type="button" class="btn btn-ghost sm" data-a="inv" data-id="' + c.id + '"><span>🔍 สืบประวัติ · 銀' + x.investigateCost + '</span></button>';
+      act += '<button type="button" class="btn btn-primary sm" data-a="sponsor" data-id="' + c.id + '"' + (x.pending.left <= 0 ? ' disabled' : '') + '><span>🤝 รับเข้าสังกัด · 銀' + c.sponsorCost + '</span></button>' +
+        '<button type="button" class="btn btn-secondary sm" data-a="neutral" data-id="' + c.id + '"><span>ปล่อยตามชะตา</span></button>' +
+        '<button type="button" class="btn btn-secondary sm" data-a="maid" data-id="' + c.id + '"><span>ส่งเป็นนางกำนัลข้างกาย</span></button>' +
+        '<button type="button" class="btn btn-ghost sm dn" data-a="reject" data-id="' + c.id + '"><span>คัดออก</span></button>';
+    } else if (c.status === 'sponsored' || c.status === 'maid' || c.status === 'kept') {
+      if (!c.turned) act += '<button type="button" class="btn btn-ghost sm" data-a="gift" data-id="' + c.id + '"' + (c.giftOk ? '' : ' disabled') + '><span>🎁 ให้ของขวัญ · 銀' + x.giftCost + '</span></button>';
+      act += '<button type="button" class="btn btn-ghost sm dn" data-a="dismiss" data-id="' + c.id + '"><span>ตัดสัมพันธ์</span></button>';
+    }
+    var origin = c.clan === 'สามัญชน' ? 'ลูกสาวสามัญชน' : 'ตระกูล' + c.clan + (c.han ? ' (ฮั่นจวิน)' : ' · ' + c.banner);
+    return '<div class="xn-card ' + c.status + (c.turned ? ' turned' : '') + '"><div class="xn-ava">' + xnBust(c) + '</div><div class="xn-body">' +
+      '<div class="xn-head"><b>' + esc(c.name) + '</b><span class="xn-rk">' + esc(c.rankTh) + '</span><span class="xn-st">' + esc(c.statusTh) + '</span></div>' +
+      '<div class="xn-sub">' + esc(origin) + ' · อายุ ' + c.age + '</div><p class="xn-blurb">“' + esc(c.blurb) + '”</p>' +
+      '<div class="xn-bars">' + xnMeter('โฉม', c.charm) + xnMeter('ปัญญา', c.wit) + xnMeter('ศิลป์', c.talent) + '</div>' + meters +
+      '<div class="xn-tags">' + tags + '</div></div>' + (act ? '<div class="xn-act">' + act + '</div>' : '') + '</div>';
+  }
+  function renderXnTab(el, mode) {
+    var st = Game.st, x = QL.xiunu(st), list, head = '', empty = '';
+    if (mode === 'pending') {
+      list = x.pendingCards;
+      if (x.pending) head = '<div class="xn-head-bar"><span>รุ่นที่ <b>' + x.pending.no + '</b></span><span>โควตารับเข้าสังกัด <b>' + x.pending.left + '</b>/' + x.pending.quota + '</span><span>' + (x.pending.deadlineIn > 0 ? 'ตัดสินใจได้อีก <b>' + x.pending.deadlineIn + '</b> ฤดู' : '<b class="dn">ฤดูสุดท้าย</b>') + '</span><span class="wd-silver"><u>銀</u>' + x.silver + '</span></div>' +
+        '<p class="xn-note">ผู้เข้าคัดเลือกแต่ละคนมีความลับที่มองจากภายนอกไม่เห็น — บางคนเป็นสายของฮองเฮาหรือหวงกุ้ยเฟย บางคนซื่อตรงเกินกว่าจะอยู่รอดในวัง การ <b>สืบประวัติ</b> ช่วยให้เห็นความทะเยอทะยานและสายสืบ (แม่นยำตามปัญญาของท่าน)</p>';
+      empty = 'ไม่มีผู้เข้าคัดเลือกรอพิจารณาแล้ว';
+    } else if (mode === 'mine') { list = x.mine; empty = 'ยังไม่มีสนมในสังกัดของท่าน — เมื่อถึงขั้น ' + Q.RANKS[x.participateRank].th + ' ท่านจะมีสิทธิ์รับผู้เข้าคัดเลือกเข้าสังกัด'; }
+    else if (mode === 'palace') { list = x.palace; empty = 'ยังไม่มีสนมหน้าใหม่ในวังที่อยู่นอกสังกัดของท่าน'; head = '<p class="xn-note">รุ่นถัดไปจะเข้าวังในอีก <b>' + x.nextIn + '</b> ฤดู</p>'; }
+    else { list = x.gone; empty = 'ยังไม่มีใครถูกส่งกลับหรือจากไป'; }
+    el.innerHTML = head + '<div class="xn-list">' + (list.length ? list.map(function (c) { return xnCardHTML(c, mode, x); }).join('') : '<p class="mute xn-empty">' + esc(empty) + '</p>') + '</div>';
+    $$('[data-a]', el).forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (b.disabled) return;
+        var a = b.dataset.a, id = b.dataset.id, r;
+        function done(res, ok) {
+          if (!res.ok) { toast(res.why || 'ทำไม่ได้'); snd('fail'); return; }
+          snd(ok || 'pick'); if (res.note) toast(res.note);
+          try { renderHub(true, true); } catch (e) { /* ignore */ }
+          if (!st.cur && st.phase !== 'ended') Saves.save('auto', st);
+          var P = QL.xiunu(st).pending;
+          if (mode === 'pending' && (!P || !QL.xiunu(st).pendingCards.length)) { closeModal(); toast('พิจารณารุ่นซิ่วหนี่เสร็จสิ้น'); return; }
+          renderXnTab(el, mode);
+        }
+        if (a === 'inv') { done(QL.xnInvestigate(st, id), 'page'); return; }
+        if (a === 'gift') { done(QL.xnGift(st, id), 'chime'); return; }
+        if (a === 'sponsor') { done(QL.xnDecide(st, id, 'sponsor'), 'chime'); return; }
+        if (a === 'neutral') { done(QL.xnDecide(st, id, 'neutral'), 'page'); return; }
+        if (a === 'maid') { done(QL.xnDecide(st, id, 'maid'), 'pick'); return; }
+        if (a === 'reject') { confirmBox('คัดนางออก?', 'นางจะถูกส่งกลับบ้าน ถ้านางมาจากตระกูลใหญ่ ตระกูลนั้นจะจดจำเรื่องนี้ไว้', 'คัดออก', 'ยังก่อน').then(function (ok) { if (ok) done(QL.xnDecide(st, id, 'reject'), 'fail'); }); return; }
+        if (a === 'dismiss') { confirmBox('ตัดสัมพันธ์กับนาง?', 'นางจะจากสังกัดของท่านไปและจะไม่กลับมาอีก หากนางเคยภักดีต่อท่าน ท่านจะเสียชื่อเรื่องความใจดำ', 'ตัดสัมพันธ์', 'ยังก่อน').then(function (ok) { if (ok) done(QL.xnDismiss(st, id), 'fail'); }); }
+      });
+    });
+  }
+  function openXiunu(tab) {
+    var st = Game.st; if (!st) return;
+    var x = QL.xiunu(st), tabs = [];
+    if (x.pending && x.pendingCards.length) tabs.push({ id: 'pending', label: '📜 รอพิจารณา (' + x.pendingCards.length + ')', render: function (el) { renderXnTab(el, 'pending'); } });
+    tabs.push({ id: 'mine', label: '🤝 สังกัดของท่าน (' + x.mine.length + ')', render: function (el) { renderXnTab(el, 'mine'); } });
+    tabs.push({ id: 'palace', label: '🏯 ในวัง (' + x.palace.length + ')', render: function (el) { renderXnTab(el, 'palace'); } });
+    tabs.push({ id: 'gone', label: '🍂 จากไป (' + x.gone.length + ')', render: function (el) { renderXnTab(el, 'gone'); } });
+    openModal({ title: 'ซิ่วหนี่ · สตรีผู้เข้าคัดเลือก', cls: 'modal-xiunu', tabs: tabs, start: tab && tabs.some(function (t) { return t.id === tab; }) ? tab : tabs[0].id });
+  }
+  Game.openXiunu = openXiunu;
 
   function menuTabs(inGame) {
     var t = [{ id: 'save', label: inGame ? 'บันทึก' : 'โหลดเกม', render: tabSaves }];
@@ -30996,7 +31808,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { Sound: S
     $$('#hub-tabs button').forEach(function (b) { b.onclick = function () { snd('page'); setHubTab(b.dataset.tab); }; });
     $('#climb-strip').onclick = function () { setHubTab('ladder'); };
     $('#btn-menu').onclick = function () { openMenu(); };
-    document.addEventListener('click', function (e) { var b = e.target && e.target.closest ? e.target.closest('.btn-wardrobe') : null; if (b) { e.preventDefault(); openWardrobe(); } });
+    document.addEventListener('click', function (e) {
+      var b = e.target && e.target.closest ? e.target.closest('.btn-wardrobe') : null; if (b) { e.preventDefault(); openWardrobe(); return; }
+      var xb = e.target && e.target.closest ? e.target.closest('.btn-xiunu') : null; if (xb) { e.preventDefault(); openXiunu(); }
+    });
     $('#btn-end-season').onclick = onEndSeasonClick;
     $('#action-groups').addEventListener('click', function (e) {
       var b = e.target.closest ? e.target.closest('.action-card') : null;
