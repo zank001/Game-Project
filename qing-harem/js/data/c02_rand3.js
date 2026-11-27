@@ -1,5 +1,5 @@
 /* =============================================================
-   c02_rand3.js — unit c02 (rank 1 ต่าอิง) — general random events (3/4)
+   c02_rand3.js — unit c02 (rank 1 ต้าอิ้ง) — general random events (3/4)
    r1_vanished_girl · r1_jade_pendant · r1_embroidery_lesson · r1_thief_servant
    ============================================================= */
 Q.add([

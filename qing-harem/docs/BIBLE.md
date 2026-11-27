@@ -8,7 +8,7 @@ Read `docs/DESIGN.md` (technical contract) too.
 ## 1. Premise & tone
 - Player = a young woman (name typed by the player, default "หลันซี"), age 16 at start, entering the Forbidden City
   (วังต้องห้าม / จื่อจินเฉิง) during the 1st year of the fictional reign **เฉิงผิง (承平)** of the Great Qing (ต้าชิง).
-- The ladder (rank index → title): `0 นางกำนัล/ผู้เข้าคัดเลือก → 1 ต่าอิง → 2 ฉังไจ้ → 3 กุ้ยเหริน → 4 ปิน → 5 เฟย → 6 กุ้ยเฟย → 7 หวงกุ้ยเฟย → 8 ฮองเฮา → 9 ไทเฮา`.
+- The ladder (rank index → title): `0 นางกำนัล/ผู้เข้าคัดเลือก → 1 ต้าอิ้ง → 2 ฉังไจ้ → 3 กุ้ยเหริน → 4 ผิน → 5 เฟย → 6 กุ้ยเฟย → 7 หวงกุ้ยเฟย → 8 ฮองเฮา → 9 ไทเฮา`.
   Rank 9 (Empress Dowager) is the summit and ends the game with a "true" ending.
 - Time: 1 turn = 1 season (4 per year). A full climb ≈ 70–100 seasons (≈ 18–25 years). Player ages 16 → ~40.
 - Tone: elegant, melancholic, quietly menacing — a *palace drama* (cf. Zhen Huan / Story of Yanxi Palace / Ruyi's Royal Love),
@@ -25,7 +25,7 @@ Read `docs/DESIGN.md` (technical contract) too.
 - **Interrogation Hall (ศาลสอบสวนวังหลัง, ฉินสิงซื่อ)** — where accused servants are beaten for confessions.
 - **Cold Palace (ตำหนักเย็น)** — where fallen consorts rot.
 - **Phoenix Seal (ตราหงส์)** — the Empress's seal of authority over the inner court; delegating it to a consort is a huge sign of trust.
-- Currency: silver **ตำลึง**. Titles of address: ฮ่องเต้ (Emperor, address "ฝ่าบาท"), ฮองเฮา (Empress), ไทเฮา (Empress Dowager), หวงกุ้ยเฟย / กุ้ยเฟย / เฟย / ปิน / กุ้ยเหริน / ฉังไจ้ / ต่าอิง.
+- Currency: silver **ตำลึง**. Titles of address: ฮ่องเต้ (Emperor, address "ฝ่าบาท"), ฮองเฮา (Empress), ไทเฮา (Empress Dowager), หวงกุ้ยเฟย / กุ้ยเฟย / เฟย / ผิน / กุ้ยเหริน / ฉังไจ้ / ต้าอิ้ง.
 - Buildings: ตำหนักหย่งโซ่ว (Yongshou — where low-rank consorts live; player's first home), ตำหนักขุนหนิง (Kunning — Empress), ตำหนักฉือหนิง (Cining — Dowager),
   ห้องทรงพระอักษรหยางซิน (Yangxin Study — Emperor's working room), สวนหลวง (Imperial Garden), สำนักแพทย์หลวง (Imperial Hospital), โรงซักผ้าหลวง (Laundry Bureau, where maids toil), พระที่นั่งไท่เหอ (Taihe Hall — throne hall).
 - Seasons/festivals: spring flower-viewing banquet (ชมบุปผา), summer Dragon Boat (ตวนอู่), autumn Mid-Autumn (จงชิว), winter New Year (ตรุษ) & the Emperor's birthday. (Owned by unit c11.)
@@ -47,7 +47,7 @@ Read `docs/DESIGN.md` (technical contract) too.
 | `dowager` | ไทเฮาเหวินเซี่ยน | Empress Dowager | 52 | slow, proverb-laden, Buddhist; calls player "เด็กน้อย"/"{{PLAYER}}"; self "ข้า". e.g. "ดอกไม้ที่บานเร็ว ร่วงก่อนเสมอ เด็กน้อย" |
 | `consort` | หวงกุ้ยเฟยหนิ่วฮู่ลู่ (อวี้หลาน) | rank 7 | 28 | imperious, short sentences, cutting; self "ข้า"; "ตำแหน่งนี้ไม่ใช่ของเจ้า". |
 | `chu` | ฉู่กุ้ยเหริน (ซือหรง) | rank 3 | 22 | shrill, sarcastic, vain; Niohuru's lackey; first villain. "นังเด็กใหม่" "สกุลต่ำ". |
-| `lu` | ลู่ปิน (เสวี่ยหนิง) | rank 4 | 24 | honeyed, soft laugh, double meanings, calls player "น้องสาวที่รัก". **Secretly the Empress's spy**; the false friend. |
+| `lu` | ลู่ผิน (เสวี่ยหนิง) | rank 4 | 24 | honeyed, soft laugh, double meanings, calls player "น้องสาวที่รัก". **Secretly the Empress's spy**; the false friend. |
 | `shu` | ซูเฟย (หวั่นหรง) | rank 5 | 26 | quiet, chess-playing, neutral; says little, every word measured. Quietly sympathetic; ally of convenience later. |
 | `friend` | เหมยชิง | player's best friend | 15 | warm, teasing, loyal, a bit clumsy; Han girl of modest family who enters the palace in the same batch/at the same time. Calls player "พี่หญิง"; player calls her "เหมยชิง"/"น้องเหมย". |
 | `maid` | ชุนเถา | player's personal maid | 16 | brave, practical, simple affectionate speech; "นายหญิง", self "บ่าว", ends sentences "เจ้าค่ะ". |
@@ -60,18 +60,18 @@ Read `docs/DESIGN.md` (technical contract) too.
 ### Backstories per origin (used in prologue and as flavor)
 - `noble` ธิดาขุนนางแมนจู สกุลกวาเอ่อร์เจีย (father a banner colonel). Starts proud and rich; arrogance and family enemies are her flaw. `F.family_backing` unlocks occasional silver gifts / political support events.
 - `scholar` ธิดานักปราชญ์ฮั่น สกุลเซิ่น (father a Hanlin scholar). Poetry and wit are her weapons; money is thin; the Manchu ladies look down on her.
-- `maid` นางกำนัลชั้นต่ำ — an orphan in the Laundry Bureau. She begins at rank 0 and plays a few seasons at the very bottom; the prologue ends when she is noticed and raised to ต่าอิง. Her special reward: a unique epilogue line in true endings ("from the laundry to the phoenix throne").
+- `maid` นางกำนัลชั้นต่ำ — an orphan in the Laundry Bureau. She begins at rank 0 and plays a few seasons at the very bottom; the prologue ends when she is noticed and raised to ต้าอิ้ง. Her special reward: a unique epilogue line in true endings ("from the laundry to the phoenix throne").
 - For ALL origins: เหมยชิง exists (friend) and ชุนเถา becomes the player's maid when she reaches rank 1 (for maid-origin, Chuntao is a younger girl from the laundry who attaches herself to the player).
 
 ## 5. Arc outline by rank (what the story IS)
 Each rank N (1–8) has an **arc** (2–3 chained chapters, ending by setting `F.arcN_done`) and a **promotion event** `promo_N_(N+1)` (the ceremony + a final twist) fired automatically once the gate is met.
 Rank 0 → 1 is the **prologue** (unit c01). Authors may *show* flavor, but the **decisions** in an arc belong to the unit that owns it.
 
-0. **Prologue (c01)** — Great Selection (noble/scholar) or laundry-yard drudgery (maid). Meet Mama Qin, Meixing, Chuntao, glimpse Chu Guiren's cruelty, learn the rules (tablets, bribes, seasons). Ends with promotion to ต่าอิง (noble/scholar: same season; maid: after ~2 seasons when the Emperor notices her).
-1. **ต่าอิง (c02) — "ดอกเหมยใต้หิมะ"**: scarcity (coal, food), Chu Guiren's bullying, the first glimpses of the Emperor. Arc1: *the stolen coal / winter humiliation* → the night the Emperor hears her music or poem in the snow-garden → noticed. Sets `met_emperor`. Promo 1→2: ฉังไจ้; Empress sends a "test" gift; Chu seethes.
+0. **Prologue (c01)** — Great Selection (noble/scholar) or laundry-yard drudgery (maid). Meet Mama Qin, Meixing, Chuntao, glimpse Chu Guiren's cruelty, learn the rules (tablets, bribes, seasons). Ends with promotion to ต้าอิ้ง (noble/scholar: same season; maid: after ~2 seasons when the Emperor notices her).
+1. **ต้าอิ้ง (c02) — "ดอกเหมยใต้หิมะ"**: scarcity (coal, food), Chu Guiren's bullying, the first glimpses of the Emperor. Arc1: *the stolen coal / winter humiliation* → the night the Emperor hears her music or poem in the snow-garden → noticed. Sets `met_emperor`. Promo 1→2: ฉังไจ้; Empress sends a "test" gift; Chu seethes.
 2. **ฉังไจ้ (c03) — "คนใกล้ตัว"**: Lu Pin befriends the player (`lu_trusted` set true here — she seems wonderful). Chu schemes; Chuntao is framed for theft → choices on how to defend her. Arc2 ends with the player's first real political win or loss. Promo 2→3: กุ้ยเหริน after nursing the Emperor's headache / embroidering a sutra for the Dowager.
-3. **กุ้ยเหริน (c04) — "คดีผ้าพิษ"** (first big trial): Chu poisons the Dowager's robe/incense and frames the player through Chuntao; Interrogation Hall; **Chuntao's fate** (owner: c04 — `maid_alive` stays true or is cleared); **Dr. Xie introduced** (`met_doctor`); **Chu's downfall** (`chu_down`) or a bitter compromise. Promo 3→4: ปิน — first own hall, honorific title, Dowager's approval.
-4. **ปิน (c05) — "ครรภ์มังกร"**: first meeting with Prince Rui at a poetry gathering (`met_prince`); pregnancy arc: attempts on the unborn child; **Lu Pin's betrayal exposed** (`lu_exposed`); outcome: son born (`heir_own`, `has_heir`, `heir_name:'หย่งหลิน'`), or loss (`lost_child`), or (rare, low health + bad luck) `end_childbirth_death`. Promo 4→5: เฟย.
+3. **กุ้ยเหริน (c04) — "คดีผ้าพิษ"** (first big trial): Chu poisons the Dowager's robe/incense and frames the player through Chuntao; Interrogation Hall; **Chuntao's fate** (owner: c04 — `maid_alive` stays true or is cleared); **Dr. Xie introduced** (`met_doctor`); **Chu's downfall** (`chu_down`) or a bitter compromise. Promo 3→4: ผิน — first own hall, honorific title, Dowager's approval.
+4. **ผิน (c05) — "ครรภ์มังกร"**: first meeting with Prince Rui at a poetry gathering (`met_prince`); pregnancy arc: attempts on the unborn child; **Lu Pin's betrayal exposed** (`lu_exposed`); outcome: son born (`heir_own`, `has_heir`, `heir_name:'หย่งหลิน'`), or loss (`lost_child`), or (rare, low health + bad luck) `end_childbirth_death`. Promo 4→5: เฟย.
 5. **เฟย (c06) — "ศึกชายแดนและตระกูล"**: western war led by Niohuru's father; player's family fortunes (`family_safe` or `family_fallen`); **Meixing's fate** (owner: c06 — `friend_alive` may be cleared; Empress tries to turn her); if the player has no heir, the **adoption** chapter (`heir_adopted`, `has_heir`, `heir_name:'หมิงเซวียน'`) — the player may refuse. Promo 5→6: กุ้ยเฟย — the Emperor lets her share the Phoenix Seal while the Empress is ill.
 6. **กุ้ยเฟย (c07) — "ตราหงส์"**: duel with the Imperial Noble Consort over the Phoenix Seal; Niohuru Sr.'s corruption evidence; Prince Rui's offers. Outcome: `niohuru_down` (ruthless/clever win; her father disgraced, she confined) or `niohuru_ally` (gentle accommodation). Promo 6→7: หวงกุ้ยเฟย.
 7. **หวงกุ้ยเฟย (c08) — "ความลับของฮองเฮา"**: evidence that Empress Fuca caused earlier tragedies (a dead consort, the player's own harm, Lu Pin's orders). Choices: expose / blackmail / bargain. Outcome: `empress_down` (deposed → player is first in line) or `empress_controlled` (Empress remains but beholden). Promo 7→8: ฮองเฮา (grand coronation of the Empress; Dowager's blessing). If `empress_controlled`, the Empress "retires to the Buddha hall" so the throne is vacated peacefully.

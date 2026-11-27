@@ -84,7 +84,7 @@ Q.CHARS = {
   dowager:  { th: 'ไทเฮาเหวินเซี่ยน',      short: 'ไทเฮา',       zh: '温宪皇太后',         color: '#6b3fa0', role: 'พระมารดาของฮ่องเต้' },
   consort:  { th: 'หวงกุ้ยเฟยหนิ่วฮู่ลู่',  short: 'หวงกุ้ยเฟย',  zh: '钮祜禄·玉兰',        color: '#d4471f', role: 'หวงกุ้ยเฟย สนมผู้เกรียงไกร' },
   chu:      { th: 'ฉู่กุ้ยเหริน',          short: 'ฉู่กุ้ยเหริน', zh: '楚思容',            color: '#c2487e', role: 'กุ้ยเหรินผู้ถือดี' },
-  lu:       { th: 'ลู่ปิน',                short: 'ลู่ปิน',      zh: '陆雪凝',            color: '#5f8fb8', role: 'ปินผู้อ่อนหวาน' },
+  lu:       { th: 'ลู่ผิน',                short: 'ลู่ผิน',      zh: '陆雪凝',            color: '#5f8fb8', role: 'ผินผู้อ่อนหวาน' },
   shu:      { th: 'ซูเฟย',                 short: 'ซูเฟย',       zh: '舒穆禄·婉容',        color: '#4f8a78', role: 'เฟยผู้เงียบขรึม' },
   friend:   { th: 'เหมยชิง',               short: 'เหมยชิง',     zh: '梅卿',              color: '#e07a9a', role: 'สหายร่วมคัดเลือก' },
   maid:     { th: 'ชุนเถา',                short: 'ชุนเถา',      zh: '春桃',              color: '#e8905a', role: 'สาวใช้คนสนิท' },
@@ -130,13 +130,13 @@ Q.TAGS = ['garden', 'visit_empress', 'visit_dowager', 'visit_emperor', 'befriend
 /* ---------- ranks ---------- */
 Q.RANKS = [
   { i: 0, key: 'maid',        th: 'นางกำนัล',     zh: '宫女',  alt: 'ผู้เข้าคัดเลือก', stipend: 1,   hall: 'ห้องนอนรวมของนางกำนัล',        color: '#8d8d8d', note: 'ยังไม่นับเป็นสนม' },
-  { i: 1, key: 'daying',      th: 'ต่าอิง',       zh: '答应',  stipend: 12,  hall: 'เรือนข้างตำหนักหย่งโซ่ว',       color: '#8fa86b', note: 'ขั้นต่ำสุดของสนมวังหลัง',
+  { i: 1, key: 'daying',      th: 'ต้าอิ้ง',       zh: '答应',  stipend: 12,  hall: 'เรือนข้างตำหนักหย่งโซ่ว',       color: '#8fa86b', note: 'ขั้นต่ำสุดของสนมวังหลัง',
     onPromote: { prestige: 4, silver: 30, favor: 5 } },
   { i: 2, key: 'changzai',    th: 'ฉังไจ้',       zh: '常在',  stipend: 20,  hall: 'เรือนเล็กในตำหนักหย่งโซ่ว',      color: '#6fae8f', note: 'เริ่มมีหน้ามีตา',
     onPromote: { prestige: 6, silver: 40 } },
   { i: 3, key: 'guiren',      th: 'กุ้ยเหริน',    zh: '贵人',  stipend: 32,  hall: 'ห้องหลักของเรือนตะวันออก',       color: '#59a5b0', note: 'ได้ป้ายชื่อเขียวถวายฮ่องเต้',
     onPromote: { prestige: 7, silver: 60 } },
-  { i: 4, key: 'pin',         th: 'ปิน',          zh: '嫔',    stipend: 52,  hall: 'ตำหนักของตนเอง พร้อมบ่าวไพร่',   color: '#5b8fd0', note: 'มีตำหนักและฉายาพระราชทาน',
+  { i: 4, key: 'pin',         th: 'ผิน',          zh: '嫔',    stipend: 52,  hall: 'ตำหนักของตนเอง พร้อมบ่าวไพร่',   color: '#5b8fd0', note: 'มีตำหนักและฉายาพระราชทาน',
     onPromote: { prestige: 8, silver: 100, threat: 3 } },
   { i: 5, key: 'fei',         th: 'เฟย',          zh: '妃',    stipend: 80,  hall: 'ตำหนักใหญ่ประจำสนมชั้นสูง',     color: '#8a6fd0', note: 'สนมชั้นสูง ร่วมงานใหญ่ได้',
     onPromote: { prestige: 8, silver: 150, threat: 3 } },
@@ -337,7 +337,7 @@ Q.WARDROBE = (function () {
     if (!o.style) o.style = 'graceful';
     items.push(o);
   }
-  var T = ['', 'ต่าอิง', 'ฉังไจ้', 'กุ้ยเหริน', 'ปิน', 'เฟย', 'กุ้ยเฟย', 'หวงกุ้ยเฟย', 'ฮองเฮา', 'ไทเฮา'];
+  var T = ['', 'ต้าอิ้ง', 'ฉังไจ้', 'กุ้ยเหริน', 'ผิน', 'เฟย', 'กุ้ยเฟย', 'หวงกุ้ยเฟย', 'ฮองเฮา', 'ไทเฮา'];
 
   /* ---------- ชุด (robe) ---------- */
   add('robe', 'r_start_noble', 'ชุดไหมสีท้อของบ้านเดิม', 0, { sw: ['#f2c9c0', '#d98c8c'], src: 'start', style: 'graceful', desc: 'ชุดที่แม่ตัดให้ก่อนเข้าวัง ปักดอกท้อเล็กๆ ที่ชายเสื้อ', eff: {}, look: { lvl: 0 } });
@@ -394,7 +394,7 @@ Q.WARDROBE = (function () {
   add('head', 'h_gift_jade', 'ปิ่นหยกขาวพระราชทาน', 3, { src: 'gift', style: 'graceful', set: 'jade', desc: 'ปิ่นหยกขาวที่ฮ่องเต้ทรงมอบเอง ไม่มีใครในวังมีเหมือน', eff: { chk: { charm: 2 }, fav: 0.2 }, look: { lvl: 3, flowers: '#f4efe6', silk: '#4a9a82', pinHead: 'jade' } });
 
   /* ---------- สร้อยคอ (neck) ---------- */
-  add('neck', 'n_g4', 'สร้อยลูกปัดหยกประจำตำแหน่งปิน', 4, { src: 'rank', grant: 4, style: 'graceful', desc: 'สร้อยลูกปัดแบบราชสำนัก สีขาวหยก', eff: { pre: 0.1 }, look: { beads: 4 } });
+  add('neck', 'n_g4', 'สร้อยลูกปัดหยกประจำตำแหน่งผิน', 4, { src: 'rank', grant: 4, style: 'graceful', desc: 'สร้อยลูกปัดแบบราชสำนัก สีขาวหยก', eff: { pre: 0.1 }, look: { beads: 4 } });
   add('neck', 'n_g6', 'สร้อยลูกปัดทองกุ้ยเฟย', 6, { src: 'rank', grant: 6, style: 'grand', desc: 'ลูกปัดทองครีมยาวถึงเอว มีจี้ทองห้อย', eff: { pre: 0.15 }, look: { beads: 6 } });
   add('neck', 'n_g8', 'สร้อยมุกพระมเหสี', 8, { src: 'rank', grant: 8, style: 'grand', set: 'imperial', desc: 'สร้อยมุกหลวงสามสิบเม็ด', eff: { chk: { charm: 1 }, pre: 0.2 }, look: { beads: 8 } });
   add('neck', 'n_jade_cord', 'จี้หยกร้อยด้ายแดง', 1, { style: 'plain', set: 'jade', desc: 'หยกชิ้นเล็กร้อยด้ายแดง กันภัยได้ตามความเชื่อ', eff: { thr: -0.3, chk: { talent: 1 } }, look: { pendant: 'jade' } });

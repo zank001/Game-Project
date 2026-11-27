@@ -1,5 +1,5 @@
 /* =============================================================
-   c02_rand2.js — unit c02 (rank 1 ต่าอิง) — general random events (2/4)
+   c02_rand2.js — unit c02 (rank 1 ต้าอิ้ง) — general random events (2/4)
    r1_old_eunuch · r1_songbird · r1_letter_home · r1_sutra_coins
    ============================================================= */
 Q.add([

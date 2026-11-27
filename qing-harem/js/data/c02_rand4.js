@@ -1,5 +1,5 @@
 /* =============================================================
-   c02_rand4.js — unit c02 (rank 1 ต่าอิง) — general random events (4/4)
+   c02_rand4.js — unit c02 (rank 1 ต้าอิ้ง) — general random events (4/4)
    r1_screen_banquet · r1_cough · r1_tailor_short · r1_midnight_steps
    ============================================================= */
 Q.add([
