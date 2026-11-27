@@ -222,7 +222,9 @@ var QL = (function () {
     if (!fx) return;
     Q.STAT_KEYS.forEach(function (k) {
       if (fx[k] === undefined) return;
-      var old = st.S[k]; st.S[k] = clampStat(k, old + roll(st, fx[k])); flashAdd(st, 'S', k, st.S[k] - old);
+      var d = roll(st, fx[k]);
+      if (k === 'prestige' && d > 0 && C.prestigeScale) d = Math.max(1, Math.round(d * C.prestigeScale));
+      var old = st.S[k]; st.S[k] = clampStat(k, old + d); flashAdd(st, 'S', k, st.S[k] - old);
     });
     if (fx.rel) Object.keys(fx.rel).forEach(function (k) {
       var old = st.R[k] || 0, nv = Math.max(-100, Math.min(100, old + roll(st, fx.rel[k])));
@@ -357,14 +359,14 @@ var QL = (function () {
     st.S.silver += rk.stipend; rep.stipend = rk.stipend;
     var f0 = st.S.favor; st.S.favor = Math.max(0, f0 - C.favorDecay); rep.favorLoss = f0 - st.S.favor;
     var th0 = st.S.threat;
-    var dTh = -C.threatDecay + (st.S.favor >= 50 ? 2 : 0) + (st.S.prestige >= 50 ? 1 : 0) + (st.rank >= 6 ? 1 : 0);
+    var dTh = -C.threatDecay + Math.floor(st.S.favor / C.threatFavorDiv) + Math.floor(st.S.prestige / C.threatPrestigeDiv) + (st.rank >= C.threatRankFrom ? 1 : 0);
     st.S.threat = clampStat('threat', th0 + dTh); rep.threatDelta = st.S.threat - th0;
     var h0 = st.S.health;
     if (st.F.poisoned) {
       st.S.health = clampStat('health', st.S.health - C.poisonDrain); rep.notes.push('พิษในกายยังกัดกินสุขภาพของท่าน');
       var cure = C.poisonSelfCure + (st.R.doctor >= 30 ? 0.25 : 0);
       if (rnd(st) < cure) { delete st.F.poisoned; rep.notes.push('พิษจางลงจนหมดไปเอง'); }
-    } else if (st.S.health < 70) st.S.health = clampStat('health', st.S.health + C.healthRegen);
+    } else if (st.S.health > 0 && st.S.health < 70) st.S.health = clampStat('health', st.S.health + C.healthRegen);
     if (st.t % 4 === 3 && st.rank <= 2) { st.S.health = clampStat('health', st.S.health - C.winterChill); rep.notes.push('ฤดูหนาวเยือกเย็นเกินกว่าเสื้อผ้าบางๆ จะต้านไหว'); }
     rep.healthDelta = st.S.health - h0;
     st.t++; st.sir++; st.ap = C.apPerSeason;
@@ -398,7 +400,8 @@ var QL = (function () {
     var line = null;
     if (ev) st.pending.unshift(ev.id);
     else if (a.lines && a.lines.length) line = fill(st, a.lines[Math.floor(rnd(st) * a.lines.length)]);
-    st.phase = ev ? 'events' : 'hub';
+    if (!st.pendingEnding) { var se = systemEnd(st); if (se) st.pendingEnding = se; }
+    st.phase = (ev || st.pendingEnding) ? 'events' : 'hub';
     return { ok: true, action: a.id, th: a.th, line: line, flash: st.flash, event: ev ? ev.id : null };
   }
   function hub(st) {

@@ -35,15 +35,19 @@ Q.CONST = {
   startAge: 16,
   maxSeasons: 140,          // forced twilight ending (≈35 years)
   apPerSeason: 2,           // action points each season
-  favorDecay: 3,            // favor lost every season end
+  favorDecay: 2,            // favor lost every season end
   threatDecay: 2,           // natural cooling of danger
   healthRegen: 1,           // when health < 70 and not poisoned
   winterChill: 1,           // health lost each winter (ranks 0-2 only → thin clothes)
   poisonDrain: 5,           // health lost per season while F.poisoned
   poisonSelfCure: 0.25,     // chance per season poison fades by itself (+0.25 if R.doctor>=30)
-  attackFloor: 25,          // threat below this → no attack events
-  attackScale: 110,         // p = (threat-floor)/scale
-  attackMax: 0.55,
+  attackFloor: 12,          // threat below this → no attack events
+  attackScale: 100,         // p = (threat-floor)/scale
+  attackMax: 0.45,
+  prestigeScale: 0.65,      // positive prestige gains are multiplied by this (min +1)
+  threatFavorDiv: 15,       // each season threat drifts up by floor(favor/this) …
+  threatPrestigeDiv: 35,    // … + floor(prestige/this) …
+  threatRankFrom: 5,        // … + 1 once rank >= this   (minus threatDecay)
   eventsPerSeasonCap: 3,
   pFestival: 0.45,          // chance a festival event is drawn (if one is eligible)
   pRandom: 0.9,             // chance a general random event is drawn
@@ -148,14 +152,14 @@ Q.RANKS = [
 
 /* ---------- promotion gates: key = CURRENT rank. All must hold at a season end. ---------- */
 Q.GATES = {
-  1: { minSeasons: 4, favor: 18, prestige: 10, req: 'F.arc1_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  2: { minSeasons: 5, favor: 26, prestige: 20, req: 'F.arc2_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  3: { minSeasons: 6, favor: 34, prestige: 32, req: 'F.arc3_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  4: { minSeasons: 6, favor: 40, prestige: 44, req: 'F.arc4_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  5: { minSeasons: 6, favor: 46, prestige: 56, req: 'F.arc5_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  6: { minSeasons: 6, favor: 50, prestige: 68, req: 'F.arc6_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  7: { minSeasons: 6, favor: 52, prestige: 80, req: 'F.arc7_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  8: { minSeasons: 4, favor: 45, prestige: 90, req: 'F.arc8_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  1: { minSeasons: 4, favor: 8,  prestige: 12, req: 'F.arc1_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  2: { minSeasons: 5, favor: 16, prestige: 24, req: 'F.arc2_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  3: { minSeasons: 6, favor: 20, prestige: 38, req: 'F.arc3_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  4: { minSeasons: 6, favor: 24, prestige: 52, req: 'F.arc4_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  5: { minSeasons: 6, favor: 28, prestige: 62, req: 'F.arc5_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  6: { minSeasons: 6, favor: 30, prestige: 72, req: 'F.arc6_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  7: { minSeasons: 6, favor: 31, prestige: 80, req: 'F.arc7_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  8: { minSeasons: 4, favor: 27, prestige: 88, req: 'F.arc8_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
 };
 
 /* ---------- origins ---------- */

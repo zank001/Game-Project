@@ -14,6 +14,7 @@ const ctx = vm.createContext({ console: { log() {}, warn() {}, error: console.er
 const load = f => vm.runInContext(fs.readFileSync(path.join(ROOT, f), 'utf8'), ctx, { filename: f });
 load('js/core_data.js'); load('js/logic.js');
 fs.readdirSync(path.join(ROOT, 'js/data')).filter(f => f.endsWith('.js') && (flag('sample') || f !== '00_sample.js')).sort().forEach(f => load('js/data/' + f));
+(arg('extra','')||'').split(',').filter(Boolean).forEach(f => vm.runInContext(fs.readFileSync(f, 'utf8'), ctx, { filename: f }));
 const { Q, QL } = ctx; QL.reindex();
 
 let rs = SEED0 * 7919;
@@ -64,6 +65,7 @@ function pickAction(st, acts) {
 }
 
 const seenGlobal = {};
+const statLog = {}, favSrc = {};
 function runGame(origin, seed) {
   const st = QL.newGame({ name: 'บอท', origin, gift: pickR(Object.keys(Q.GIFTS)), seed });
   const trace = [];
@@ -73,10 +75,11 @@ function runGame(origin, seed) {
     let id;
     while ((id = QL.nextPending(st))) {
       QL.startEvent(st, id); seenGlobal[id] = (seenGlobal[id] || 0) + 1;
-      log('  ▶ event ' + id + ' [' + QL.event(id).kind + ']');
+      log('  ▶ event ' + id + ' [' + QL.event(id).kind + ']'); (favSrc[id] = favSrc[id] || { f: 0, p: 0, n: 0, rank: st.rank, plays: 0 }).plays++; favSrc[id].rank = st.rank;
       let v, n = 0;
       while ((v = QL.view(st))) {
         if (n++ > 400) throw new Error('infinite loop in ' + id);
+        if (v.flash && v.flash.S) { const fv = v.flash.S.favor || 0, pv = v.flash.S.prestige || 0; const k = v.ev; const o = (favSrc[k] = favSrc[k] || { f: 0, p: 0, n: 0, rank: st.rank, plays: 0 }); o.f += fv; o.p += pv; }
         if (v.promoted) { log('  ★ PROMOTED → ' + v.promoted.title); QL.ackPromotion(st); }
         if (v.kind === 'choice') { const i = pickChoice(st, v); log('    ? ' + v.choices[i].text.slice(0, 40) + (v.choices[i].pct != null ? ' (' + v.choices[i].pct + '%)' : '')); const r = QL.choose(st, i); if (r && r.success !== null) log('      → ' + (r.success ? 'success' : 'fail')); }
         else QL.advance(st);
@@ -97,6 +100,7 @@ function runGame(origin, seed) {
       }
       if (st.phase === 'ended') break;
       rankSeasons[st.rank] = (rankSeasons[st.rank] || 0) + 1;
+      (statLog[st.rank] = statLog[st.rank] || []).push({ f: st.S.favor, p: st.S.prestige, h: st.S.health, th: st.S.threat, s: st.S.silver, sir: st.sir });
       QL.endSeason(st);
     }
   } catch (e) { return { crash: e.message, st }; }
@@ -127,6 +131,17 @@ if (!TRACE) {
   console.log('\nBy origin:'); Object.keys(byOrigin).forEach(o => console.log('  ' + o + ': n=' + byOrigin[o].n + ' avg rank ' + (byOrigin[o].ranks / byOrigin[o].n).toFixed(2) + ' summit ' + byOrigin[o].summit));
   console.log('\nEndings:'); Object.keys(endings).sort((a, b) => endings[b] - endings[a]).forEach(k => console.log('  ' + String(endings[k]).padStart(4) + '  ' + k));
   console.log('\nMean seasons spent per rank:'); Object.keys(seasonsAtRank).sort().forEach(k => { const a = seasonsAtRank[k]; console.log('  rank ' + k + ': ' + (a.reduce((x, y) => x + y, 0) / a.length).toFixed(1) + ' (n=' + a.length + ')'); });
+  if (flag('favsrc')) {
+    const rows = Object.keys(favSrc).map(k => ({ id: k, tag: ((QL.event(k) || {}).tags || ['-']).join(','), kind: (QL.event(k) || {}).kind, ...favSrc[k], fpp: favSrc[k].f / Math.max(1, favSrc[k].plays), ppp: favSrc[k].p / Math.max(1, favSrc[k].plays) }));
+    const agg = {}; rows.forEach(r => { const key = r.rank + ' ' + (r.kind === 'random' ? r.tag : r.kind); const o = (agg[key] = agg[key] || { f: 0, p: 0, plays: 0 }); o.f += r.f; o.p += r.p; o.plays += r.plays; });
+    console.log('\nAvg favor/prestige gained per play, by rank & pool:');
+    Object.keys(agg).sort().forEach(k => console.log('  ' + k.padEnd(24) + ' plays ' + String(agg[k].plays).padStart(6) + '  favor/play ' + (agg[k].f / agg[k].plays).toFixed(2) + '  prestige/play ' + (agg[k].p / agg[k].plays).toFixed(2)));
+  }
+  if (flag('stats')) {
+    const q = (arr, p) => { arr = arr.slice().sort((x, y) => x - y); return arr[Math.min(arr.length - 1, Math.floor(p * arr.length))]; };
+    console.log('\nPer-rank state at season end (median / p90):');
+    Object.keys(statLog).sort().forEach(r => { const L = statLog[r]; const g = k => L.map(x => x[k]); console.log('  rank ' + r + '  favor ' + q(g('f'), .5) + '/' + q(g('f'), .9) + '  prestige ' + q(g('p'), .5) + '/' + q(g('p'), .9) + '  health ' + q(g('h'), .5) + '  threat ' + q(g('th'), .5) + '/' + q(g('th'), .9) + '  silver ' + q(g('s'), .5) + '  (n=' + L.length + ')'); });
+  }
   const all = Q.events.filter(e => e.kind !== 'ending'), never = all.filter(e => !seenGlobal[e.id]);
   console.log('\nEvent coverage: ' + (all.length - never.length) + '/' + all.length + ' seen at least once');
   if (never.length) console.log('  never seen (' + never.length + '): ' + never.slice(0, 60).map(e => e.id).join(', ') + (never.length > 60 ? ' …' : ''));

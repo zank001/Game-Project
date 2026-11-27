@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14080b">
+<meta name="description" content="ลิขิตหงส์ · วังหลังต้าชิง — เกมกลยุทธ์ผสมวิชวลโนเวลแห่งการไต่ฐานันดรในวังหลังราชวงศ์ชิง จากนางกำนัลสู่ไทเฮา">
+<meta name="color-scheme" content="dark">
+<title>ลิขิตหงส์ · วังหลังต้าชิง</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='8' fill='%23a8232f'/%3E%3Crect x='8' y='8' width='48' height='48' rx='5' fill='none' stroke='%23f3d58a' stroke-width='2'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='%23f3d58a' font-family='serif' font-weight='bold'%3E%E5%87%A4%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- shared SVG defs: stamp roughness, gold gradients, ornaments -->
+<svg id="svg-defs" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="seal-rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <linearGradient id="gold-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbe7a1"/><stop offset=".5" stop-color="#d9a441"/><stop offset="1" stop-color="#9a6a16"/>
+    </linearGradient>
+    <symbol id="orn-cloud" viewBox="0 0 120 24">
+      <path d="M2 12 H38 M82 12 H118" stroke="currentColor" stroke-width="1" fill="none" opacity=".7"/>
+      <path d="M40 12 c0-5 4-8 8-6 c1-4 8-5 10-1 c3-3 9-1 9 4 c4 0 6 4 3 7 c-2 2-6 2-8 0 c-2 3-7 3-9 0 c-3 2-8 1-9-2 c-3 1-5-1-4-2z" fill="currentColor" opacity=".9"/>
+      <circle cx="30" cy="12" r="2" fill="currentColor"/><circle cx="90" cy="12" r="2" fill="currentColor"/>
+    </symbol>
+    <symbol id="orn-phoenix" viewBox="0 0 64 64">
+      <path d="M32 6 c4 6 3 10 0 14 c-3-4-4-8 0-14z M32 20 c-8 2-16 8-22 20 c8-4 14-4 18 0 c-4 2-8 6-8 12 c6-4 10-4 12-2 c2-2 6-2 12 2 c0-6-4-10-8-12 c4-4 10-4 18 0 C48 28 40 22 32 20z" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<noscript><p style="color:#f3d58a;padding:24px;font-family:serif">เกมนี้ต้องเปิดใช้งาน JavaScript</p></noscript>
+<div id="app">
+
+  <!-- ===================== TITLE ===================== -->
+  <section id="title-screen" class="screen active" aria-label="หน้าชื่อเรื่อง">
+    <div id="title-art" class="title-art"></div>
+    <div class="petals" id="petals" aria-hidden="true"></div>
+    <div class="title-vignette"></div>
+    <div class="title-corner-btns">
+      <button id="btn-title-settings" class="icon-btn" aria-label="ตั้งค่า" title="ตั้งค่า">⚙</button>
+      <button id="btn-title-mute" class="icon-btn" aria-label="เปิด/ปิดเสียง" title="เสียง">🔊</button>
+    </div>
+    <div class="title-main">
+      <div class="title-crest">
+        <span class="seal n2 big title-seal"><b><i>承</i><i>平</i></b></span>
+      </div>
+      <div class="title-zh" aria-hidden="true">凤 临 天 下</div>
+      <h1 class="title-h1"><span id="title-main-text">ลิขิตหงส์</span></h1>
+      <div class="title-sub"><i></i><span>วังหลังต้าชิง</span><i></i></div>
+      <div class="title-en">Phoenix Ascent · The Qing Inner Court</div>
+      <nav class="title-menu" aria-label="เมนูหลัก">
+        <button id="btn-new" class="btn btn-primary btn-xl"><span>เริ่มบันทึกประวัติ</span></button>
+        <button id="btn-continue" class="btn btn-secondary btn-xl disabled" disabled><span>เล่นต่อ</span><small id="continue-meta"></small></button>
+        <div class="title-row">
+          <button id="btn-archive" class="btn btn-ghost">📜 จดหมายเหตุ</button>
+          <button id="btn-howto" class="btn btn-ghost">❓ วิธีเล่น &amp; เครดิต</button>
+        </div>
+        <button id="btn-load-list" class="link-btn" hidden>เลือกช่องบันทึก…</button>
+      </nav>
+    </div>
+    <div class="title-foot">เรื่องราวสมมติ · ฮ่องเต้ ราชวงศ์ และสกุลทั้งหมดไม่มีตัวตนจริง</div>
+  </section>
+
+  <!-- ===================== CREATION ===================== -->
+  <section id="create-screen" class="screen" aria-label="สร้างตัวละคร">
+    <div class="create-bg"></div>
+    <header class="screen-head">
+      <button id="btn-create-back" class="icon-btn" aria-label="กลับ">‹</button>
+      <div class="head-title"><svg class="orn"><use href="#orn-cloud"/></svg><h2>บันทึกประวัติสตรีผู้เข้าวัง</h2><svg class="orn"><use href="#orn-cloud"/></svg></div>
+      <span class="head-spacer"></span>
+    </header>
+    <div class="create-body">
+      <div class="create-left">
+        <div class="preview-card">
+          <div class="preview-bg" id="create-preview-bg"></div>
+          <div class="preview-fig" id="create-preview"></div>
+          <div class="preview-plate"><b id="preview-name">หลันซี</b><small id="preview-origin"></small></div>
+        </div>
+        <div class="field">
+          <label for="name-input">นามของท่าน</label>
+          <input id="name-input" type="text" maxlength="12" value="หลันซี" autocomplete="off" spellcheck="false">
+          <div class="name-chips" id="name-chips"></div>
+        </div>
+      </div>
+      <div class="create-right">
+        <div class="sect-title"><svg class="orn"><use href="#orn-cloud"/></svg><h3>ชาติกำเนิด</h3></div>
+        <div class="origin-list" id="origin-list"></div>
+        <div class="sect-title"><svg class="orn"><use href="#orn-cloud"/></svg><h3>พรสวรรค์ติดตัว</h3></div>
+        <div class="gift-list" id="gift-list"></div>
+      </div>
+    </div>
+    <footer class="create-foot">
+      <button id="btn-start" class="btn btn-primary btn-xl"><span>ก้าวเข้าสู่วังต้องห้าม</span></button>
+    </footer>
+  </section>
+
+  <!-- ===================== HUB ===================== -->
+  <section id="hub-screen" class="screen" data-tab="actions" aria-label="วังหลัง">
+    <header id="hub-top">
+      <div id="hud-date" class="hud-date"></div>
+      <div id="hud-id" class="hud-id"></div>
+      <div class="hud-right">
+        <div id="hud-ap" class="ap-pips" aria-label="แต้มกำลัง"></div>
+        <div class="hud-btns">
+          <button id="btn-mute" class="icon-btn" aria-label="เปิด/ปิดเสียง" title="เสียง">🔊</button>
+          <button id="btn-menu" class="icon-btn" aria-label="เมนู" title="เมนู">☰</button>
+        </div>
+      </div>
+    </header>
+    <button id="climb-strip" class="climb-strip" aria-label="ความคืบหน้าสู่ขั้นถัดไป"></button>
+    <main id="hub-main">
+      <section id="panel-ladder" class="panel panel-ladder" aria-label="บันไดฐานันดร">
+        <div id="ladder-head" class="ladder-head"></div>
+        <ol id="ladder" class="ladder"></ol>
+      </section>
+      <section id="panel-actions" class="panel panel-actions" aria-label="การกระทำ">
+        <div class="actions-scroll">
+          <div id="hero" class="hero"></div>
+          <div id="action-groups" class="action-groups"></div>
+        </div>
+        <div class="end-wrap">
+          <button id="btn-end-season" class="btn btn-primary btn-xl"><span>สิ้นสุดฤดูกาล</span><small id="end-season-sub"></small></button>
+        </div>
+      </section>
+      <section id="panel-status" class="panel panel-status" aria-label="สถานะ">
+        <div id="status-hero" class="status-hero"></div>
+        <div class="sect-title sm"><svg class="orn"><use href="#orn-cloud"/></svg><h3>คุณสมบัติ</h3></div>
+        <div id="stats" class="stats"></div>
+        <div class="sect-title sm"><svg class="orn"><use href="#orn-cloud"/></svg><h3>สายสัมพันธ์</h3></div>
+        <div id="rels" class="rels"></div>
+      </section>
+    </main>
+    <nav id="hub-tabs" aria-label="แท็บ">
+      <button data-tab="ladder"><i>⛰</i><span>บันไดยศ</span></button>
+      <button data-tab="actions" class="on"><i>🏮</i><span>การกระทำ</span></button>
+      <button data-tab="status"><i>♛</i><span>สถานะ</span></button>
+    </nav>
+    <div id="hub-toast" class="hub-toast" aria-live="polite"></div>
+  </section>
+
+  <!-- ===================== EVENT / VISUAL NOVEL ===================== -->
+  <section id="event-screen" class="screen" aria-label="เหตุการณ์">
+    <div id="bg-a" class="bg-layer amb on"></div>
+    <div id="bg-b" class="bg-layer amb"></div>
+    <div class="ev-shade"></div>
+    <div id="stage" class="stage"></div>
+    <div id="ev-top" class="ev-top">
+      <div id="ev-badge" class="ev-badge"></div>
+      <div id="ev-title" class="ev-title"></div>
+      <div class="ev-btns">
+        <button id="btn-log" class="icon-btn" aria-label="ย้อนอ่านบทสนทนา" title="ย้อนอ่าน">📖</button>
+        <button id="btn-auto" class="icon-btn" aria-label="อ่านอัตโนมัติ" title="อัตโนมัติ">▶</button>
+        <button id="btn-skip" class="icon-btn" aria-label="ข้ามข้อความ" title="ข้าม">⏭</button>
+        <button id="btn-ev-menu" class="icon-btn" aria-label="เมนู" title="เมนู">☰</button>
+      </div>
+    </div>
+    <div id="flash" class="flash" aria-live="polite"></div>
+    <div id="note-bar" class="note-bar"></div>
+    <div id="check-stamp" class="check-stamp"></div>
+    <div id="advance-area" class="advance-area">
+      <div id="caption" class="caption"></div>
+      <div id="choices" class="choices"></div>
+      <div id="dialogue-box" class="dialogue-box">
+        <div id="speaker-avatar" class="speaker-avatar"></div>
+        <div id="name-tab" class="name-tab"></div>
+        <div id="dialogue-text" class="dialogue-text"></div>
+        <span id="next-ind" class="next-ind">▼</span>
+      </div>
+    </div>
+    <div id="card-overlay" class="card-overlay">
+      <div class="card-frame"><div id="card-text" class="card-text"></div><div class="card-ind">▼</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== ENDING ===================== -->
+  <section id="ending-screen" class="screen" aria-label="ตอนจบ">
+    <div id="end-bg" class="end-bg"></div>
+    <div class="end-veil"></div>
+    <div class="end-scroll">
+      <div class="end-card">
+        <div id="end-badge" class="end-badge"></div>
+        <div class="end-kicker">— ตอนจบ —</div>
+        <h1 id="end-title" class="end-title"></h1>
+        <div id="end-sub" class="end-sub"></div>
+        <div id="end-epi" class="end-epi"></div>
+        <div id="end-stats" class="end-stats"></div>
+        <div id="end-new" class="end-new"></div>
+        <div class="end-actions">
+          <button id="btn-end-archive" class="btn btn-secondary">📜 จดหมายเหตุ</button>
+          <button id="btn-end-load" class="btn btn-ghost">โหลดเกม</button>
+          <button id="btn-restart" class="btn btn-primary"><span>เริ่มบันทึกประวัติใหม่</span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== OVERLAYS ===================== -->
+  <div id="ceremony" class="overlay ceremony" hidden role="dialog" aria-modal="true" aria-label="ราชโองการ">
+    <div class="cer-glow"></div>
+    <div class="cer-sparks" id="cer-sparks"></div>
+    <div class="cer-stage">
+      <div class="cer-portrait" id="cer-portrait"></div>
+      <div class="edict" id="edict">
+        <div class="edict-rod top"></div>
+        <div class="edict-paper">
+          <div class="edict-border"></div>
+          <div class="edict-inner">
+            <div class="edict-head" id="cer-head">奉天承运 皇帝诏曰</div>
+            <svg class="edict-orn"><use href="#orn-cloud"/></svg>
+            <p class="edict-lead" id="cer-lead"></p>
+            <div class="cer-change" id="cer-change"></div>
+            <h2 class="cer-title" id="cer-title"></h2>
+            <div class="cer-zh" id="cer-zh"></div>
+            <ul class="cer-rewards" id="cer-rewards"></ul>
+            <div class="cer-date" id="cer-date"></div>
+            <button id="btn-ceremony-ok" class="btn btn-primary btn-xl"><span>น้อมรับราชโองการ</span></button>
+          </div>
+        </div>
+        <div class="edict-rod bottom"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="season-report" class="overlay report" hidden role="dialog" aria-modal="true" aria-label="รายงานประจำฤดู">
+    <div class="report-card" id="report-card"></div>
+  </div>
+
+  <div id="modal-root" class="overlay modal-root" hidden></div>
+  <div id="tip-root" class="tip-root"></div>
+  <div id="toast-root" class="toast-root" aria-live="polite"></div>
+</div>
+
+<script src="js/core_data.js"></script>
+<script src="js/logic.js"></script>
+<!-- DATA:BEGIN -->
+<script src="js/data/c02_arc1a.js"></script>
+<script src="js/data/c02_arc1b.js"></script>
+<script src="js/data/c02_arc1c.js"></script>
+<script src="js/data/c02_promo.js"></script>
+<script src="js/data/c02_rand1.js"></script>
+<script src="js/data/c02_rand2.js"></script>
+<script src="js/data/c02_rand3.js"></script>
+<script src="js/data/c02_rand4.js"></script>
+<script src="js/data/c03_arc2.js"></script>
+<script src="js/data/c03_promo.js"></script>
+<script src="js/data/c03_rand_a.js"></script>
+<script src="js/data/c03_rand_b.js"></script>
+<script src="js/data/c03_rand_c.js"></script>
+<script src="js/data/c04_arc3a.js"></script>
+<script src="js/data/c04_arc3b.js"></script>
+<script src="js/data/c04_arc3c.js"></script>
+<script src="js/data/c04_promo.js"></script>
+<script src="js/data/c04_rand_a.js"></script>
+<script src="js/data/c04_rand_b.js"></script>
+<script src="js/data/c04_rand_c.js"></script>
+<script src="js/data/c05_arc4a.js"></script>
+<script src="js/data/c05_arc4b.js"></script>
+<script src="js/data/c05_arc4c.js"></script>
+<script src="js/data/c05_promo.js"></script>
+<script src="js/data/c05_rand1.js"></script>
+<script src="js/data/c05_rand2.js"></script>
+<script src="js/data/c05_rand3.js"></script>
+<script src="js/data/c05_rand4.js"></script>
+<script src="js/data/c06_arc5a.js"></script>
+<script src="js/data/c06_arc5b.js"></script>
+<script src="js/data/c06_arc5c.js"></script>
+<script src="js/data/c06_arc5d.js"></script>
+<script src="js/data/c06_promo.js"></script>
+<script src="js/data/c06_rand1.js"></script>
+<script src="js/data/c06_rand2.js"></script>
+<script src="js/data/c06_rand3.js"></script>
+<script src="js/data/c06_rand4.js"></script>
+<script src="js/data/c07_arc6a.js"></script>
+<script src="js/data/c07_arc6b.js"></script>
+<script src="js/data/c07_arc6c.js"></script>
+<script src="js/data/c07_promo.js"></script>
+<script src="js/data/c07_rand1.js"></script>
+<script src="js/data/c07_rand2.js"></script>
+<script src="js/data/c07_rand3.js"></script>
+<script src="js/data/c07_rand4.js"></script>
+<script src="js/data/c08_arc7a.js"></script>
+<script src="js/data/c08_arc7b.js"></script>
+<script src="js/data/c08_arc7c.js"></script>
+<script src="js/data/c08_arc7d.js"></script>
+<script src="js/data/c08_promo.js"></script>
+<script src="js/data/c08_rand_a.js"></script>
+<script src="js/data/c08_rand_b.js"></script>
+<script src="js/data/c08_rand_c.js"></script>
+<script src="js/data/c09_endings.js"></script>
+<script src="js/data/c09_finale_a.js"></script>
+<script src="js/data/c09_finale_b.js"></script>
+<script src="js/data/c09_finale_b2.js"></script>
+<script src="js/data/c09_finale_c.js"></script>
+<script src="js/data/c09_finale_d.js"></script>
+<script src="js/data/c09_promo.js"></script>
+<script src="js/data/c09_rand_b.js"></script>
+<script src="js/data/c09_rank8.js"></script>
+<script src="js/data/c10_ending_b.js"></script>
+<script src="js/data/c10_ending_c.js"></script>
+<script src="js/data/c10_endings.js"></script>
+<script src="js/data/c10_extras_a.js"></script>
+<script src="js/data/c10_extras_b.js"></script>
+<script src="js/data/c11_autumn.js"></script>
+<script src="js/data/c11_extra.js"></script>
+<script src="js/data/c11_life_a.js"></script>
+<script src="js/data/c11_life_b.js"></script>
+<script src="js/data/c11_spring.js"></script>
+<script src="js/data/c11_summer.js"></script>
+<script src="js/data/c11_winter_a.js"></script>
+<script src="js/data/c11_winter_b.js"></script>
+<script src="js/data/c12_court.js"></script>
+<script src="js/data/c12_doctor.js"></script>
+<script src="js/data/c12_friend.js"></script>
+<script src="js/data/c12_maid.js"></script>
+<script src="js/data/c12_prince.js"></script>
+<script src="js/data/c13_befriend_a.js"></script>
+<script src="js/data/c13_befriend_b.js"></script>
+<script src="js/data/c13_befriend_c.js"></script>
+<script src="js/data/c13_befriend_d.js"></script>
+<script src="js/data/c13_befriend_e.js"></script>
+<script src="js/data/c13_befriend_f.js"></script>
+<script src="js/data/c13_garden_a.js"></script>
+<script src="js/data/c13_garden_b.js"></script>
+<script src="js/data/c13_garden_c.js"></script>
+<script src="js/data/c13_garden_d.js"></script>
+<script src="js/data/c13_garden_e.js"></script>
+<script src="js/data/c13_garden_f.js"></script>
+<script src="js/data/c14_dowager_a.js"></script>
+<script src="js/data/c14_dowager_b.js"></script>
+<script src="js/data/c14_emperor_a.js"></script>
+<script src="js/data/c14_emperor_b.js"></script>
+<script src="js/data/c14_emperor_c.js"></script>
+<script src="js/data/c14_emperor_d.js"></script>
+<script src="js/data/c15_bribe_a.js"></script>
+<script src="js/data/c15_bribe_b.js"></script>
+<script src="js/data/c15_empress_a.js"></script>
+<script src="js/data/c15_empress_b.js"></script>
+<script src="js/data/c15_empress_c.js"></script>
+<script src="js/data/c15_palace_a.js"></script>
+<script src="js/data/c15_palace_b.js"></script>
+<script src="js/data/c16_family_a.js"></script>
+<script src="js/data/c16_family_b.js"></script>
+<script src="js/data/c16_family_c.js"></script>
+<script src="js/data/c16_investigate_a.js"></script>
+<script src="js/data/c16_investigate_b.js"></script>
+<script src="js/data/c16_investigate_c.js"></script>
+<script src="js/data/c16_investigate_d.js"></script>
+<script src="js/data/c16_investigate_e.js"></script>
+<script src="js/data/c16_more.js"></script>
+<script src="js/data/c16_scheme_a.js"></script>
+<script src="js/data/c16_scheme_b.js"></script>
+<script src="js/data/c16_scheme_c.js"></script>
+<script src="js/data/c16_scheme_d.js"></script>
+<script src="js/data/c17_attack_a.js"></script>
+<script src="js/data/c17_attack_b.js"></script>
+<script src="js/data/c17_attack_c.js"></script>
+<script src="js/data/c17_attack_d.js"></script>
+<script src="js/data/c17_attack_e.js"></script>
+<!-- DATA:END -->
+<script src="js/art_chars.js"></script><script src="js/art_bg.js"></script><script src="js/sound.js"></script><script src="js/engine.js"></script>
+</body>
+</html>
