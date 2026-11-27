@@ -295,3 +295,142 @@ Q.ACTIONS = [
 Q.SAVE_KEY = 'qh_saves_v1';
 Q.SEEN_KEY = 'qh_seen_v1';
 Q.SET_KEY = 'qh_settings_v1';
+
+/* =============================================================
+   WARDROBE — เครื่องแต่งกาย · เครื่องหัว · เครื่องประดับ
+   5 slots. Items: {id, slot, th, desc, tier, minRank, price, src, grant?, style, set?, eff?, look}
+   - minRank: rank needed to WEAR it (sumptuary law). price>0 ⇒ sold in the Royal Wardrobe Bureau (needs rank >= minRank).
+   - src: 'start' (origin kit) | 'rank' (auto-granted on reaching rank `grant`) | 'shop' | 'gift' (via fx.give in events)
+   - eff (all small): chk {charm,talent,wit}: bonus to that stat in skill checks · thr/pre/vir/fav: per-season drift (fractions accumulate)
+   - look: passed to portraitSVG(opts.outfit): robe/head {lvl 0-9, col,trim,pat,patCol | flowers,silk,pinHead,accent}
+           neck {beads:lvl|0, col, bigCol, pendant:'gold'|'jade'|'silver'|'ruby'} · ear {earring:'pearl'|'jade'|'gold'|'ruby'|'sapphire'}
+           charm {kerchief:'#hex'} | {sachet:'#hex'}
+   - set: matching robe + head + ≥1 accessory with the same set id ⇒ set bonus (Q.WARDROBE.sets[id].eff)
+   Condition-language variable W: {tier, dress (tier−rank), style, set, flash, robe, head, neck, ear, charm, own:{id:true}}
+   ============================================================= */
+Q.WARDROBE = (function () {
+  var slots = [
+    { id: 'robe',  th: 'ชุด',        icon: '👘', cat: 'ชุด' },
+    { id: 'head',  th: 'เครื่องหัว',  icon: '👑', cat: 'เครื่องหัว' },
+    { id: 'neck',  th: 'สร้อยคอ',    icon: '📿', cat: 'เครื่องประดับ' },
+    { id: 'ear',   th: 'ต่างหู',      icon: '✨', cat: 'เครื่องประดับ' },
+    { id: 'charm', th: 'ของติดตัว',   icon: '🌸', cat: 'เครื่องประดับ' },
+  ];
+  var styles = { plain: 'เรียบง่าย', graceful: 'งามสง่า', bright: 'สะดุดตา', grand: 'สูงศักดิ์', sacred: 'สงบศักดิ์สิทธิ์' };
+  var sets = {
+    plum:     { th: 'ชุดเหมยหอม',        eff: { chk: { charm: 3 }, thr: 0.4 } },
+    orchid:   { th: 'ชุดกล้วยไม้ม่วง',    eff: { chk: { talent: 3 }, vir: 0.15 } },
+    jade:     { th: 'ชุดหยกเขียว',       eff: { chk: { wit: 3 }, thr: -0.4 } },
+    peony:    { th: 'ชุดโบตั๋นราชสำนัก',  eff: { chk: { charm: 3, wit: 1 }, pre: 0.2 } },
+    phoenix:  { th: 'ชุดหงส์เพลิง',      eff: { chk: { charm: 2, wit: 2 }, pre: 0.3, fav: 0.2 } },
+    imperial: { th: 'เครื่องทรงหลวง',    eff: { chk: { charm: 3, wit: 3 }, pre: 0.4 } },
+  };
+  var PRICE = [0, 45, 90, 160, 280, 430, 700, 1000, 0, 0];
+  var items = [];
+  function add(slot, id, th, tier, o) {
+    o = o || {};
+    o.id = id; o.slot = slot; o.th = th; o.tier = tier;
+    if (o.minRank === undefined) o.minRank = tier;
+    if (o.src === undefined) o.src = 'shop';
+    if (o.src === 'shop' && o.price === undefined) o.price = PRICE[tier];
+    if (o.price === undefined) o.price = 0;
+    if (!o.style) o.style = 'graceful';
+    items.push(o);
+  }
+  var T = ['', 'ต่าอิง', 'ฉังไจ้', 'กุ้ยเหริน', 'ปิน', 'เฟย', 'กุ้ยเฟย', 'หวงกุ้ยเฟย', 'ฮองเฮา', 'ไทเฮา'];
+
+  /* ---------- ชุด (robe) ---------- */
+  add('robe', 'r_start_noble', 'ชุดไหมสีท้อของบ้านเดิม', 0, { sw: ['#f2c9c0', '#d98c8c'], src: 'start', style: 'graceful', desc: 'ชุดที่แม่ตัดให้ก่อนเข้าวัง ปักดอกท้อเล็กๆ ที่ชายเสื้อ', eff: {}, look: { lvl: 0 } });
+  add('robe', 'r_start_scholar', 'ชุดไหมฟ้าอ่อนลายไผ่', 0, { sw: ['#c9e1e8', '#7fb0bc'], src: 'start', style: 'plain', desc: 'ชุดเรียบของลูกสาวบัณฑิต สะอาดและไม่โอ้อวด', eff: { thr: -0.3 }, look: { lvl: 0 } });
+  add('robe', 'r_start_maid', 'ชุดฝ้ายนางกำนัล', 0, { sw: ['#7f93a6', '#5d7185'], src: 'start', style: 'plain', desc: 'ผ้าฝ้ายหยาบสีเทาน้ำเงิน ซักจนนุ่มแล้วหลายร้อยครั้ง', eff: { thr: -0.5 }, look: { lvl: 0 } });
+  for (var g = 1; g <= 9; g++) {
+    add('robe', 'r_g' + g, g === 8 ? 'ฉลองพระองค์ฮองเฮา' : g === 9 ? 'ฉลองพระองค์ไทเฮา' : 'ชุด' + T[g] + 'พระราชทาน', g, {
+      src: 'rank', grant: g, style: g >= 6 ? 'grand' : 'graceful',
+      desc: g === 8 ? 'สีเหลืองทองปักมังกรและหงส์ เครื่องทรงของมารดาแห่งแผ่นดิน' : g === 9 ? 'สีม่วงเข้มปักทอง สง่างามอย่างเงียบสงบเหมือนผู้ที่ไม่ต้องพิสูจน์อะไรอีกแล้ว' : 'ชุดตามฐานันดรที่สำนักเครื่องทรงตัดถวาย ' + (g >= 6 ? 'พร้อมผ้าคลุมไหล่ลายเมฆ' : ''),
+      eff: g >= 8 ? { chk: { charm: 2, wit: 2 }, pre: 0.3, fav: 0.2, thr: 0.8 } : g >= 4 ? { pre: 0.15 } : { pre: 0.08 },
+      set: g >= 8 ? 'imperial' : null, look: { lvl: g } });
+  }
+  add('robe', 'r_peach', 'ชุดไหมสีท้อปักดอกไม้', 1, { style: 'graceful', set: 'plum', desc: 'สีอ่อนหวาน ปักดอกท้อ เหมาะกับสนมใหม่ที่ยังไม่อยากสะดุดตาใคร', eff: { chk: { charm: 2 } }, look: { lvl: 1, col: '#f6c3b2', trim: '#c95a58', pat: 'flower', patCol: '#e8928a' } });
+  add('robe', 'r_bamboo', 'ชุดไหมเขียวลายไผ่', 1, { style: 'plain', set: 'jade', desc: 'เขียวอ่อนปักไผ่ บอกโดยไม่พูดว่าผู้สวมใส่ไม่โลภ', eff: { chk: { wit: 2 }, thr: -0.2 }, look: { lvl: 1, col: '#c0e2d4', trim: '#4f8f86', pat: 'bamboo', patCol: '#8fc2b2' } });
+  add('robe', 'r_lilac', 'ชุดไหมม่วงลิลาก', 1, { style: 'graceful', set: 'orchid', desc: 'ม่วงนวลลายจุดไข่ปลา ดูเหมือนกวีที่เพิ่งตื่นนอน', eff: { chk: { talent: 2 } }, look: { lvl: 1, col: '#cdc0dc', trim: '#8a6fa8', pat: 'dots', patCol: '#a994c4' } });
+  add('robe', 'r_rose', 'ชุดปักกุหลาบสีบานเย็น', 2, { style: 'bright', set: 'plum', desc: 'สีสดที่ทำให้คนหันมอง — ทั้งคนที่ชอบและคนที่ไม่ชอบ', eff: { chk: { charm: 3 }, thr: 0.4 }, look: { lvl: 2, col: '#f2a9bc', trim: '#b83a66', pat: 'flower', patCol: '#e07a98' } });
+  add('robe', 'r_lake', 'ชุดสีน้ำทะเลสาบ', 2, { style: 'graceful', set: 'jade', desc: 'ฟ้าครามอ่อนปักไผ่เงิน เย็นตาและน่าไว้ใจ', eff: { chk: { wit: 3 } }, look: { lvl: 2, col: '#a9d4de', trim: '#3f7f9a', pat: 'bamboo', patCol: '#78b0c4' } });
+  add('robe', 'r_dusk', 'ชุดสีม่วงพลบค่ำ', 2, { style: 'graceful', set: 'orchid', desc: 'ม่วงเข้มปักจุดเงิน เหมาะแก่คืนบรรเลงพิณ', eff: { chk: { talent: 3 } }, look: { lvl: 2, col: '#c8aad6', trim: '#7a5a9a', pat: 'dots', patCol: '#a384bc' } });
+  add('robe', 'r_cloud_plum', 'ชุดลายเมฆสีบานเย็นเข้ม', 3, { style: 'bright', set: 'plum', desc: 'ลายเมฆมงคลบนผ้าสีดอกเหมยแก่ ทรงอำนาจแต่ไม่หยิ่ง', eff: { chk: { charm: 3 }, pre: 0.12, thr: 0.4 }, look: { lvl: 3, col: '#e5708c', trim: '#8a2a52', pat: 'cloud', patCol: '#f6b4c4' } });
+  add('robe', 'r_cloud_jade', 'ชุดลายเมฆสีมรกต', 3, { style: 'graceful', set: 'jade', desc: 'เขียวมรกตปักเมฆเงิน สุขุมเกินวัย', eff: { chk: { wit: 3 }, thr: -0.3 }, look: { lvl: 3, col: '#5aaab4', trim: '#1f5f6a', pat: 'cloud', patCol: '#a8e0e4' } });
+  add('robe', 'r_cloud_orchid', 'ชุดลายเมฆสีกล้วยไม้', 3, { style: 'graceful', set: 'orchid', desc: 'ม่วงกล้วยไม้ทอลายเมฆ งดงามแบบคนที่เก่งเรื่องศิลปะ', eff: { chk: { talent: 3, charm: 1 }, pre: 0.12 }, look: { lvl: 3, col: '#aa7cc2', trim: '#5a3a7a', pat: 'cloud', patCol: '#d4b0e8' } });
+  add('robe', 'r_azure', 'ชุดฟ้าคราม', 4, { style: 'graceful', set: 'jade', desc: 'ฟ้าครามปักเมฆขาว เครื่องทรงของสตรีผู้มีฉายาแล้ว', eff: { chk: { wit: 2, charm: 2 }, pre: 0.18 }, look: { lvl: 4, col: '#7ea8e2', trim: '#2f5fa8', pat: 'cloud', patCol: '#cfe0ff' } });
+  add('robe', 'r_wine', 'ชุดสีไวน์แดง', 4, { style: 'bright', set: 'plum', desc: 'แดงเข้มแบบที่ทำให้คนจำได้ตลอดงานเลี้ยง', eff: { chk: { charm: 3 }, pre: 0.18, thr: 0.7 }, look: { lvl: 4, col: '#c0425a', trim: '#6a1a30', pat: 'cloud', patCol: '#f0b0bc' } });
+  add('robe', 'r_violet', 'ชุดม่วงปักโบตั๋น', 5, { style: 'grand', set: 'orchid', desc: 'ม่วงสูงศักดิ์ทอเมฆทองแดง คนเห็นแล้วรู้ว่านี่คือเฟย', eff: { chk: { talent: 3, wit: 2 }, pre: 0.22 }, look: { lvl: 5, col: '#9d82e2', trim: '#5a3fa0', pat: 'cloud', patCol: '#dcd0ff' } });
+  add('robe', 'r_emerald', 'ชุดสีหยกเขียวแก่', 5, { style: 'graceful', set: 'jade', desc: 'เขียวหยกเข้ม ทอเมฆเงิน เป็นสีของผู้รู้จักรอ', eff: { chk: { wit: 3, charm: 1 }, pre: 0.22, thr: -0.3 }, look: { lvl: 5, col: '#4aa888', trim: '#1a5a48', pat: 'cloud', patCol: '#b0e8d0' } });
+  add('robe', 'r_peony', 'ชุดโบตั๋นราชสำนัก', 6, { style: 'grand', set: 'peony', desc: 'ผ้าคลุมไหล่เมฆและโบตั๋นบานสะพรั่ง ราชินีแห่งบุปผา', eff: { chk: { charm: 4 }, pre: 0.28, thr: 0.5 }, look: { lvl: 6, col: '#f0a0cc', trim: '#a02a78', pat: 'cloud', patCol: '#fff0f8' } });
+  add('robe', 'r_phoenix', 'ชุดแดงหงส์เพลิง', 6, { style: 'bright', set: 'phoenix', desc: 'แดงเพลิงปักหงส์ทองที่หน้าอก — ประกาศเจตนาให้ผู้คนอ่านได้ทั้งวัง', eff: { chk: { charm: 3, wit: 1 }, pre: 0.28, thr: 1 }, look: { lvl: 6, col: '#e0505e', trim: '#a82030', pat: 'cloud', patCol: '#ffc8a0' } });
+  add('robe', 'r_amber', 'ชุดสีอำพันทอง', 7, { style: 'grand', set: 'phoenix', desc: 'อำพันและทองปักเมฆมงคล แสงตกกระทบแล้วเหมือนไฟในเตา', eff: { chk: { charm: 3, wit: 2 }, pre: 0.32, thr: 0.5 }, look: { lvl: 7, col: '#ec9540', trim: '#a8501a', pat: 'cloud', patCol: '#ffe0a0' } });
+  add('robe', 'r_ink_gold', 'ชุดน้ำหมึกขลิบทอง', 7, { style: 'sacred', desc: 'ดำน้ำเงินเข้มขลิบทองคำ สงบ น่าเกรงขาม ไม่ต้องดังก็มีอำนาจ', eff: { chk: { wit: 4 }, pre: 0.28, thr: -0.5 }, look: { lvl: 7, col: '#2a2f4a', trim: '#c89a2a', pat: 'cloud', patCol: '#e0c070' } });
+
+  /* ---------- เครื่องหัว (head) ---------- */
+  add('head', 'h_start_noble', 'ปิ่นดอกท้อประจำตัว', 0, { sw: ['#ee7f9a', '#f4efe6'], src: 'start', style: 'graceful', desc: 'ปิ่นดอกไม้ไหมและไข่มุกเม็ดเล็กที่ท่านแม่ติดให้เอง', eff: {}, look: { lvl: 0 } });
+  add('head', 'h_start_scholar', 'ปิ่นไม้ดอกมะลิ', 0, { sw: ['#f4f0e6', '#b49a72'], src: 'start', style: 'plain', desc: 'ปิ่นไม้ไผ่เรียบๆ และดอกไม้ไหมสีขาว', eff: { thr: -0.2 }, look: { lvl: 0 } });
+  add('head', 'h_start_maid', 'ผ้าคาดผมฝ้าย', 0, { sw: ['#9a8a78', '#6e6052'], src: 'start', style: 'plain', desc: 'ผ้าคาดผมสีหม่น กันไอน้ำและกันตาของผู้คุมงาน', eff: { thr: -0.3 }, look: { lvl: 0 } });
+  var HN = ['', 'ปิ่นดอกไม้', 'ปิ่นและพู่', 'ฉีโถวเล็ก', 'ฉีโถวหยกและมุก', 'ฉีโถวมุกพู่ทอง', 'ฉีโถวทองประดับหงส์', 'ฉีโถวทองคำ', 'มงกุฎหงส์ฮองเฮา', 'มงกุฎหงส์ไทเฮา'];
+  for (g = 1; g <= 9; g++) {
+    add('head', 'h_g' + g, g >= 8 ? HN[g] : HN[g] + T[g], g, {
+      src: 'rank', grant: g, style: g >= 6 ? 'grand' : 'graceful',
+      desc: g === 8 ? 'มงกุฎหงส์เก้าตัว ประดับไพลินและทับทิม หนักกว่าที่ใครเห็น' : g === 9 ? 'มงกุฎหงส์ทองคำประดับอเมทิสต์ หนักด้วยปีเดือนและบทเรียน' : 'เครื่องหัวตามฐานันดร ' + (g >= 3 ? 'ทรงฉีโถวแบบราชสำนักแมนจู' : 'เรียบแต่เรียบร้อย'),
+      eff: g >= 8 ? { chk: { charm: 2, wit: 1 }, pre: 0.2, thr: 0.5 } : g >= 3 ? { chk: { charm: 1 }, pre: 0.08 } : {},
+      set: g >= 8 ? 'imperial' : null, look: { lvl: g } });
+  }
+  add('head', 'h_plum_pin', 'ปิ่นดอกเหมยสีชมพู', 1, { style: 'graceful', set: 'plum', desc: 'กลีบเหมยไหมสีชมพูอ่อนกับไข่มุก', eff: { chk: { charm: 1 } }, look: { lvl: 1, flowers: '#f08aa6', pinHead: 'pearl' } });
+  add('head', 'h_white_pin', 'ปิ่นมะลิขาว', 1, { style: 'plain', set: 'jade', desc: 'ดอกมะลิไหมสีขาว หอมเฉพาะในความคิด', eff: { chk: { wit: 1 }, thr: -0.3 }, look: { lvl: 1, flowers: '#f4f0e6', pinHead: 'pearl' } });
+  add('head', 'h_orchid_pin', 'ปิ่นกล้วยไม้ม่วงพู่หยก', 2, { style: 'graceful', set: 'orchid', desc: 'ดอกกล้วยไม้สีม่วงกับพู่เงิน', eff: { chk: { talent: 2 } }, look: { lvl: 2, flowers: '#c9a4e8', silk: '#8a6fa8', pinHead: 'jade' } });
+  add('head', 'h_rose_pin', 'ปิ่นกุหลาบพู่แดง', 2, { style: 'bright', set: 'plum', desc: 'กุหลาบสีสดและพู่แดงยาว แกว่งเมื่อเดิน', eff: { chk: { charm: 2 }, thr: 0.3 }, look: { lvl: 2, flowers: '#e8455f', silk: '#c2456b', pinHead: 'pearl' } });
+  add('head', 'h_qitou_white', 'ฉีโถวดอกขาวพู่ฟ้า', 3, { style: 'graceful', set: 'jade', desc: 'ฉีโถวเล็กประดับดอกเก๊กฮวยไหมและพู่สีฟ้า', eff: { chk: { wit: 2 } }, look: { lvl: 3, flowers: '#f4f8ff', silk: '#9fc0e8', pinHead: 'pearl', accent: '#cfe0f4' } });
+  add('head', 'h_qitou_peony', 'ฉีโถวดอกโบตั๋น', 3, { style: 'bright', set: 'plum', desc: 'โบตั๋นสีชมพูเข้มบนฉีโถวสีดำมัน', eff: { chk: { charm: 2 }, pre: 0.1, thr: 0.3 }, look: { lvl: 3, flowers: '#ee6f90', silk: '#c2456b' } });
+  add('head', 'h_qitou_jade', 'ฉีโถวหยกมุก', 4, { style: 'graceful', set: 'jade', desc: 'หยกขาวและมุกบนฉีโถว เย็นตาและทรงเกียรติ', eff: { chk: { wit: 2, charm: 1 }, pre: 0.12 }, look: { lvl: 4, flowers: '#f4efe6', silk: '#4a9a82', pinHead: 'jade' } });
+  add('head', 'h_qitou_ruby', 'ฉีโถวทับทิมแดง', 5, { style: 'bright', set: 'phoenix', desc: 'ทับทิมเม็ดโตกลางฉีโถว สีเลือดนกพิราบ', eff: { chk: { charm: 3 }, pre: 0.18, thr: 0.5 }, look: { lvl: 5, flowers: '#e8455f', silk: '#d83a52', pinHead: 'ruby' } });
+  add('head', 'h_qitou_orchid', 'ฉีโถวกล้วยไม้ไพลิน', 6, { style: 'grand', set: 'orchid', desc: 'กล้วยไม้ม่วงกับไพลินน้ำเงิน หายากและงดงามเงียบๆ', eff: { chk: { talent: 3 }, pre: 0.22 }, look: { lvl: 6, flowers: '#b894e8', silk: '#6a4cc0', pinHead: 'jade' } });
+  add('head', 'h_qitou_phoenix', 'ฉีโถวหงส์เพลิง', 6, { style: 'bright', set: 'phoenix', desc: 'ปีกหงส์ทองและทับทิม ลุกเป็นไฟกลางห้องโถง', eff: { chk: { charm: 3 }, pre: 0.25, thr: 1 }, look: { lvl: 6, flowers: '#ff7a5a', silk: '#d83a52', pinHead: 'ruby' } });
+  add('head', 'h_qitou_gold', 'ฉีโถวทองคำล้ำค่า', 7, { style: 'grand', set: 'phoenix', desc: 'ทองคำแท้ทั้งแผ่น หนักจนต้องฝึกเดินใหม่', eff: { chk: { charm: 2, wit: 2 }, pre: 0.3, thr: 0.7 }, look: { lvl: 7, flowers: '#ffd870', silk: '#d83a52', pinHead: 'ruby' } });
+  add('head', 'h_gift_jade', 'ปิ่นหยกขาวพระราชทาน', 3, { src: 'gift', style: 'graceful', set: 'jade', desc: 'ปิ่นหยกขาวที่ฮ่องเต้ทรงมอบเอง ไม่มีใครในวังมีเหมือน', eff: { chk: { charm: 2 }, fav: 0.2 }, look: { lvl: 3, flowers: '#f4efe6', silk: '#4a9a82', pinHead: 'jade' } });
+
+  /* ---------- สร้อยคอ (neck) ---------- */
+  add('neck', 'n_g4', 'สร้อยลูกปัดหยกประจำตำแหน่งปิน', 4, { src: 'rank', grant: 4, style: 'graceful', desc: 'สร้อยลูกปัดแบบราชสำนัก สีขาวหยก', eff: { pre: 0.1 }, look: { beads: 4 } });
+  add('neck', 'n_g6', 'สร้อยลูกปัดทองกุ้ยเฟย', 6, { src: 'rank', grant: 6, style: 'grand', desc: 'ลูกปัดทองครีมยาวถึงเอว มีจี้ทองห้อย', eff: { pre: 0.15 }, look: { beads: 6 } });
+  add('neck', 'n_g8', 'สร้อยมุกพระมเหสี', 8, { src: 'rank', grant: 8, style: 'grand', set: 'imperial', desc: 'สร้อยมุกหลวงสามสิบเม็ด', eff: { chk: { charm: 1 }, pre: 0.2 }, look: { beads: 8 } });
+  add('neck', 'n_jade_cord', 'จี้หยกร้อยด้ายแดง', 1, { style: 'plain', set: 'jade', desc: 'หยกชิ้นเล็กร้อยด้ายแดง กันภัยได้ตามความเชื่อ', eff: { thr: -0.3, chk: { talent: 1 } }, look: { pendant: 'jade' } });
+  add('neck', 'n_silver_lock', 'สร้อยเงินกุญแจอายุยืน', 2, { style: 'plain', desc: 'กุญแจเงินที่แม่ให้ ขอให้สุขภาพแข็งแรง', eff: { vir: 0.12, chk: { charm: 1 } }, look: { pendant: 'silver' } });
+  add('neck', 'n_pearl_string', 'สร้อยมุกเม็ดเล็ก', 3, { style: 'graceful', set: 'plum', desc: 'ไข่มุกขาวเรียงกลมเกลียว เรียบหรู', eff: { chk: { charm: 2 }, pre: 0.1 }, look: { beads: 4, col: '#f4efe6', bigCol: '#f4efe6' } });
+  add('neck', 'n_gold_ruyi', 'จี้ทองรูปหรุยอี้', 5, { style: 'grand', set: 'phoenix', desc: 'หรุยอี้ทองคำ สัญลักษณ์ของความสมปรารถนา', eff: { chk: { charm: 2, wit: 1 }, pre: 0.2 }, look: { pendant: 'gold' } });
+  add('neck', 'n_amber', 'สร้อยอำพันทองแดง', 6, { style: 'grand', set: 'phoenix', desc: 'อำพันเม็ดโต อบอุ่นเหมือนแสงเทียน', eff: { chk: { wit: 2 }, pre: 0.2 }, look: { beads: 6, col: '#e0a040', bigCol: '#b0601a' } });
+  add('neck', 'n_buddhist', 'ลูกประคำจันทน์ของไทเฮา', 2, { src: 'gift', style: 'sacred', desc: 'ไม้จันทน์หอมที่ไทเฮาใช้สวดมานาน ประทานให้เป็นของฝากใจ', eff: { vir: 0.3, thr: -0.5, chk: { wit: 1 } }, look: { beads: 4, col: '#8a5a34', bigCol: '#c89a2a' } });
+
+  /* ---------- ต่างหู (ear) ---------- */
+  add('ear', 'e_pearl_stud', 'ต่างหูมุกจากท่านแม่', 0, { src: 'start', style: 'plain', desc: 'ไข่มุกเม็ดเล็กๆ ที่แม่ถอดจากหูตัวเองให้', eff: { chk: { charm: 1 } }, look: { earring: 'pearl' } });
+  add('ear', 'e_jade_drop', 'ต่างหูหยกห้อย', 2, { style: 'graceful', set: 'jade', desc: 'หยกเขียวใสเป็นหยดน้ำ', eff: { chk: { wit: 1, charm: 1 } }, look: { earring: 'jade' } });
+  add('ear', 'e_gold_hook', 'ต่างหูทองห้อยมุก', 3, { style: 'graceful', set: 'plum', desc: 'ทองเกี่ยวหูห้อยไข่มุกหยดเดียว', eff: { chk: { charm: 2 } }, look: { earring: 'gold' } });
+  add('ear', 'e_ruby_drop', 'ต่างหูทับทิม', 4, { style: 'bright', set: 'plum', desc: 'ทับทิมเม็ดเล็กสีเลือด วับแวมเมื่อหันหน้า', eff: { chk: { charm: 3 }, thr: 0.3 }, look: { earring: 'ruby' } });
+  add('ear', 'e_sapphire_drop', 'ต่างหูไพลินห้อย', 5, { style: 'graceful', set: 'orchid', desc: 'ไพลินน้ำเงินเข้มห้อยลงมาเป็นหยด', eff: { chk: { talent: 2, wit: 1 }, pre: 0.1 }, look: { earring: 'sapphire' } });
+  add('ear', 'e_phoenix_drop', 'ต่างหูหงส์ทอง', 6, { style: 'grand', set: 'phoenix', desc: 'หงส์ทองจิ๋วห้อยไข่มุกสองเม็ด', eff: { chk: { charm: 3 }, pre: 0.2, thr: 0.4 }, look: { earring: 'gold' } });
+
+  /* ---------- ของติดตัว (charm) ---------- */
+  add('charm', 'c_start_scholar', 'ผ้าเช็ดหน้าปักไผ่', 0, { src: 'start', style: 'plain', desc: 'ผ้าเช็ดหน้าสีเขียวอ่อนปักไผ่ ฝีมือท่านแม่', eff: { chk: { wit: 1 } }, look: { kerchief: '#bfe0d2' } });
+  add('charm', 'c_start_noble', 'ถุงหอมจากบ้านเดิม', 0, { src: 'start', style: 'graceful', desc: 'ถุงหอมไหมปักลายตระกูล ใส่ดอกไม้แห้งจากสวนที่บ้าน', eff: { vir: 0.08 }, look: { sachet: '#e0707a' } });
+  add('charm', 'c_kerchief_plum', 'ผ้าเช็ดหน้าปักดอกเหมย', 1, { style: 'graceful', set: 'plum', desc: 'ปักเหมยแดงบนผ้าไหมขาว', eff: { chk: { charm: 1 } }, look: { kerchief: '#f4c0cc' } });
+  add('charm', 'c_sachet_herb', 'ถุงหอมสมุนไพรกันเคราะห์', 1, { style: 'plain', set: 'jade', desc: 'ใบมินต์ อบเชย และเปลือกส้มแห้ง กลิ่นสะอาดและน่าไว้ใจ', eff: { thr: -0.4, vir: 0.08 }, look: { sachet: '#7aa88a' } });
+  add('charm', 'c_kerchief_violet', 'ผ้าเช็ดหน้าปักกล้วยไม้', 2, { style: 'graceful', set: 'orchid', desc: 'ม่วงนวลปักกล้วยไม้สองดอก', eff: { chk: { talent: 1 } }, look: { kerchief: '#d8c8ec' } });
+  add('charm', 'c_sachet_silk', 'ถุงหอมไหมปักโบตั๋น', 3, { style: 'bright', set: 'peony', desc: 'ไหมแดงทองปักโบตั๋น กลิ่นลำใยหอมหวาน', eff: { chk: { charm: 2 } }, look: { sachet: '#c2456b' } });
+  add('charm', 'c_kerchief_gold', 'ผ้าเช็ดหน้าไหมทอง', 4, { style: 'grand', set: 'phoenix', desc: 'ไหมสีทองอ่อน ปักขอบด้วยด้ายทองแท้', eff: { pre: 0.12, chk: { charm: 1 } }, look: { kerchief: '#f0d890' } });
+  add('charm', 'c_jade_tassel', 'พู่หยกห้อยเอว', 5, { style: 'grand', set: 'peony', desc: 'พู่ไหมเขียวและหยกขาวห้อยข้างเอว ไหวเบาๆ เมื่อก้าวเดิน', eff: { chk: { wit: 1, charm: 1 }, pre: 0.15 }, look: { sachet: '#4a9a82' } });
+  add('charm', 'c_kerchief_meixing', 'ผ้าเช็ดหน้าปักมือของเหมยชิง', 1, { src: 'gift', style: 'graceful', desc: 'ตะเข็บไม่เท่ากัน แต่ปักด้วยใจทั้งดวง', eff: { vir: 0.2, chk: { talent: 1 } }, look: { kerchief: '#f2a0b8' } });
+  add('charm', 'c_gift_empress', 'ถุงหอมกำยานของฮองเฮา', 3, { src: 'gift', style: 'graceful', desc: 'กลิ่นกำยานหลวงจากตำหนักขุนหนิง ของขวัญที่ต้องคิดให้ดีก่อนรับ', eff: { pre: 0.1, thr: 0.3 }, look: { sachet: '#b22d3b' } });
+
+  /* starter kits by origin (equipped automatically) */
+  var kits = {
+    noble:   ['r_start_noble', 'h_start_noble', 'e_pearl_stud', 'c_start_noble'],
+    scholar: ['r_start_scholar', 'h_start_scholar', 'c_start_scholar'],
+    maid:    ['r_start_maid', 'h_start_maid'],
+  };
+  var byId = {};
+  items.forEach(function (i) { byId[i.id] = i; });
+  return { slots: slots, styles: styles, sets: sets, items: items, byId: byId, kits: kits, price: PRICE };
+})();

@@ -36,6 +36,7 @@ CSP-safe mini-language (no eval). Variables: **`S`** (stats) **`F`** (flags) **`
 Operators: `! && || ?? ?: == != === !== < <= > >= + - * / %` , parentheses, `min() max() abs() floor()`, member access `S.favor`, `F.met_emperor`, `F['x']`.
 Examples: `"S.favor >= 40 && !F.chu_down"`, `"rank >= 3 && (F.love_doctor || R.doctor >= 50)"`, `"origin == 'maid'"`, `"t == 0 && rank == 0"`.
 Unset flags are `undefined` (falsy). Unknown identifiers are an ERROR (validator catches).
+The variable **`W`** (wardrobe) is also available: `W.tier` (avg tier of robe+head), `W.dress` (tier − rank; ≥0 = dressed for the rank), `W.style` (robe style: plain|graceful|bright|grand|sacred), `W.set` (matching set id or null), `W.flash` (# of bright/grand pieces), `W.robe/head/neck/ear/charm` (equipped ids), `W.own.<item_id>` (owned). Example: `"W.style == 'plain' && rank >= 3"`, `check.mods: [{cond:'W.set', add:8}]`.
 
 ## 3. Effects (`fx`) — on nodes, choices (`fx`, `winFx`, `loseFx`), actions, rank-up
 ```js
@@ -46,6 +47,7 @@ fx: {
   unset: ['poisoned'],   inc: { r3_strikes: 1 },
   queue: [{ id: 'r3_arc_trial_b', in: 1 }],      // run that event at the START of the season (1+in) seasons from now (in:0 = next season)
   ap: 1,                                         // extra action points this season
+  give: ['h_gift_jade'],                          // grant wardrobe item(s) (ids in Q.WARDROBE.items; auto-equipped if better than the current piece)
   log: 'ข้อความสั้นๆ บันทึกลงสมุดเหตุการณ์',      // shown in the diary
   note: 'ข้อความเด่นที่แสดงเป็นแถบสั้นๆ',          // a highlighted toast with the node
 }

@@ -180,7 +180,7 @@
   }
   function portraitRaw(c, x, o) {
     o = o || {};
-    var key = [c, x || 'neutral', o.rank === undefined ? '' : o.rank, o.origin || '', o.bust ? 1 : 0].join('|');
+    var key = [c, x || 'neutral', o.rank === undefined ? '' : o.rank, o.origin || '', o.bust ? 1 : 0, o.outfit ? JSON.stringify(o.outfit) : ''].join('|');
     if (_pcache[key] !== undefined) return _pcache[key];
     var s = '';
     try { if (typeof window.portraitSVG === 'function') s = String(window.portraitSVG(c, x || 'neutral', o) || ''); } catch (e) { s = ''; }
@@ -192,7 +192,8 @@
   /* portrait(c, expr, {rank, origin, bust, vb}) → ready-to-insert svg string with unique ids */
   function portrait(c, x, o) {
     o = o || {};
-    var s = portraitRaw(c, x, { rank: o.rank, origin: o.origin, bust: o.bust });
+    var oo = o.outfit === true ? (Game.st ? QL.look(Game.st) : null) : (o.outfit || null);
+    var s = portraitRaw(c, x, { rank: o.rank, origin: o.origin, bust: o.bust, outfit: oo });
     if (o.vb) s = cropVB(s, o.vb);
     return uniq(s);
   }
@@ -499,7 +500,7 @@
     var idKey = [st.rank, st.origin, st.name].join('|');
     if (_topKey !== idKey || !$('#hud-id').firstChild) {
       _topKey = idKey;
-      $('#hud-id').innerHTML = '<span class="hid-ava">' + portrait('player', 'neutral', { rank: st.rank, origin: st.origin, bust: true }) + '</span>' +
+      $('#hud-id').innerHTML = '<span class="hid-ava">' + portrait('player', 'neutral', { rank: st.rank, origin: st.origin, bust: true, outfit: true }) + '</span>' +
         seal(st.rank, 'sm') + '<span class="hid-txt"><b>' + esc(st.name) + '</b><small>' + esc(hub.rankTitle) + ' · ' + esc(R.zh) + '</small></span>';
     }
     var total = Math.max(Q.CONST.apPerSeason, hub.ap), pips = '';
@@ -568,7 +569,8 @@
   function renderHero(hub) {
     var st = Game.st, R = Q.RANKS[st.rank];
     var expr = (st.S.health < 30 || st.F.poisoned) ? 'sad' : (st.S.favor >= 50 ? 'smile' : 'neutral');
-    var key = [st.rank, st.origin, expr, st.name, st.F.has_heir ? 1 : 0, st.F.poisoned ? 1 : 0, st.F.heir_name || ''].join('|');
+    var wsig = (QL.ensureW(st), Object.keys(st.W.eq).map(function (k) { return st.W.eq[k]; }).join(','));
+    var key = [st.rank, st.origin, expr, st.name, st.F.has_heir ? 1 : 0, st.F.poisoned ? 1 : 0, st.F.heir_name || '', wsig].join('|');
     var chips = '<span class="hc">อายุ ' + hub.date.age + '</span>';
     if (st.F.has_heir) chips += '<span class="hc heir">👶 ' + esc(typeof st.F.heir_name === 'string' ? st.F.heir_name : 'ทายาท') + '</span>';
     if (st.F.poisoned) chips += '<span class="hc poison">☠ ถูกพิษ</span>';
@@ -578,10 +580,11 @@
       if (el.getAttribute('data-key') === k2) { var ch = $('.hero-chips', el); if (ch) ch.innerHTML = chips; return; }
       el.setAttribute('data-key', k2);
       el.innerHTML = '<div class="hero-bg">' + bgSVG(st.origin !== 'maid' && st.rank === 0 ? 'family_home' : HALL_BG[st.rank], hub.date.season) + '</div><div class="hero-shade"></div>' +
-        '<div class="hero-fig">' + portrait('player', expr, { rank: st.rank, origin: st.origin, vb: '30 0 340 440' }) + '</div>' +
+        '<div class="hero-fig">' + portrait('player', expr, { rank: st.rank, origin: st.origin, vb: '30 0 340 440', outfit: true }) + '</div>' +
         '<div class="hero-info"><div class="hero-name">' + esc(st.name) + '</div>' +
         '<div class="hero-rank">' + seal(st.rank, 'sm') + '<span><b>' + esc(hub.rankTitle) + '</b><small>' + esc(R.zh) + '</small></span></div>' +
-        '<div class="hero-hall">🏠 ' + esc(R.hall) + '</div><div class="hero-chips">' + chips + '</div></div>';
+        '<div class="hero-hall">🏠 ' + esc(R.hall) + '</div><div class="hero-chips">' + chips + '</div>' +
+        '<button type="button" class="btn btn-ghost sm btn-wardrobe">👘 ตู้เสื้อผ้า</button></div>';
     });
   }
 
@@ -661,6 +664,7 @@
     $('#action-groups').classList.toggle('still', !!refresh);
     renderTop(hub); renderClimbStrip(hub); renderLadder(hub); renderHero(hub); renderStats(hub); renderRels(); renderActions(hub);
     Seen.rank(st.rank);
+    if (st.rank >= 1 && !refresh) tip('wd_intro', 'ท่านมี <b>ตู้เสื้อผ้า</b> แล้ว — เลือกชุด เครื่องหัว และเครื่องประดับได้ตามฐานะ ซื้อเพิ่มด้วยเงินตำลึง หรือรับเป็นของพระราชทานเมื่อเลื่อนขั้น เครื่องแต่งกายมีผลต่อการทอยเต๋าและความอิจฉาจากศัตรู', '.btn-wardrobe');
     if (!noSave && !st.cur && st.phase !== 'ended') Saves.save('auto', st);
     Game._deltas = null;
   }
@@ -771,7 +775,7 @@
       }
       if (sp.key !== key) {
         var changed = sp.key !== '';
-        sp.el.innerHTML = portrait(ce.c, expr, { rank: st.rank, origin: st.origin });
+        sp.el.innerHTML = portrait(ce.c, expr, { rank: st.rank, origin: st.origin, outfit: ce.c === 'player' });
         sp.key = key;
         if (changed) { sp.el.classList.remove('swap'); void sp.el.offsetWidth; sp.el.classList.add('swap'); }
       }
@@ -805,7 +809,7 @@
     nt.style.display = isNarr ? 'none' : '';
     var av = $('#speaker-avatar');
     if (!isNarr && !onStage(c) && c !== 'player') { av.innerHTML = portrait(c, v.x || 'neutral', { bust: true }); av.classList.add('on'); Seen.char(c); }
-    else if (!isNarr && c === 'player' && !onStage('player')) { av.innerHTML = portrait('player', v.x || 'neutral', { bust: true, rank: Game.st.rank, origin: Game.st.origin }); av.classList.add('on'); }
+    else if (!isNarr && c === 'player' && !onStage('player')) { av.innerHTML = portrait('player', v.x || 'neutral', { bust: true, rank: Game.st.rank, origin: Game.st.origin, outfit: true }); av.classList.add('on'); }
     else { av.innerHTML = ''; av.classList.remove('on'); }
     $('#caption').classList.remove('on');
     if (v.card && v.text) { var cp = $('#caption'); cp.textContent = v.card; cp.classList.add('on'); }
@@ -1078,6 +1082,7 @@
       var op = R.onPromote || {};
       Object.keys(op).forEach(function (k) { if (op[k]) rw += '<li><u>' + (k === 'silver' ? '銀' : esc(statIcon(k))) + '</u>' + esc(REWARD_LABEL[k] || statName(k)) + ' <b class="' + (k === 'threat' ? 'dn' : 'up') + '">' + sign(op[k]) + '</b></li>'; });
       rw += '<li><u>🏠</u>ที่ประทับ: <b>' + esc(R.hall) + '</b></li>';
+      if (info.gifts && info.gifts.length) rw += '<li><u>👘</u>ของพระราชทาน: <b class="up">' + esc(info.gifts.join(' · ')) + '</b></li>';
       if (R.stipend) rw += '<li><u>銀</u>เบี้ยหวัดประจำฤดู <b class="up">' + R.stipend + ' ตำลึง</b></li>';
     } else {
       rw += '<li><u>🏠</u>ย้ายไปประทับ: <b>' + esc(R.hall) + '</b></li><li><u>銀</u>เบี้ยหวัดประจำฤดู <b class="dn">' + R.stipend + ' ตำลึง</b></li>';
@@ -1085,7 +1090,7 @@
     $('#cer-rewards').innerHTML = rw;
     var d = QL.dateInfo(st);
     $('#cer-date').textContent = 'รัชศก' + Q.ERA + ' ปีที่ ' + d.year + ' · ' + d.seasonName;
-    $('#cer-portrait').innerHTML = portrait('player', up ? 'smile' : 'sad', { rank: st.rank, origin: st.origin, vb: '0 0 400 560' });
+    $('#cer-portrait').innerHTML = portrait('player', up ? 'smile' : 'sad', { rank: st.rank, origin: st.origin, vb: '0 0 400 560', outfit: true });
     $('#cer-sparks').innerHTML = (function () { var s = '', R2 = mk(to * 31 + 5); for (var i = 0; i < 28; i++) s += '<i class="spark amb" style="--x:' + f1(R2() * 100) + '%;--d:' + f1(5 + R2() * 6) + 's;--dl:-' + f1(R2() * 8) + 's;--s:' + f1(2 + R2() * 4) + 'px"></i>'; return s; })();
     Seen.rank(st.rank);
     showOverlay('ceremony');
@@ -1407,12 +1412,94 @@
       '<section><h4>🎯 เป้าหมาย</h4><p>เริ่มต้นจากสตรีธรรมดาในวังต้องห้าม ไต่ขึ้นบันได 9 ขั้น — <b>ต่าอิง → ฉังไจ้ → กุ้ยเหริน → ปิน → เฟย → กุ้ยเฟย → หวงกุ้ยเฟย → ฮองเฮา → ไทเฮา</b> ทุกก้าวมีผู้กีดขวางและทุกชัยชนะมีราคา</p></section>' +
       '<section><h4>🌸 ฤดูกาลและแต้มกำลัง</h4><p>1 ตา = 1 ฤดู (4 ฤดู = 1 ปี) แต่ละฤดูท่านมี <b>2 แต้มกำลัง</b> ใช้กับการกระทำในหน้าวังหลัง เมื่อพร้อมให้กด <b>สิ้นสุดฤดูกาล</b> เหตุการณ์ต่างๆ จะเกิดขึ้นเองเมื่อเริ่มฤดูใหม่</p></section>' +
       '<section><h4>⛰ บันไดฐานันดร</h4><p>ดูความก้าวหน้าได้ตลอดเวลาที่ <b>บันไดยศ</b> — การเลื่อนขั้นต้องครบทุกเงื่อนไข: อยู่ในขั้นนั้นนานพอ · ความโปรดปราน · ศักดิ์ศรี · และบททดสอบประจำขั้น ที่เป็นเรื่องราวสำคัญของแต่ละขั้น</p></section>' +
-      '<section><h4>♥ ความโปรดปรานและความสัมพันธ์</h4><p>ความโปรดปรานของฮ่องเต้ <b>จางลง 3 ทุกฤดู</b> ต้องหมั่นสร้างโอกาสพบพระองค์ ส่วนฮองเฮา ไทเฮา และคนรอบตัว ล้วนมีผลต่อชะตาท่าน</p></section>' +
+      '<section><h4>♥ ความโปรดปรานและความสัมพันธ์</h4><p>ความโปรดปรานของฮ่องเต้ <b>จางลงทุกฤดู</b> ต้องหมั่นสร้างโอกาสพบพระองค์ ส่วนฮองเฮา ไทเฮา และคนรอบตัว ล้วนมีผลต่อชะตาท่าน</p></section>' +
       '<section><h4>🎲 การเลือกและโอกาส</h4><p>ตัวเลือกที่มี <b>%</b> คือการทดสอบคุณสมบัติ ยิ่งสูงยิ่งสำเร็จง่าย · ป้าย <b>銀</b> คือเงินตำลึงที่ต้องจ่าย · ภัยรอบกายสูง เหตุร้ายจะมาบ่อยขึ้น</p></section>' +
+      '<section><h4>👘 ตู้เสื้อผ้า</h4><p>กดปุ่ม <b>ตู้เสื้อผ้า</b> ในหน้าหลักเพื่อเลือก <b>ชุด · เครื่องหัว · สร้อยคอ · ต่างหู · ของติดตัว</b> ได้ตามฐานะ ลองสวมก่อนซื้อได้ รับของพระราชทานเมื่อเลื่อนขั้น และได้ของขวัญจากผู้คนในวัง ของแต่ละชิ้นเพิ่มโอกาสตอนทอยเต๋า (โฉมงาม พรสวรรค์ ปัญญา) หรือส่งผลต่อศักดิ์ศรีและภัยรอบกายทุกฤดู — ชุดหรูสะดุดตาช่วยให้ถูกจดจำ แต่ก็ล่อสายตาศัตรูด้วย · สวมชุด เครื่องหัว และเครื่องประดับโทนเดียวกันครบ จะได้โบนัสชุดเซ็ต</p></section>' +
       '<section><h4>📜 ตอนจบ</h4><p>มีตอนจบมากมายตามวิถีที่ท่านเลือก ทั้งสุข เศร้า และสงบ ดูได้ที่ <b>จดหมายเหตุ</b> · ระบบบันทึกอัตโนมัติทุกครั้งที่กลับสู่หน้าวังหลัง</p></section>' +
       '<section><h4>⌨ ปุ่มลัด</h4><p><b>Space / Enter</b> ไปต่อ · <b>1–4</b> เลือกตัวเลือก · <b>Esc</b> เมนู</p></section>' +
       '<section class="credits"><h4>✦ เครดิต</h4><p>ลิขิตหงส์ · วังหลังต้าชิง<br>เกมกลยุทธ์ผสมวิชวลโนเวล ภาพและเสียงทั้งหมดสร้างด้วยโค้ด<br>เรื่องราวเป็นนิยายสมมติ — รัชศกเฉิงผิง ฮ่องเต้ ราชวงศ์ และตัวละครทั้งหมดไม่มีตัวตนจริง ชื่อสกุลแมนจูใช้เพื่อบรรยากาศเท่านั้น</p></section></div>';
   }
+
+
+  /* ============================================================
+     11b. WARDROBE (ตู้เสื้อผ้า · เครื่องหัว · เครื่องประดับ)
+     ============================================================ */
+  var _wd = { tryId: null };
+  var GEM_COL = { pearl: '#f1e8dc', jade: '#7ccaa0', gold: '#e8b43e', ruby: '#d83a52', sapphire: '#4a6cd8', silver: '#cfd6e0' };
+  function wdSwatch(it) {
+    if (it.sw) return 'background:linear-gradient(135deg,' + it.sw[0] + ' 0 55%,' + it.sw[1] + ' 55% 100%)';
+    var L = it.look || {};
+    var col = L.col || L.flowers || L.kerchief || L.sachet || GEM_COL[L.earring] || GEM_COL[L.pendant] || L.bigCol || (Q.RANKS[Math.min(9, it.tier)] || {}).color || '#d9a441';
+    var col2 = L.trim || L.silk || (L.beads ? '#e8b43e' : null) || col;
+    return 'background:linear-gradient(135deg,' + col + ' 0 55%,' + col2 + ' 55% 100%)';
+  }
+  function wdAfterChange() {
+    var st = Game.st; if (!st) return;
+    try { renderHub(true, true); } catch (e) { /* ignore */ }
+    if (!st.cur && st.phase !== 'ended') Saves.save('auto', st);
+  }
+  function renderWardrobe(el, slotId) {
+    var st = Game.st, w = QL.wardrobe(st);
+    var slot = w.slots.filter(function (x) { return x.id === slotId; })[0];
+    var tryIt = _wd.tryId ? Q.WARDROBE.byId[_wd.tryId] : null;
+    if (tryIt && tryIt.slot !== slotId) tryIt = null;
+    var outfit = QL.look(st);
+    if (tryIt) outfit[tryIt.slot] = tryIt.look;
+    var fig = portrait('player', 'smile', { rank: st.rank, origin: st.origin, vb: '30 0 340 440', outfit: outfit });
+    var effHtml = w.effLines.length ? w.effLines.map(function (l) { return '<li class="' + (l.good ? 'up' : 'dn') + '">' + esc(l.t) + '</li>'; }).join('') : '<li class="mute">ยังไม่มีผลพิเศษ</li>';
+    var setHtml = w.set
+      ? '<div class="wd-set on"><b>✦ ' + esc(w.setTh) + '</b><small>ครบชุดเซ็ต! ' + w.setLines.map(function (l) { return esc(l.t); }).join(' · ') + '</small></div>'
+      : '<div class="wd-set"><b>ชุดเซ็ต</b><small>สวมชุด เครื่องหัว และเครื่องประดับอย่างน้อย 1 ชิ้นที่มีโทนเดียวกัน (ดูป้ายบนการ์ด) เพื่อรับโบนัสเพิ่ม</small></div>';
+    var tryBar = '';
+    if (tryIt) {
+      var owned = !!st.W.own[tryIt.id], can = !owned && tryIt.price > 0 && st.rank >= tryIt.minRank && st.S.silver >= tryIt.price;
+      tryBar = '<div class="wd-try"><span>👁 กำลังลองสวม: <b>' + esc(tryIt.th) + '</b></span>' +
+        (owned ? '<button type="button" class="btn btn-primary sm" data-a="equip" data-id="' + tryIt.id + '"><span>สวมใส่</span></button>'
+          : can ? '<button type="button" class="btn btn-primary sm" data-a="buy" data-id="' + tryIt.id + '"><span>ซื้อ 銀 ' + tryIt.price + '</span></button>' : '') +
+        '<button type="button" class="btn btn-ghost sm" data-a="untry"><span>เลิกลอง</span></button></div>';
+    }
+    var list = slot.items.map(function (it) {
+      var tags = '<span class="wd-tag tier">' + esc(it.minRank === 0 ? 'ทุกฐานะ' : it.rankTh + 'ขึ้นไป') + '</span>' +
+        (it.styleTh ? '<span class="wd-tag style">' + esc(it.styleTh) + '</span>' : '') + (it.setTh ? '<span class="wd-tag set">✦ ' + esc(it.setTh) + '</span>' : '');
+      var eff = it.eff.length ? '<ul class="wd-eff">' + it.eff.map(function (l) { return '<li class="' + (l.good ? 'up' : 'dn') + '">' + esc(l.t) + '</li>'; }).join('') + '</ul>' : '';
+      var act = '';
+      if (it.equipped) act = '<span class="wd-worn">✓ สวมอยู่</span>' + ((slotId === 'robe' || slotId === 'head') ? '' : '<button type="button" class="btn btn-ghost sm" data-a="unequip"><span>ถอด</span></button>');
+      else if (it.owned) act = it.wearable ? '<button type="button" class="btn btn-secondary sm" data-a="equip" data-id="' + it.id + '"><span>สวมใส่</span></button>' : '<span class="wd-lock">🔒 ' + esc(it.why) + '</span>';
+      else {
+        if (it.price > 0) act = it.buyable ? '<button type="button" class="btn btn-primary sm" data-a="buy" data-id="' + it.id + '"><span>ซื้อ 銀 ' + it.price + '</span></button>'
+          : it.tooPoor ? '<span class="wd-lock">銀 ' + it.price + ' · เงินไม่พอ</span>' : '<span class="wd-lock">🔒 ' + esc(it.why) + ' · 銀 ' + it.price + '</span>';
+        else act = '<span class="wd-lock">🎁 ' + (it.src === 'rank' ? 'รับพระราชทานเมื่อเป็น' + esc(Q.RANKS[it.grant].th) : 'ได้รับจากเหตุการณ์ในวัง') + '</span>';
+        act += '<button type="button" class="btn btn-ghost sm" data-a="try" data-id="' + it.id + '"><span>ลองสวม</span></button>';
+      }
+      return '<div class="wd-item' + (it.equipped ? ' eq' : it.owned ? ' own' : '') + (tryIt && tryIt.id === it.id ? ' trying' : '') + '"><i class="wd-sw" style="' + wdSwatch(it) + '"></i>' +
+        '<div class="wd-info"><b>' + esc(it.th) + '</b><div class="wd-tags">' + tags + '</div><p>' + esc(it.desc) + '</p>' + eff + '</div><div class="wd-act">' + act + '</div></div>';
+    }).join('');
+    var worn = Q.WARDROBE.slots.map(function (sl) { var id = st.W.eq[sl.id], it = id && Q.WARDROBE.byId[id]; return '<li><u>' + sl.icon + '</u><span>' + esc(it ? it.th : '—') + '</span></li>'; }).join('');
+    el.innerHTML = '<div class="wd"><aside class="wd-side"><div class="wd-fig">' + fig + '<div class="wd-name"><b>' + esc(st.name) + '</b><small>' + esc(QL.rankTitle(st)) + '</small></div></div>' +
+      '<div class="wd-sum"><div class="wd-silver"><u>銀</u>' + w.silver + ' ตำลึง</div><h4>ผลของเครื่องแต่งกาย</h4><ul class="wd-eff big">' + effHtml + '</ul>' + setHtml + '<h4>ที่สวมอยู่</h4><ul class="wd-worn-list">' + worn + '</ul></div></aside>' +
+      '<section class="wd-main">' + tryBar + '<div class="wd-hint">' + esc(slotId === 'robe' ? 'ชุดตามฐานะต้องสวมเสมอ ยิ่งสูงศักดิ์ยิ่งสะดุดตา — และยิ่งเป็นเป้าสายตา' : slotId === 'head' ? 'เครื่องหัวบอกฐานะและรสนิยมของท่านก่อนที่ท่านจะเอ่ยปาก' : 'เครื่องประดับชิ้นเล็กๆ ที่บางครั้งตัดสินความประทับใจแรก') + '</div>' +
+      '<div class="wd-list">' + (list || '<p class="mute">ยังไม่มีสิ่งของในหมวดนี้</p>') + '</div></section></div>';
+    $$('[data-a]', el).forEach(function (b) {
+      b.addEventListener('click', function () {
+        var a = b.dataset.a, id = b.dataset.id, r;
+        if (a === 'try') { _wd.tryId = id; snd('page'); renderWardrobe(el, slotId); return; }
+        if (a === 'untry') { _wd.tryId = null; snd('page'); renderWardrobe(el, slotId); return; }
+        if (a === 'equip') { r = QL.equip(st, id); if (!r.ok) { toast(r.why); return; } _wd.tryId = null; snd('pick'); wdAfterChange(); renderWardrobe(el, slotId); return; }
+        if (a === 'unequip') { r = QL.unequip(st, slotId); if (!r.ok) { toast(r.why); return; } snd('page'); wdAfterChange(); renderWardrobe(el, slotId); return; }
+        if (a === 'buy') {
+          r = QL.buy(st, id); if (!r.ok) { toast(r.why); snd('fail'); return; }
+          QL.equip(st, id); _wd.tryId = null; snd('chime'); toast('ซื้อ ' + Q.WARDROBE.byId[id].th + ' แล้ว · สวมใส่ให้เรียบร้อย'); wdAfterChange(); renderWardrobe(el, slotId);
+        }
+      });
+    });
+  }
+  function openWardrobe(slot) {
+    var st = Game.st; if (!st) return;
+    QL.ensureW(st); _wd.tryId = null;
+    var tabs = Q.WARDROBE.slots.map(function (sl) { return { id: sl.id, label: sl.icon + ' ' + sl.th, render: function (el) { _wd.tryId = null; renderWardrobe(el, sl.id); } }; });
+    openModal({ title: 'ตู้เสื้อผ้า', cls: 'modal-wardrobe', tabs: tabs, start: slot || 'robe' });
+  }
+  Game.openWardrobe = openWardrobe;
 
   function menuTabs(inGame) {
     var t = [{ id: 'save', label: inGame ? 'บันทึก' : 'โหลดเกม', render: tabSaves }];
@@ -1539,6 +1626,7 @@
     $$('#hub-tabs button').forEach(function (b) { b.onclick = function () { snd('page'); setHubTab(b.dataset.tab); }; });
     $('#climb-strip').onclick = function () { setHubTab('ladder'); };
     $('#btn-menu').onclick = function () { openMenu(); };
+    document.addEventListener('click', function (e) { var b = e.target && e.target.closest ? e.target.closest('.btn-wardrobe') : null; if (b) { e.preventDefault(); openWardrobe(); } });
     $('#btn-end-season').onclick = onEndSeasonClick;
     $('#action-groups').addEventListener('click', function (e) {
       var b = e.target.closest ? e.target.closest('.action-card') : null;

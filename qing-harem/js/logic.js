@@ -11,12 +11,14 @@ var QL = (function () {
   var C = Q.CONST;
   var EV = {};
   var ACT = {};
+  var WI = {};                  // wardrobe item index
   var strict = false;           // validator sets true → cond errors throw
 
   function reindex() {
     EV = {}; ACT = {};
     Q.events.forEach(function (e) { EV[e.id] = e; });
     Q.ACTIONS.forEach(function (a) { ACT[a.id] = a; });
+    WI = {}; if (Q.WARDROBE) Q.WARDROBE.items.forEach(function (i) { WI[i.id] = i; });
   }
   function warn() { if (!strict && typeof console !== 'undefined') console.warn.apply(console, arguments); }
   function copy(o) { return JSON.parse(JSON.stringify(o)); }
@@ -148,14 +150,17 @@ var QL = (function () {
   }
   var astCache = {};
   function getAst(expr) { return astCache[expr] || (astCache[expr] = parse(String(expr))); }
-  function envOf(st) {
-    return { S: st.S, F: st.F, R: st.R, rank: st.rank, sir: st.sir, season: st.t % 4,
-             year: Math.floor(st.t / 4) + 1, t: st.t, age: C.startAge + Math.floor(st.t / 4), origin: st.origin };
+  function envOf(st, needW) {
+    var e = { S: st.S, F: st.F, R: st.R, rank: st.rank, sir: st.sir, season: st.t % 4,
+              year: Math.floor(st.t / 4) + 1, t: st.t, age: C.startAge + Math.floor(st.t / 4), origin: st.origin };
+    if (needW) e.W = wardrobeEnv(st);
+    return e;
   }
+  var USES_W = /\bW\b/;
   function cond(expr, st) {
     if (expr === undefined || expr === null || expr === '' || expr === true) return true;
     if (expr === false) return false;
-    try { return !!evalAst(getAst(expr), envOf(st)); }
+    try { return !!evalAst(getAst(expr), envOf(st, USES_W.test(expr))); }
     catch (e) { if (strict) throw e; warn('[cond]', expr, e.message); return false; }
   }
 
@@ -201,6 +206,7 @@ var QL = (function () {
     Object.keys(Q.INIT_FLAGS).forEach(function (k) { st.F[k] = Q.INIT_FLAGS[k]; });
     Object.keys(o.start.F || {}).forEach(function (k) { st.F[k] = o.start.F[k]; });
     if (opts.gift && Q.GIFTS[opts.gift]) applyFx(st, Q.GIFTS[opts.gift].fx);
+    ensureW(st);
     st.flash = null;
     return st;
   }
@@ -238,8 +244,149 @@ var QL = (function () {
     if (fx.inc) Object.keys(fx.inc).forEach(function (n) { st.F[n] = (Number(st.F[n]) || 0) + fx.inc[n]; });
     if (fx.queue) fx.queue.forEach(function (q) { st.queue.push({ id: q.id, due: st.t + 1 + (q['in'] || 0) }); });
     if (fx.ap) st.ap = Math.max(0, st.ap + fx.ap);
+    if (fx.give) fx.give.forEach(function (id) { giveItem(st, id); });
     if (fx.log) st.log.push({ t: st.t, text: fill(st, fx.log) });
     if (fx.note) { var f = st.flash || (st.flash = { S: {}, R: {}, notes: [] }); f.notes.push(fill(st, fx.note)); }
+  }
+
+
+  /* ---------------- wardrobe (ตู้เสื้อผ้า) ---------------- */
+  var CHK_TH = { charm: 'โฉมงาม', talent: 'พรสวรรค์', wit: 'ปัญญา' };
+  function ensureW(st) {
+    if (!st.W || typeof st.W !== 'object') { st.W = { own: {}, eq: {}, fr: {} }; initWardrobe(st); }
+    if (!st.W.own) st.W.own = {}; if (!st.W.eq) st.W.eq = {}; if (!st.W.fr) st.W.fr = {};
+    return st.W;
+  }
+  function wearable(st, it) { return !!it && st.rank >= it.minRank; }
+  function slotItem(st, slot) { var id = ensureW(st).eq[slot]; return id ? WI[id] : null; }
+  function flashNote(st, text) { var f = st.flash || (st.flash = { S: {}, R: {}, notes: [] }); f.notes.push(text); }
+  function giveItem(st, id, quiet) {
+    var it = WI[id];
+    if (!it) { warn('give: unknown wardrobe item', id); return false; }
+    var W = ensureW(st);
+    if (W.own[id]) return false;
+    W.own[id] = true;
+    var cur = slotItem(st, it.slot);
+    var auto = wearable(st, it) && (!cur || !wearable(st, cur) || it.tier >= cur.tier);
+    if (auto) W.eq[it.slot] = id;
+    if (!quiet) {
+      flashNote(st, 'ได้รับ ' + it.th + (auto ? ' · สวมใส่ให้แล้ว' : ' · เก็บเข้าตู้เสื้อผ้า'));
+      st.log.push({ t: st.t, text: 'ได้รับ' + it.th });
+    }
+    return true;
+  }
+  function grantsFor(st, rank, quiet) {
+    var got = [];
+    Q.WARDROBE.items.forEach(function (it) { if (it.grant === rank && giveItem(st, it.id, quiet)) got.push(it.id); });
+    return got;
+  }
+  function initWardrobe(st) {
+    (Q.WARDROBE.kits[st.origin] || []).forEach(function (id) { giveItem(st, id, true); });
+    for (var r = 1; r <= st.rank; r++) grantsFor(st, r, true);
+  }
+  function validateWardrobe(st) {
+    var W = ensureW(st);
+    Q.WARDROBE.slots.forEach(function (s) {
+      var it = slotItem(st, s.id);
+      if (it && !wearable(st, it)) { delete W.eq[s.id]; it = null; }
+      if (!it && (s.id === 'robe' || s.id === 'head')) {
+        var best = null;
+        Object.keys(W.own).forEach(function (id) { var c = WI[id]; if (c && c.slot === s.id && wearable(st, c) && (!best || c.tier > best.tier)) best = c; });
+        if (best) W.eq[s.id] = best.id;
+      }
+    });
+  }
+  function wardrobeEff(st) {
+    var out = { chk: { charm: 0, talent: 0, wit: 0 }, thr: 0, pre: 0, vir: 0, fav: 0, set: null, setTh: null, tier: 0, style: 'plain', flash: 0, parts: {} };
+    function addEff(e) {
+      if (!e) return;
+      if (e.chk) Object.keys(e.chk).forEach(function (k) { out.chk[k] = (out.chk[k] || 0) + e.chk[k]; });
+      ['thr', 'pre', 'vir', 'fav'].forEach(function (k) { if (e[k]) out[k] += e[k]; });
+    }
+    var sets = {};
+    Q.WARDROBE.slots.forEach(function (s) {
+      var it = slotItem(st, s.id);
+      if (!wearable(st, it)) return;
+      out.parts[s.id] = it; addEff(it.eff);
+      if (it.set) (sets[it.set] = sets[it.set] || {})[s.id] = true;
+      if (it.style === 'bright' || it.style === 'grand') out.flash++;
+    });
+    Object.keys(sets).forEach(function (k) {
+      var o = sets[k];
+      if (!out.set && o.robe && o.head && (o.neck || o.ear || o.charm)) { out.set = k; out.setTh = Q.WARDROBE.sets[k].th; addEff(Q.WARDROBE.sets[k].eff); }
+    });
+    var rb = out.parts.robe, hd = out.parts.head;
+    out.tier = rb && hd ? Math.round((rb.tier + hd.tier) / 2) : (rb ? rb.tier : 0);
+    out.style = rb ? rb.style : 'plain';
+    return out;
+  }
+  function wardrobeEnv(st) {
+    var e = wardrobeEff(st), W = ensureW(st);
+    return { tier: e.tier, dress: e.tier - st.rank, style: e.style, set: e.set, flash: e.flash,
+             robe: W.eq.robe, head: W.eq.head, neck: W.eq.neck, ear: W.eq.ear, charm: W.eq.charm, own: W.own };
+  }
+  function effLines(e) {
+    var L = [];
+    if (!e) return L;
+    if (e.chk) Object.keys(e.chk).forEach(function (k) { if (e.chk[k]) L.push({ t: CHK_TH[k] + ' +' + e.chk[k] + ' เมื่อทอยเต๋า', good: true }); });
+    function f(v) { return (Math.round(v * 100) / 100) + ''; }
+    if (e.pre) L.push({ t: 'ศักดิ์ศรี +' + f(e.pre) + ' ต่อฤดู', good: true });
+    if (e.fav) L.push({ t: 'ความโปรดปราน +' + f(e.fav) + ' ต่อฤดู', good: true });
+    if (e.vir) L.push({ t: 'คุณธรรม +' + f(e.vir) + ' ต่อฤดู', good: true });
+    if (e.thr) L.push({ t: 'ภัยรอบกาย ' + (e.thr > 0 ? '+' : '') + f(e.thr) + ' ต่อฤดู', good: e.thr < 0 });
+    return L;
+  }
+  function look(st) {
+    var out = {};
+    Q.WARDROBE.slots.forEach(function (s) { var it = slotItem(st, s.id); out[s.id] = wearable(st, it) ? it.look : null; });
+    return out;
+  }
+  function equip(st, id) {
+    var it = WI[id], W = ensureW(st);
+    if (!it) return { ok: false, why: 'ไม่พบสิ่งของชิ้นนี้' };
+    if (!W.own[id]) return { ok: false, why: 'ยังไม่มีชิ้นนี้ในตู้เสื้อผ้า' };
+    if (!wearable(st, it)) return { ok: false, why: 'ฐานะยังไม่ถึง — ต้องเป็น' + Q.RANKS[it.minRank].th };
+    W.eq[it.slot] = id;
+    return { ok: true };
+  }
+  function unequip(st, slot) {
+    var W = ensureW(st);
+    if (slot === 'robe' || slot === 'head') return { ok: false, why: 'ชุดและเครื่องหัวต้องสวมเสมอ' };
+    delete W.eq[slot];
+    return { ok: true };
+  }
+  function buy(st, id) {
+    var it = WI[id], W = ensureW(st);
+    if (!it || !(it.price > 0)) return { ok: false, why: 'ชิ้นนี้ไม่มีขาย' };
+    if (W.own[id]) return { ok: false, why: 'มีชิ้นนี้แล้ว' };
+    if (!wearable(st, it)) return { ok: false, why: 'ฐานะยังไม่ถึง — ต้องเป็น' + Q.RANKS[it.minRank].th };
+    if (st.S.silver < it.price) return { ok: false, why: 'เงินตำลึงไม่พอ' };
+    st.S.silver -= it.price; W.own[id] = true;
+    st.log.push({ t: st.t, text: 'ซื้อ' + it.th + ' (' + it.price + ' ตำลึง)' });
+    return { ok: true, price: it.price };
+  }
+  function wardrobe(st) {
+    var W = ensureW(st), eff = wardrobeEff(st);
+    var slots = Q.WARDROBE.slots.map(function (s) {
+      var list = Q.WARDROBE.items.filter(function (it) {
+        if (it.slot !== s.id) return false;
+        if (W.own[it.id]) return true;
+        if (it.src === 'shop') return true;
+        if (it.src === 'rank') return it.grant <= st.rank + 1;
+        return false;
+      }).sort(function (a, b) { return a.tier - b.tier || (a.id < b.id ? -1 : 1); }).map(function (it) {
+        var owned = !!W.own[it.id], ok = wearable(st, it), why = null;
+        if (!ok) why = 'ต้องเป็น' + Q.RANKS[it.minRank].th;
+        return { id: it.id, th: it.th, desc: it.desc || '', tier: it.tier, minRank: it.minRank, rankTh: Q.RANKS[it.minRank].th, price: it.price, src: it.src, grant: it.grant,
+                 style: it.style, styleTh: Q.WARDROBE.styles[it.style] || '', set: it.set || null, setTh: it.set ? Q.WARDROBE.sets[it.set].th : null,
+                 owned: owned, equipped: W.eq[it.slot] === it.id, wearable: ok, why: why, buyable: !owned && it.price > 0 && ok && st.S.silver >= it.price,
+                 tooPoor: !owned && it.price > 0 && ok && st.S.silver < it.price, eff: effLines(it.eff), look: it.look, sw: it.sw || null };
+      });
+      return { id: s.id, th: s.th, icon: s.icon, cat: s.cat, equipped: W.eq[s.id] || null, items: list };
+    });
+    var setLines = eff.set ? effLines(Q.WARDROBE.sets[eff.set].eff) : [];
+    return { slots: slots, eff: eff, effLines: effLines({ chk: eff.chk, thr: eff.thr, pre: eff.pre, vir: eff.vir, fav: eff.fav }), set: eff.set, setTh: eff.setTh, setLines: setLines,
+             silver: st.S.silver, sets: Q.WARDROBE.sets };
   }
 
   /* ---------------- ranks ---------------- */
@@ -250,12 +397,16 @@ var QL = (function () {
     st.F['rank' + st.rank] = true;
     var r = Q.RANKS[st.rank];
     if (r.onPromote) applyFx(st, r.onPromote);
+    var gifts = grantsFor(st, st.rank, false);
+    validateWardrobe(st);
+    st.promoted.gifts = gifts.map(function (id) { return WI[id].th; });
     st.log.push({ t: st.t, text: 'เลื่อนขั้นเป็น' + r.th + ' (' + r.zh + ')' });
   }
   function demote(st, n) {
     var from = st.rank;
     st.rank = Math.max(0, st.rank - n); st.sir = 0; st.promoReady = null;
     if (st.rank < 1) { st.rank = 1; if (!st.pendingEnding) st.pendingEnding = 'end_cold_palace'; }
+    validateWardrobe(st);
     st.log.push({ t: st.t, text: 'ถูกลดขั้นเหลือ' + Q.RANKS[st.rank].th });
     st.demoted = { from: from, to: st.rank };
   }
@@ -363,6 +514,15 @@ var QL = (function () {
     var th0 = st.S.threat;
     var dTh = -C.threatDecay + Math.floor(st.S.favor / C.threatFavorDiv) + Math.floor(st.S.prestige / C.threatPrestigeDiv) + (st.rank >= C.threatRankFrom ? 1 : 0);
     st.S.threat = clampStat('threat', th0 + dTh); rep.threatDelta = st.S.threat - th0;
+    // wardrobe drift (fractions accumulate until they reach a whole point)
+    var we = wardrobeEff(st), fr = ensureW(st).fr, wfl = {};
+    fr.threat = (fr.threat || 0) + we.thr; fr.prestige = (fr.prestige || 0) + we.pre; fr.virtue = (fr.virtue || 0) + we.vir; fr.favor = (fr.favor || 0) + we.fav;
+    ['threat', 'prestige', 'virtue', 'favor'].forEach(function (k) {
+      var v = fr[k], n = v >= 0 ? Math.floor(v) : Math.ceil(v);
+      if (n) { fr[k] = v - n; wfl[k] = n; }
+    });
+    if (Object.keys(wfl).length) { applyFx(st, wfl); rep.wardrobe = wfl; }
+    st.flash = null;
     var h0 = st.S.health;
     if (st.F.poisoned) {
       st.S.health = clampStat('health', st.S.health - C.poisonDrain); rep.notes.push('พิษในกายยังกัดกินสุขภาพของท่าน');
@@ -473,7 +633,12 @@ var QL = (function () {
   }
   function chance(st, ch) {
     var stats = Array.isArray(ch.stat) ? ch.stat : [ch.stat], sum = 0;
-    stats.forEach(function (k) { sum += (k === 'luck') ? 50 : (st.S[k] !== undefined ? st.S[k] : 50); });
+    var wb = null;
+    stats.forEach(function (k) {
+      var base = (k === 'luck') ? 50 : (st.S[k] !== undefined ? st.S[k] : 50);
+      if (k !== 'luck') { wb = wb || wardrobeEff(st); base += wb.chk[k] || 0; }
+      sum += base;
+    });
     var v = sum / stats.length, mod = 0;
     (ch.mods || []).forEach(function (m) { if (cond(m.cond, st)) mod += m.add; });
     return Math.max(0.05, Math.min(0.95, 0.5 + (v + mod - ch.dc) / C.checkDivisor));
@@ -557,6 +722,7 @@ var QL = (function () {
     actions: actions, doAction: doAction, hub: hub,
     nextPending: nextPending, startEvent: startEvent, view: view, advance: advance, choose: choose, ackPromotion: ackPromotion,
     systemEnd: systemEnd, summary: summary, rnd: rnd,
+    wardrobe: wardrobe, wardrobeEff: wardrobeEff, equip: equip, unequip: unequip, buy: buy, give: giveItem, look: look, ensureW: ensureW, effLines: effLines,
     event: function (id) { return EV[id]; }, action: function (id) { return ACT[id]; },
   };
 })();

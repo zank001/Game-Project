@@ -969,3 +969,70 @@ body[data-screen="hub-screen"] .tip-root { top: calc(142px + var(--st)); }
   .dialogue-text { font-size: 23px; }
   .hero { height: 250px; }
 }
+
+/* ============================================================
+   WARDROBE (ตู้เสื้อผ้า · เครื่องหัว · เครื่องประดับ)
+   ============================================================ */
+.btn-wardrobe { align-self: flex-start; margin-top: 4px; min-height: 38px; padding: 5px 14px; font-size: 14px; }
+.modal-wardrobe .modal-body { padding: 12px 14px 18px; }
+.modal-wardrobe .mtab { padding: 8px 12px; }
+.wd { display: grid; grid-template-columns: minmax(230px, 290px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.wd-side { position: sticky; top: 0; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.wd-fig { position: relative; aspect-ratio: 340 / 400; overflow: hidden; border-radius: 12px; border: 1px solid var(--gold-dim); background: radial-gradient(ellipse at 50% 30%, rgba(217, 164, 65, .22), rgba(0, 0, 0, 0) 62%), linear-gradient(180deg, #4a1a28, #1c0b12); box-shadow: inset 0 0 0 3px rgba(0, 0, 0, .35); }
+.wd-fig svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.wd-name { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 10px 8px; text-align: center; background: linear-gradient(0deg, rgba(14, 4, 8, .92), rgba(14, 4, 8, 0)); }
+.wd-name b { display: block; font-family: var(--font-th); font-size: 17px; color: var(--gold-xl); }
+.wd-name small { color: var(--cream-d); font-size: 12.5px; }
+.wd-sum { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 10px; background: rgba(20, 8, 12, .55); border: 1px solid var(--gold-faint); }
+.wd-sum h4 { margin: 4px 0 0; font-family: var(--font-th); font-size: 14px; color: var(--gold-l); letter-spacing: .03em; }
+.wd-silver { display: flex; align-items: center; gap: 8px; font-family: var(--font-th); font-size: 16px; color: var(--gold-xl); }
+.wd-silver u { text-decoration: none; display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #8a8a8a; color: #fff; font-size: 12px; font-weight: 700; }
+.wd-eff { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 8px; }
+.wd-eff li { font-size: 12.5px; line-height: 1.35; padding: 2px 8px; border-radius: 999px; background: rgba(0, 0, 0, .3); border: 1px solid transparent; }
+.wd-eff li.up { color: #a9e2b0; border-color: rgba(120, 200, 140, .35); }
+.wd-eff li.dn { color: #f2a79a; border-color: rgba(230, 120, 100, .35); }
+.wd-eff li.mute { color: var(--cream-d); }
+.wd-eff.big li { font-size: 13.5px; }
+.wd-set { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: 8px; border: 1px dashed var(--gold-faint); color: var(--cream-d); }
+.wd-set b { font-family: var(--font-th); font-size: 14px; color: var(--cream); }
+.wd-set small { font-size: 12px; line-height: 1.45; }
+.wd-set.on { border-style: solid; border-color: var(--gold); background: linear-gradient(180deg, rgba(217, 164, 65, .22), rgba(217, 164, 65, .06)); }
+.wd-set.on b { color: var(--gold-xl); }
+.wd-worn-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+.wd-worn-list li { display: flex; gap: 8px; align-items: baseline; font-size: 13px; color: var(--cream); min-width: 0; }
+.wd-worn-list u { text-decoration: none; flex: none; width: 22px; text-align: center; }
+.wd-worn-list span { overflow-wrap: anywhere; }
+.wd-main { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.wd-hint { font-size: 13px; color: var(--cream-d); line-height: 1.5; padding: 0 2px; }
+.wd-try { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--gold); background: linear-gradient(180deg, rgba(217, 164, 65, .24), rgba(217, 164, 65, .08)); }
+.wd-try > span { flex: 1 1 160px; min-width: 0; font-size: 14px; color: var(--gold-xl); }
+.wd-list { display: flex; flex-direction: column; gap: 8px; }
+.wd-item { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 10px; background: linear-gradient(180deg, rgba(62, 22, 32, .8), rgba(30, 11, 17, .9)); border: 1px solid var(--gold-faint); }
+.wd-item.own { border-color: var(--gold-dim); }
+.wd-item.eq { border-color: var(--gold); box-shadow: inset 0 0 0 1px rgba(217, 164, 65, .35), 0 0 14px rgba(217, 164, 65, .18); }
+.wd-item.trying { border-color: #8fd8c0; box-shadow: 0 0 0 1px rgba(143, 216, 192, .5); }
+.wd-sw { display: block; width: 38px; height: 38px; border-radius: 50%; border: 2px solid rgba(255, 240, 192, .7); box-shadow: 0 2px 8px rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(0, 0, 0, .25); }
+.wd-info { min-width: 0; }
+.wd-info b { display: block; font-family: var(--font-th); font-size: 15px; color: var(--gold-xl); overflow-wrap: anywhere; }
+.wd-info p { margin: 3px 0 4px; font-size: 12.5px; line-height: 1.5; color: var(--cream-d); }
+.wd-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.wd-tag { font-size: 11px; padding: 1px 8px; border-radius: 999px; background: rgba(0, 0, 0, .35); border: 1px solid var(--gold-faint); color: var(--cream-d); }
+.wd-tag.set { color: #f3d58a; border-color: var(--gold-dim); }
+.wd-tag.tier { color: #bfe3d6; }
+.wd-act { display: flex; flex-direction: column; align-items: stretch; gap: 6px; min-width: 104px; }
+.wd-act .btn { min-height: 38px; padding: 5px 12px; font-size: 14px; white-space: nowrap; }
+.wd-worn { text-align: center; color: #a9e2b0; font-family: var(--font-th); font-size: 14px; }
+.wd-lock { text-align: center; font-size: 12px; color: var(--cream-d); line-height: 1.35; }
+.mute { color: var(--cream-d); }
+@media (max-width: 720px) {
+  .wd { grid-template-columns: 1fr; gap: 12px; }
+  .wd-side { position: sticky; top: -12px; z-index: 3; display: grid; grid-template-columns: minmax(110px, 34%) minmax(0, 1fr); gap: 10px; align-items: stretch; margin: -12px -12px 0; padding: 10px 12px 8px; background: linear-gradient(180deg, #2a1019 82%, rgba(42, 16, 25, 0)); }
+  .wd-fig { aspect-ratio: 340 / 400; }
+  .wd-sum { padding: 8px 10px; justify-content: center; }
+  .wd-sum h4, .wd-set, .wd-worn-list { display: none; }
+  .wd-eff li { font-size: 12px; padding: 1px 7px; }
+  .wd-item { grid-template-columns: 30px minmax(0, 1fr); }
+  .wd-sw { width: 30px; height: 30px; }
+  .wd-act { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-end; }
+  .wd-worn, .wd-lock { flex: 1 1 auto; text-align: left; }
+}

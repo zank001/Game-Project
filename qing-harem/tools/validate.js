@@ -47,7 +47,7 @@ const KINDS = ['random', 'chapter', 'chain', 'festival', 'promo', 'ending'];
 const NODE_KEYS = ['who', 'x', 'text', 'card', 'bg', 'cast', 'fx', 'next', 'jump', 'choices', 'branch', 'promote', 'demote', 'ending'];
 const CHOICE_KEYS = ['text', 'cond', 'req', 'why', 'hint', 'cost', 'fx', 'check', 'win', 'lose', 'winFx', 'loseFx', 'next', 'jump'];
 const EV_KEYS = ['id', 'kind', 'title', 'minRank', 'maxRank', 'tags', 'season', 'weight', 'cond', 'trigger', 'prio', 'once', 'cooldown', 'bg', 'cast', 'start', 'nodes', 'ending', 'desc', '__file'];
-const FX_KEYS = Q.STAT_KEYS.concat(['rel', 'set', 'unset', 'inc', 'queue', 'ap', 'log', 'note']);
+const FX_KEYS = Q.STAT_KEYS.concat(['rel', 'set', 'unset', 'inc', 'queue', 'ap', 'log', 'note', 'give']);
 const WHO = ['narrator'].concat(Object.keys(Q.CHARS).filter(k => k !== 'narrator'));
 const PLACEHOLDERS = ['PLAYER', 'RANK', 'HEIR', 'YEAR', 'SEASON'];
 const THAI = /[฀-๿]/;
@@ -99,6 +99,9 @@ function checkFx(where, fx, label) {
         else if (!ids.has(q.id)) (ALL ? E : W)(where, label + '.queue → unknown event "' + q.id + '"');
         if (q && q['in'] !== undefined && (!Number.isInteger(q['in']) || q['in'] < 0)) E(where, label + '.queue.in must be int >= 0');
       });
+    } else if (k === 'give') {
+      if (!Array.isArray(v)) E(where, label + '.give must be an array of wardrobe item ids');
+      else v.forEach(id => { if (!(Q.WARDROBE && Q.WARDROBE.byId[id])) E(where, label + '.give unknown wardrobe item "' + id + '"'); });
     } else if (k === 'ap') { if (typeof v !== 'number') E(where, label + '.ap must be number'); }
     else if (k === 'log' || k === 'note') { if (typeof v !== 'string') E(where, label + '.' + k + ' must be a string'); else checkText(where, v, label + '.' + k, 140); }
   }

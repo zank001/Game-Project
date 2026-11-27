@@ -65,7 +65,7 @@ var _artRender = (function () {
   function render(charId, expr, opts) {
     opts = opts || {};
     var rank = Math.max(0, Math.min(9, opts.rank | 0)), origin = opts.origin || 'noble';
-    var prof = profileFor(charId, rank, origin);
+    var prof = profileFor(charId, rank, origin, charId === 'player' ? opts.outfit : null);
     var X = E[expr] || E.neutral;
     return build(prof, X, E[expr] ? expr : 'neutral', opts, charId);
   }
@@ -819,8 +819,63 @@ var _artRender = (function () {
     return { col: T[0], trim: T[1], pat: T[2], patCol: T[3] };
   }
 
-  CHARS.player = function (rank, origin) {
-    var m = origin === 'maid', sch = origin === 'scholar', pal = playerPal(rank, origin);
+  /* ---------- wardrobe accessories (player) ---------- */
+  var GEM = { pearl: ['#f6efe2', '#b9a98f'], jade: ['#7ccaa0', '#3a8f72'], gold: ['#f6d46a', '#a87420'], ruby: ['#d83a52', '#7a1f2a'], sapphire: ['#4a6cd8', '#1f2f7a'], silver: ['#d7dde6', '#7d8794'] };
+  function earringsSVG(c, kind) {
+    var g = GEM[kind] || GEM.pearl, s = '', k, sg, x, y = 200;
+    for (k = 0; k < 2; k++) {
+      sg = k ? 1 : -1; x = 200 + sg * 62;
+      s += '<g transform="translate(' + x + ' ' + y + ') scale(1.3) translate(' + (-x) + ' ' + (-y) + ')">';
+      s += ln('M' + x + ' ' + (y - 5) + 'q' + (sg * 3) + ' 3 ' + (sg * 1) + ' 9', GOLD, 1.5);
+      if (kind === 'pearl') s += pr(c, x + sg, y + 13, 1.25);
+      else if (kind === 'gold') s += cir(x + sg, y + 11, 3.4, '#f6d46a', 'stroke="' + GOLDD + '" stroke-width="1"') + pr(c, x + sg, y + 21, 1);
+      else if (kind === 'ruby') s += cir(x + sg, y + 12, 4.3, g[0], 'stroke="' + GOLDD + '" stroke-width="1.3"') + cir(x + sg - 1.2, y + 10.6, 1.2, '#fff', 'opacity=".8"');
+      else s += pth('M' + (x + sg) + ' ' + (y + 5) + 'C' + (x + sg + 6) + ' ' + (y + 14) + ' ' + (x + sg + 4) + ' ' + (y + 26) + ' ' + (x + sg) + ' ' + (y + 28) + 'C' + (x + sg - 4) + ' ' + (y + 26) + ' ' + (x + sg - 6) + ' ' + (y + 14) + ' ' + (x + sg) + ' ' + (y + 5) + 'Z', g[0], 'stroke="' + g[1] + '" stroke-width="1"') + cir(x + sg - 1.5, y + 14, 1.3, '#fff', 'opacity=".6"');
+      s += '</g>';
+    }
+    return s;
+  }
+  function beadSpec(lvl, sp) {
+    sp = sp || {};
+    if (lvl >= 8) return { col: sp.col || '#f4efe6', n: 30, depth: 130, bigCol: sp.bigCol || '#e8b43e', pendant: '#e8b43e', tuft: '#d83a52', r: 3.4 };
+    if (lvl >= 6) return { col: sp.col || '#e6d9c4', n: 30, depth: 130, bigCol: sp.bigCol || '#7ccaa0', pendant: '#e8b43e', tuft: '#d83a52', r: 3.4 };
+    return { col: sp.col || '#f4efe6', n: 22, depth: 96, bigCol: sp.bigCol || '#7ccaa0', pendant: null, tuft: '#d83a52', r: 3 };
+  }
+  function neckAccSVG(c, sp) {
+    var s = '';
+    if (sp.beads) s += courtBeads(c, beadSpec(sp.beads, sp));
+    else if (sp.pendant) {
+      var kind = sp.pendant, g = GEM[kind] || GEM.gold, y = 330;
+      s += ln('M172 286Q200 ' + (y + 14) + ' 228 286', '#c04050', 1.7);
+      s += '<g transform="translate(200 ' + y + ') scale(1.4) translate(-200 ' + (-y) + ')">';
+      if (kind === 'jade') s += ell(200, y + 8, 9, 12, 'url(#jd' + c.u + ')', 'stroke="#2f7a60" stroke-width="1"') + cir(200, y + 3, 2.6, '#3a1a22') + cir(197, y + 6, 1.4, '#fff', 'opacity=".5"');
+      else if (kind === 'silver') s += pth('M191 ' + (y - 2) + 'h18v18a9 9 0 0 1 -18 0z', g[0], 'stroke="' + g[1] + '" stroke-width="1.2"') + cir(200, y + 8, 3, 'none', 'stroke="' + g[1] + '" stroke-width="1.2"') + ln('M196 ' + (y - 2) + 'a4 4 0 0 1 8 0', g[1], 1.4);
+      else s += ln('M200 ' + (y - 4) + 'l0 6', GOLDD, 1.6) + pth('M200 ' + (y + 2) + 'C190 ' + (y + 2) + ' 188 ' + (y + 12) + ' 196 ' + (y + 16) + 'C192 ' + (y + 22) + ' 204 ' + (y + 24) + ' 204 ' + (y + 17) + 'C212 ' + (y + 20) + ' 214 ' + (y + 6) + ' 205 ' + (y + 5) + 'C204 ' + (y + 1) + ' 202 ' + (y + 1) + ' 200 ' + (y + 2) + 'Z', 'url(#gd' + c.u + ')', 'stroke="' + GOLDD + '" stroke-width="1"') + cir(200, y + 11, 2.2, '#d83a52');
+      s += '</g>';
+    }
+    return s;
+  }
+  function kerchiefSVG(c, col) {
+    var s = '';
+    s += pth('M222 322l34 -10l9 31l-34 10z', col, 'stroke="' + dk(col, .35) + '" stroke-width="1" transform="rotate(-8 240 330)"');
+    s += pth('M222 322l17 -5l-3 17z', lt(col, .3), 'opacity=".75" transform="rotate(-8 240 330)"');
+    s += fl(c, 247, 334, .5, '#e8455f', -10) + lf(c, 240, 340, .35, -120, '#4a9a70') + lf(c, 254, 342, .35, 100, '#4a9a70');
+    return s;
+  }
+  function sachetSVG(c, col) {
+    var s = '', x = 276, y = 500;
+    s += ln('M' + x + ' ' + (y - 40) + 'L' + x + ' ' + (y - 8), GOLDD, 2);
+    s += pth('M' + (x - 17) + ' ' + y + 'C' + (x - 20) + ' ' + (y + 18) + ' ' + (x - 12) + ' ' + (y + 38) + ' ' + x + ' ' + (y + 38) + 'C' + (x + 12) + ' ' + (y + 38) + ' ' + (x + 20) + ' ' + (y + 18) + ' ' + (x + 17) + ' ' + y + 'Q' + x + ' ' + (y - 8) + ' ' + (x - 17) + ' ' + y + 'Z', col, 'stroke="' + dk(col, .4) + '" stroke-width="1.2"');
+    s += ln('M' + (x - 17) + ' ' + (y + 1) + 'Q' + x + ' ' + (y + 8) + ' ' + (x + 17) + ' ' + (y + 1), GOLD, 2.2) + fl(c, x, y + 20, .55, lt(col, .6), 0);
+    s += pstring(c, x, y + 38, x + 2, y + 52, x - 2, y + 66, 4, .75) + pth('M' + (x - 2) + ' ' + (y + 66) + 'l-4 14l5 -4l4 4z', '#d83a52');
+    return s;
+  }
+
+  CHARS.player = function (rank, origin, ou) {
+    var rl = (ou && ou.robe) || null, hl = (ou && ou.head) || null;
+    var rr = rl && rl.lvl != null ? rl.lvl : rank, hr = hl && hl.lvl != null ? hl.lvl : rank;   // robe / head "level" (default = rank)
+    var m = origin === 'maid', sch = origin === 'scholar', pal = playerPal(rr, origin);
+    if (rl) { if (rl.col) pal.col = rl.col; if (rl.trim) pal.trim = rl.trim; if (rl.pat) pal.pat = rl.pat; if (rl.patCol) pal.patCol = rl.patCol; }
     var P = tmplF({
       skinTone: m ? '#f0d1b4' : sch ? '#f8e1ce' : '#f8dcc6',
       eye: { iris: '#8a5a3a' }, mouth: { col: '#cc5566' },
@@ -831,49 +886,53 @@ var _artRender = (function () {
       return bothL('M' + (200 + 8) + ' 214Q' + (200 + 22) + ' 226 ' + (200 + 20) + ' 244', c.skin.deep, 1.1, 'opacity=".28"') +
         bothL('M' + (200 + 55) + ' 178q8 2 10 7M' + (200 + 55) + ' 183q8 4 9 10', c.skin.deep, .9, 'opacity=".3"');
     } : null;
-    var maidTone = m ? 1 : 0;
     var hf = { top: 58, lockLen: 34, tipY: 198 };
-    var silk = rank >= 6 ? '#d83a52' : rank >= 4 ? (sch ? '#4f9ab0' : '#c2456b') : '#e07a98';
-    var flowers = m ? '#ead7a8' : sch ? '#f4f0e6' : (rank >= 6 ? '#e8455f' : '#ee7f9a');
+    var silk = (hl && hl.silk) || (hr >= 6 ? '#d83a52' : hr >= 4 ? (sch ? '#4f9ab0' : '#c2456b') : '#e07a98');
+    var flowers = (hl && hl.flowers) || (m ? '#ead7a8' : sch ? '#f4f0e6' : (hr >= 6 ? '#e8455f' : '#ee7f9a'));
     var gray = rank >= 9 ? .85 : 0;
+    var neckSp = (ou && ou.neck !== undefined) ? ou.neck : undefined;   // undefined = default by rank, null = none
+    var earSp = ou && ou.ear ? ou.ear : null, charmSp = ou && ou.charm ? ou.charm : null;
 
-    P.back = function (c) { return rank === 0 && m ? hairBack(c, { top: 60, wd: 10 }) : hairBack(c, { top: rank >= 3 ? 56 : 60, wd: 12 }); };
+    P.back = function (c) { return hr === 0 && m ? hairBack(c, { top: 60, wd: 10 }) : hairBack(c, { top: hr >= 3 ? 56 : 60, wd: 12 }); };
     P.pre = function (c) {
       var s = '';
-      if (rank >= 6) s += cloudShawl(c, { col: rank === 8 ? '#c02a3a' : rank === 9 ? '#3e2166' : pal.trim, trim: rank >= 8 ? '#f0cc58' : '#f4d672', fringe: rank === 9 ? '#c89a2a' : '#d83a52' });
-      s += standCollar(c, { col: rank === 0 && m ? dk(pal.col, .12) : (rank >= 8 ? '#f6e7c0' : lt(pal.col, .35)), trim: rank === 0 && m ? pal.trim : GOLD, y: 262 });
-      if (rank >= 4) s += courtBeads(c, { col: rank >= 8 ? '#f4efe6' : (rank >= 6 ? '#e6d9c4' : '#f4efe6'), n: rank >= 6 ? 30 : 22, depth: rank >= 6 ? 130 : 96, bigCol: rank >= 8 ? '#e8b43e' : '#7ccaa0', pendant: rank >= 6 ? '#e8b43e' : null, tuft: '#d83a52', r: rank >= 6 ? 3.4 : 3 });
+      if (rr >= 6) s += cloudShawl(c, { col: rr === 8 ? '#c02a3a' : rr === 9 ? '#3e2166' : pal.trim, trim: rr >= 8 ? '#f0cc58' : '#f4d672', fringe: rr === 9 ? '#c89a2a' : '#d83a52' });
+      s += standCollar(c, { col: rr === 0 && m ? dk(pal.col, .12) : (rr >= 8 ? '#f6e7c0' : lt(pal.col, .35)), trim: rr === 0 && m ? pal.trim : GOLD, y: 262 });
+      if (neckSp === undefined) { if (rank >= 4) s += courtBeads(c, beadSpec(rank)); }
+      else if (neckSp) s += neckAccSVG(c, neckSp);
+      if (charmSp && charmSp.kerchief) s += kerchiefSVG(c, charmSp.kerchief);
       return s;
     };
     P.body = function (c) {
-      var o = { sh: rank === 0 ? 104 : 112, col: pal.col, pat: pal.pat, patCol: pal.patCol, patOp: rank === 0 ? .35 : .5 };
+      var o = { sh: rr === 0 ? 104 : 112, col: pal.col, pat: pal.pat, patCol: pal.patCol, patOp: rr === 0 ? .35 : .5 };
       var s = robeBody(c, o);
-      if (rank >= 1) s += robeTrims(c, { sh: o.sh, trim: pal.trim, trim2: GOLD, lapel: true, sleeveBand: pal.trim });
-      if (rank >= 6) s += medallion(c, 200, 470, 36, { col: pal.trim, bg: rank === 8 ? '#e8a82a' : pal.col, kind: rank >= 8 ? 'dragon' : 'flower', flower: rank >= 8 ? '#e8455f' : '#ffd6ee' });
+      if (rr >= 1) s += robeTrims(c, { sh: o.sh, trim: pal.trim, trim2: GOLD, lapel: true, sleeveBand: pal.trim });
+      if (rr >= 6) s += medallion(c, 200, 470, 36, { col: pal.trim, bg: rr === 8 ? '#e8a82a' : pal.col, kind: rr >= 8 ? 'dragon' : 'flower', flower: rr >= 8 ? '#e8455f' : '#ffd6ee' });
+      if (charmSp && charmSp.sachet) s += sachetSVG(c, charmSp.sachet);
       return s;
     };
     P.hairFront = function (c) {
-      if (rank === 0 && m) return hairFront(c, { top: 60, peak: 0, lockLen: 40, tipY: 196, hl: 98 }) + braidSVG(c, { tie: '#a88a68' });
-      var s = hairFront(c, { top: hf.top, peak: 5, lockLen: rank >= 3 ? 44 : 36, tipY: 198, gray: gray });
-      return s;
+      if (hr === 0 && m) return hairFront(c, { top: 60, peak: 0, lockLen: 40, tipY: 196, hl: 98 }) + braidSVG(c, { tie: '#a88a68' });
+      return hairFront(c, { top: hf.top, peak: 5, lockLen: hr >= 3 ? 44 : 36, tipY: 198, gray: gray });
     };
     P.head = function (c) {
-      var o = { flowers: flowers, silk: silk, leaf: sch ? '#5aa08a' : '#4a9a70', pinHead: m ? 'pearl' : 'jade' };
-      if (rank === 0) {
+      var o = { flowers: flowers, silk: silk, leaf: sch ? '#5aa08a' : '#4a9a70', pinHead: (hl && hl.pinHead) || (m ? 'pearl' : 'jade') };
+      if (hr === 0) {
         if (m) return ln('M' + (200 - 62) + ' 118Q200 78 ' + (200 + 62) + ' 118', '#9a8a78', 5, 'opacity=".9"');
         return headWings(c, { y: 74, w: 52 }) + cluster(c, 200 - 46, 92, [[0, 0, 1, flowers, 0]], o.leaf) + hairpin(c, 200 + 30, 92, 200 + 56, 66, 'pearl', [3, 30]);
       }
-      if (rank <= 2) {
-        var s = headWings(c, { y: 72, w: rank === 1 ? 56 : 62 });
+      if (hr <= 2) {
+        var s = headWings(c, { y: 72, w: hr === 1 ? 56 : 62 });
         s += cluster(c, 200 - 50, 90, [[0, 0, 1.2, flowers, 0], [12, -8, .8, lt(flowers, .3), 40]], o.leaf);
-        if (rank === 2) s += cluster(c, 200 + 52, 88, [[0, 0, 1, lt(flowers, .1), 0]], o.leaf);
-        s += hairpin(c, 200 + 26, 98, 200 + 62, 62, o.pinHead, [3, rank === 2 ? 40 : 28]);
-        if (rank === 2) s += tassel(c, 200 + 66, 90, 56, 2, 10, silk, 3);
+        if (hr === 2) s += cluster(c, 200 + 52, 88, [[0, 0, 1, lt(flowers, .1), 0]], o.leaf);
+        s += hairpin(c, 200 + 26, 98, 200 + 62, 62, o.pinHead, [3, hr === 2 ? 40 : 28]);
+        if (hr === 2) s += tassel(c, 200 + 66, 90, 56, 2, 10, silk, 3);
         return s;
       }
-      if (rank <= 7) return headQitou(c, { lvl: rank, board: rank === 9 ? '#2a1a40' : '#201a2e', flowers: flowers, silk: silk, leaf: o.leaf, pinHead: o.pinHead, accent: '#f4d672' });
-      return headCrown(c, { grand: rank === 9, silk: silk, gem: rank === 9 ? '#8a3cc8' : '#d83a52', blue: rank === 9 ? '#6a4cc0' : '#35a7c9' });
+      if (hr <= 7) return headQitou(c, { lvl: hr, board: '#201a2e', flowers: flowers, silk: silk, leaf: o.leaf, pinHead: o.pinHead, accent: (hl && hl.accent) || '#f4d672' });
+      return headCrown(c, { grand: hr === 9, silk: silk, gem: hr === 9 ? '#8a3cc8' : '#d83a52', blue: hr === 9 ? '#6a4cc0' : '#35a7c9' });
     };
+    if (earSp && earSp.earring) P.over = function (c) { return earringsSVG(c, earSp.earring); };
     return P;
   };
 
@@ -882,11 +941,11 @@ var _artRender = (function () {
     return { base: base, hi: lt(base, .16), sh: mix(base, '#d68a82', .38), deep: mix(base, '#a85a56', .55) };
   }
   var _profCache = {};
-  function profileFor(charId, rank, origin) {
+  function profileFor(charId, rank, origin, outfit) {
     var p = CHARS[charId] || CHARS.__missing;
     if (typeof p === 'function') {
-      var k = charId + '|' + rank + '|' + origin;
-      return _profCache[k] || (_profCache[k] = p(rank, origin));
+      var k = charId + '|' + rank + '|' + origin + '|' + (outfit ? JSON.stringify(outfit) : '');
+      return _profCache[k] || (_profCache[k] = p(rank, origin, outfit));
     }
     return p;
   }
