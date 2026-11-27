@@ -261,9 +261,10 @@ var QL = (function () {
   }
   function gate(st) {
     var g = Q.GATES[st.rank]; if (!g) return null;
+    var favHave = st.S.favor; (st.fh || []).forEach(function (v) { if (v > favHave) favHave = v; });
     var need = [
       { k: 'time', label: 'อยู่ในตำแหน่งครบ (ฤดู)', have: st.sir, want: g.minSeasons, ok: st.sir >= g.minSeasons },
-      { k: 'favor', label: 'ความโปรดปราน', have: st.S.favor, want: g.favor, ok: st.S.favor >= g.favor },
+      { k: 'favor', label: 'ความโปรดปราน', have: favHave, want: g.favor, ok: favHave >= g.favor },
       { k: 'prestige', label: 'ศักดิ์ศรี', have: st.S.prestige, want: g.prestige, ok: st.S.prestige >= g.prestige },
     ];
     if (g.req) need.push({ k: 'req', label: g.reqLabel || 'บททดสอบประจำขั้น', ok: cond(g.req, st) });
@@ -357,6 +358,7 @@ var QL = (function () {
     st.flash = null;
     var rk = Q.RANKS[st.rank];
     st.S.silver += rk.stipend; rep.stipend = rk.stipend;
+    st.fh = (st.fh || []).concat([st.S.favor]).slice(-3);   // recent favor peaks count toward promotion gates
     var f0 = st.S.favor; st.S.favor = Math.max(0, f0 - C.favorDecay); rep.favorLoss = f0 - st.S.favor;
     var th0 = st.S.threat;
     var dTh = -C.threatDecay + Math.floor(st.S.favor / C.threatFavorDiv) + Math.floor(st.S.prestige / C.threatPrestigeDiv) + (st.rank >= C.threatRankFrom ? 1 : 0);
@@ -412,7 +414,12 @@ var QL = (function () {
   function nextPending(st) {
     if (st.cur || st.phase === 'ended') return null;
     if (st.pendingEnding) { var e = st.pendingEnding; st.pendingEnding = null; if (EV[e]) return e; warn('missing ending event', e); }
-    while (st.pending.length) { var id = st.pending.shift(); if (EV[id]) return id; warn('missing pending event', id); }
+    while (st.pending.length) {
+      var id = st.pending.shift();
+      if (!EV[id]) { warn('missing pending event', id); continue; }
+      if (st.F.finale && (EV[id].kind === 'random' || EV[id].kind === 'festival')) continue;   // finale started after this was queued
+      return id;
+    }
     st.phase = 'hub';
     return null;
   }

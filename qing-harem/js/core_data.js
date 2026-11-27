@@ -152,14 +152,14 @@ Q.RANKS = [
 
 /* ---------- promotion gates: key = CURRENT rank. All must hold at a season end. ---------- */
 Q.GATES = {
-  1: { minSeasons: 4, favor: 8,  prestige: 12, req: 'F.arc1_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  2: { minSeasons: 5, favor: 16, prestige: 24, req: 'F.arc2_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  3: { minSeasons: 6, favor: 20, prestige: 38, req: 'F.arc3_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  4: { minSeasons: 6, favor: 24, prestige: 52, req: 'F.arc4_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  5: { minSeasons: 6, favor: 28, prestige: 62, req: 'F.arc5_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  6: { minSeasons: 6, favor: 30, prestige: 72, req: 'F.arc6_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  7: { minSeasons: 6, favor: 31, prestige: 80, req: 'F.arc7_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
-  8: { minSeasons: 4, favor: 27, prestige: 88, req: 'F.arc8_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  1: { minSeasons: 4, favor: 8, prestige: 12, req: 'F.arc1_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  2: { minSeasons: 5, favor: 17, prestige: 26, req: 'F.arc2_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  3: { minSeasons: 6, favor: 24, prestige: 42, req: 'F.arc3_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  4: { minSeasons: 6, favor: 30, prestige: 58, req: 'F.arc4_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  5: { minSeasons: 6, favor: 35, prestige: 70, req: 'F.arc5_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  6: { minSeasons: 6, favor: 38, prestige: 80, req: 'F.arc6_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  7: { minSeasons: 6, favor: 40, prestige: 88, req: 'F.arc7_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
+  8: { minSeasons: 4, favor: 34, prestige: 94, req: 'F.arc8_done', reqLabel: 'ผ่านบททดสอบประจำขั้น' },
 };
 
 /* ---------- origins ---------- */

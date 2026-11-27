@@ -49,6 +49,7 @@ function pickAction(st, acts) {
   if (POLICY === 'random') return pickR(acts);
   const g = QL.gate(st), unmet = k => g && g.need.some(n => n.k === k && !n.ok);
   const has = id => acts.find(a => a.id === id);
+  if (POLICY === 'reckless') { const pool = acts.filter(x => !['a_guard', 'a_rest', 'a_tonic', 'a_reward'].includes(x.id) || (x.id === 'a_tonic' && st.S.health < 25)); const sc = pool.filter(x => ['a_scheme', 'a_serve', 'a_garden', 'a_empress', 'a_bribe', 'a_investigate'].includes(x.id)); return pickR(sc.length && rr() < 0.7 ? sc : (pool.length ? pool : acts)); }
   if (st.S.health < 40) return has('a_tonic') || has('a_rest') || pickR(acts);
   if (st.S.threat > 40 && has('a_guard')) return has('a_guard');
   const order = [];
@@ -107,6 +108,7 @@ function runGame(origin, seed) {
   return { st, rankSeasons };
 }
 
+const blocked = {}, seenJump = {};
 const origins = ORIGIN === 'all' ? ['noble', 'scholar', 'maid'] : [ORIGIN];
 const endings = {}, ranks = {}, byOrigin = {}, crashes = [], seasonsAtRank = {}, stuck = [];
 let n = 0, summit = 0, totalSeasons = 0;
@@ -116,12 +118,14 @@ for (let i = 0; i < RUNS; i++) {
   const r = runGame(origin, seed); n++;
   if (r.crash) { crashes.push(origin + '#' + seed + ': ' + r.crash); continue; }
   const st = r.st;
+  Object.keys(st.seen).forEach(id => { if (!seenJump[id]) seenJump[id] = 0; seenJump[id]++; });
   endings[st.ending || '(none)'] = (endings[st.ending || '(none)'] || 0) + 1;
   ranks[st.rank] = (ranks[st.rank] || 0) + 1;
   (byOrigin[origin] = byOrigin[origin] || { n: 0, summit: 0, ranks: 0 }).n++;
   byOrigin[origin].ranks += st.rank; if (st.rank >= 9) { byOrigin[origin].summit++; summit++; }
   totalSeasons += st.t;
   Object.keys(r.rankSeasons).forEach(k => { (seasonsAtRank[k] = seasonsAtRank[k] || []).push(r.rankSeasons[k]); });
+  if (st.rank < 9) { const g = QL.gate(st); const key = 'rank ' + st.rank + ' blocked by: ' + (g ? g.need.filter(x => !x.ok).map(x => x.k).join('+') || 'none(promo pending?)' : '-') + ' [ending ' + st.ending + ']'; blocked[key] = (blocked[key] || 0) + 1; }
   if (st.ending === 'end_twilight') { const g = QL.gate(st); stuck.push(origin + '#' + seed + ' rank ' + st.rank + ' unmet: ' + (g ? g.need.filter(x => !x.ok).map(x => x.k + ' ' + (x.have !== undefined ? x.have + '/' + x.want : '')).join(', ') : '-')); }
   if (TRACE) console.log('=== END ' + st.ending + ' rank ' + st.rank + ' t=' + st.t);
 }
@@ -131,6 +135,8 @@ if (!TRACE) {
   console.log('\nBy origin:'); Object.keys(byOrigin).forEach(o => console.log('  ' + o + ': n=' + byOrigin[o].n + ' avg rank ' + (byOrigin[o].ranks / byOrigin[o].n).toFixed(2) + ' summit ' + byOrigin[o].summit));
   console.log('\nEndings:'); Object.keys(endings).sort((a, b) => endings[b] - endings[a]).forEach(k => console.log('  ' + String(endings[k]).padStart(4) + '  ' + k));
   console.log('\nMean seasons spent per rank:'); Object.keys(seasonsAtRank).sort().forEach(k => { const a = seasonsAtRank[k]; console.log('  rank ' + k + ': ' + (a.reduce((x, y) => x + y, 0) / a.length).toFixed(1) + ' (n=' + a.length + ')'); });
+  if (Object.keys(blocked).length) { console.log('\nRuns that did not reach the summit:'); Object.keys(blocked).sort((x, y) => blocked[y] - blocked[x]).slice(0, 14).forEach(k => console.log('  ' + String(blocked[k]).padStart(4) + '  ' + k)); }
+  if (arg('seen', '')) { const pre = arg('seen', '').split(','); console.log('\nEvent play counts for prefixes ' + pre.join(',') + ':'); Q.events.filter(e => pre.some(p => e.id.startsWith(p))).forEach(e => console.log('  ' + String(seenJump[e.id] || 0).padStart(5) + '  ' + e.id + ' [' + e.kind + ']')); }
   if (flag('favsrc')) {
     const rows = Object.keys(favSrc).map(k => ({ id: k, tag: ((QL.event(k) || {}).tags || ['-']).join(','), kind: (QL.event(k) || {}).kind, ...favSrc[k], fpp: favSrc[k].f / Math.max(1, favSrc[k].plays), ppp: favSrc[k].p / Math.max(1, favSrc[k].plays) }));
     const agg = {}; rows.forEach(r => { const key = r.rank + ' ' + (r.kind === 'random' ? r.tag : r.kind); const o = (agg[key] = agg[key] || { f: 0, p: 0, plays: 0 }); o.f += r.f; o.p += r.p; o.plays += r.plays; });
@@ -142,7 +148,7 @@ if (!TRACE) {
     console.log('\nPer-rank state at season end (median / p90):');
     Object.keys(statLog).sort().forEach(r => { const L = statLog[r]; const g = k => L.map(x => x[k]); console.log('  rank ' + r + '  favor ' + q(g('f'), .5) + '/' + q(g('f'), .9) + '  prestige ' + q(g('p'), .5) + '/' + q(g('p'), .9) + '  health ' + q(g('h'), .5) + '  threat ' + q(g('th'), .5) + '/' + q(g('th'), .9) + '  silver ' + q(g('s'), .5) + '  (n=' + L.length + ')'); });
   }
-  const all = Q.events.filter(e => e.kind !== 'ending'), never = all.filter(e => !seenGlobal[e.id]);
+  const all = Q.events.filter(e => e.kind !== 'ending'), never = all.filter(e => !seenJump[e.id]);
   console.log('\nEvent coverage: ' + (all.length - never.length) + '/' + all.length + ' seen at least once');
   if (never.length) console.log('  never seen (' + never.length + '): ' + never.slice(0, 60).map(e => e.id).join(', ') + (never.length > 60 ? ' …' : ''));
   const unseenEnd = Q.events.filter(e => e.kind === 'ending' && !endings[e.id]);
