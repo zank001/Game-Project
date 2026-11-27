@@ -937,6 +937,7 @@
       b.type = 'button'; b.dataset.i = c.i;
       if (c.disabled) b.disabled = true;
       var meta = '';
+      if (c.ends) meta += '<i class="chip ends" title="ตัวเลือกนี้จะทำให้เกมจบลง">⚑ จบเรื่อง</i>';
       if (c.cost && c.cost.silver) meta += '<i class="chip cost" title="ต้องจ่ายเงินตำลึง">銀 ' + c.cost.silver + '</i>';
       if (c.pct !== null && c.pct !== undefined) {
         var st2 = Array.isArray(c.stat) ? c.stat : [c.stat];
@@ -947,7 +948,11 @@
         (c.hint ? '<span class="cb-hint">' + esc(c.hint) + '</span>' : '') + (c.disabled && c.why ? '<span class="cb-why">🔒 ' + esc(c.why) + '</span>' : '') + '</span>' +
         (meta ? '<span class="cb-meta">' + meta + '</span>' : '');
       b.style.animationDelay = (c.i * 70) + 'ms';
-      b.addEventListener('click', function (e) { e.stopPropagation(); if (!c.disabled) deliver({ t: 'choose', i: c.i }); });
+      b.addEventListener('click', function (e) {
+        e.stopPropagation(); if (c.disabled) return;
+        if (!c.ends) { deliver({ t: 'choose', i: c.i }); return; }
+        confirmBox('ตัวเลือกนี้จะทำให้เกมจบลง', 'ท่านจะไปถึงตอนจบของเรื่องนี้ทันที และเล่นต่อในรอบนี้ไม่ได้อีก — ยืนยันหรือไม่?', 'ยืนยัน จบเรื่องนี้', 'ขอคิดดูก่อน').then(function (ok) { if (ok) deliver({ t: 'choose', i: c.i }); });
+      });
       box.appendChild(b);
     });
     box.classList.add('on');
@@ -1979,7 +1984,7 @@
       if (go) { if (tag === 'BUTTON') return; e.preventDefault(); onAdvanceClick(); }
       else if (/^[1-4]$/.test(e.key) && Game._wait && Game._wait.kind === 'choice') {
         var b = $('.choice-btn[data-i="' + (parseInt(e.key, 10) - 1) + '"]');
-        if (b && !b.disabled) deliver({ t: 'choose', i: parseInt(e.key, 10) - 1 });
+        if (b && !b.disabled) b.click();
       }
     }
   }

@@ -1,7 +1,7 @@
 /* =============================================================
    c18_offer_poet.js — หน่วย c18b "ข้อเสนอทางออก" · ตอนจบ end_x_poet (บทกวีที่อยู่เหนือยศศักดิ์)
-   of_po_leaflet   กลอนบนกระดาษห่อขนม   chapter  rank 2-5  (S.talent>=80 · กลอนของท่านหลุดออกไปนอกวัง ลงนาม "กวีแห่งกำแพงแดง" · ตั้ง of_po_hint)
-   of_po_academy   หอเหวินหยวน          chapter  rank 2-6  (S.talent>=90 · ฮ่องเต้เสนอตำแหน่งผู้ชำระกวี ไม่ขึ้นขั้นอีก → ตอนจบ / ปฏิเสธ → รางวัล)
+   of_po_leaflet   กลอนบนกระดาษห่อขนม   chapter  rank 4-5  (S.talent>=80 · กลอนของท่านหลุดออกไปนอกวัง ลงนาม "กวีแห่งกำแพงแดง" · ตั้ง of_po_hint)
+   of_po_academy   หอเหวินหยวน          chapter  rank 4-6  (S.talent>=90 · ฮ่องเต้เสนอตำแหน่งผู้ชำระกวี ไม่ขึ้นขั้นอีก → ตอนจบ / ปฏิเสธ → รางวัล)
    of_po_tribute   กลอนต้นฤดู            chain    (หลังปฏิเสธ: ถวายกลอนต่อหน้าราชสำนัก)
    flags (private): of_po_hint of_po_traced of_po_loose of_po_asked of_po_chosen of_po_refused of_po_penname
    ============================================================= */
@@ -10,8 +10,8 @@ Q.add([
   /* ---------- 1. กลอนบนกระดาษห่อขนม (บอกใบ้) ---------- */
   {
     id: 'of_po_leaflet', kind: 'chapter', title: 'กลอนบนกระดาษห่อขนม',
-    minRank: 2, maxRank: 5, prio: 5,
-    trigger: 'S.talent >= 80 && rank >= 2 && rank <= 5 && sir >= 2 && (season == 0 || season == 1) && !F.finale',
+    minRank: 4, maxRank: 5, prio: 5,
+    trigger: 'S.talent >= 80 && rank >= 4 && rank <= 5 && sir >= 2 && (season == 0 || season == 1) && !F.finale',
     bg: 'small_court', cast: [],
     start: 'a0',
     nodes: {
@@ -38,8 +38,8 @@ Q.add([
   /* ---------- 2. หอเหวินหยวน (ข้อเสนอจริง) ---------- */
   {
     id: 'of_po_academy', kind: 'chapter', title: 'หอเหวินหยวน',
-    minRank: 2, maxRank: 6, prio: 8,
-    trigger: 'F.of_po_hint && S.talent >= 90 && rank >= 2 && rank <= 6 && sir >= 2 && F.met_emperor && (season == 2 || season == 3) && !F.finale && !F.emperor_dead',
+    minRank: 4, maxRank: 6, prio: 8,
+    trigger: 'F.of_po_hint && S.talent >= 90 && rank >= 4 && rank <= 6 && sir >= 2 && F.met_emperor && (season == 2 || season == 3) && !F.finale && !F.emperor_dead',
     bg: 'study', cast: [{ c: 'eunuch', pos: 'center', x: 'smile' }],
     start: 'a1',
     nodes: {

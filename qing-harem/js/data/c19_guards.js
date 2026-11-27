@@ -1,11 +1,11 @@
 /* c19_guards.js — integration guards applied AFTER all content has loaded (lead-owned).
-   1) Exit offers (of_* chapters): only ONE exit-offer chain per playthrough. Entry chapters (those whose trigger does not
+   1) Exit offers (of_* chapters): only ONE exit-offer chain per playthrough, and none before year 6 (t >= 20). Entry chapters (those whose trigger does not
       mention F.of_) are blocked once any offer has started, and set F.of_any when they start. */
 (function () {
   Q.events.forEach(function (ev) {
     if (ev.kind !== 'chapter' || ev.id.indexOf('of_') !== 0 || !ev.trigger) return;
     if (ev.trigger.indexOf('F.of_') >= 0) return;            // continuation chapters keep their own gating
-    if (ev.trigger.indexOf('F.of_any') < 0) ev.trigger = '(' + ev.trigger + ') && !F.of_any';
+    if (ev.trigger.indexOf('F.of_any') < 0) ev.trigger = '(' + ev.trigger + ') && !F.of_any && t >= 20';   // never cut a young game short: offers need >= 5 years in the palace
     var n = ev.nodes && ev.nodes[ev.start];
     if (!n) return;
     n.fx = n.fx || {};

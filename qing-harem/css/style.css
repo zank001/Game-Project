@@ -572,6 +572,7 @@ body.fast *:not(.amb), body.fast *:not(.amb)::before, body.fast *:not(.amb)::aft
 .chip { font-style: normal; font-size: 12.5px; font-weight: 700; padding: 1px 11px; border-radius: 12px; white-space: nowrap; background: rgba(0, 0, 0, .55); border: 1px solid; }
 .chip u { text-decoration: none; margin-right: 5px; font-weight: 400; }
 .chip.cost { color: #ececec; border-color: rgba(236, 236, 236, .4); }
+.chip.ends { color: #ffb4a8; border-color: rgba(255, 150, 130, .65); background: rgba(160, 40, 40, .22); }
 .chip.check.hi { color: var(--good); border-color: rgba(127, 214, 160, .65); }
 .chip.check.mid { color: var(--gold-l); border-color: rgba(243, 213, 138, .65); }
 .chip.check.lo { color: var(--bad); border-color: rgba(255, 138, 122, .65); }

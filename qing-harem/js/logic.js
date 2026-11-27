@@ -1409,6 +1409,25 @@ var QL = (function () {
     (ch.mods || []).forEach(function (m) { if (cond(m.cond, st)) mod += m.add; });
     return Math.max(0.05, Math.min(0.95, 0.5 + (v + mod - ch.dc) / C.checkDivisor));
   }
+  /* does choosing this lead (through plain next/branch/jump nodes) to an ending? — the UI asks the player to confirm first */
+  function nodeEnds(ev, id, seen) {
+    var guard = 0;
+    while (id && guard++ < 40) {
+      if (seen[id]) return false; seen[id] = 1;
+      var n = ev.nodes[id]; if (!n) return false;
+      if (n.ending) return true;
+      if (n.choices && n.choices.length) return false;
+      if (n.jump) return !!(EV[n.jump] && EV[n.jump].kind === 'ending');
+      if (n.branch) { for (var i = 0; i < n.branch.length; i++) { if (!nodeEnds(ev, n.branch[i].next, seen)) return false; } return n.branch.length > 0; }
+      id = n.next;
+    }
+    return false;
+  }
+  function choiceEnds(ev, raw) {
+    if (raw.jump) return !!(EV[raw.jump] && EV[raw.jump].kind === 'ending');
+    if (raw.check) return !!(raw.win && raw.lose && nodeEnds(ev, raw.win, {}) && nodeEnds(ev, raw.lose, {}));
+    return !!raw.next && nodeEnds(ev, raw.next, {});
+  }
   function view(st) {
     if (!st.cur) return null;
     var ev = EV[st.cur.ev], node = ev && ev.nodes[st.cur.node];
@@ -1428,7 +1447,7 @@ var QL = (function () {
         if (c.req && !cond(c.req, st)) { dis = true; why = c.why || 'ยังไม่เข้าเงื่อนไข'; }
         if (c.cost && c.cost.silver && st.S.silver < c.cost.silver) { dis = true; why = 'เงินตำลึงไม่พอ'; }
         list.push({ i: list.length, idx: idx, text: fill(st, c.text), disabled: dis, why: why, hint: c.hint || null,
-                    cost: c.cost || null, pct: c.check ? Math.round(chance(st, c.check) * 100) : null, risky: !!c.check, stat: c.check ? c.check.stat : null });
+                    cost: c.cost || null, pct: c.check ? Math.round(chance(st, c.check) * 100) : null, risky: !!c.check, stat: c.check ? c.check.stat : null, ends: choiceEnds(ev, c) });
       });
       if (list.length && list.every(function (c) { return c.disabled; })) { list[list.length - 1].disabled = false; list[list.length - 1].why = null; list[list.length - 1].forced = true; }
       if (list.length) { v.kind = 'choice'; v.choices = list; }
