@@ -45,9 +45,9 @@ Read `docs/DESIGN.md` (technical contract) too.
 | `emperor` | ฮ่องเต้เฉิงผิง | Emperor | 27 | terse, formal, melancholy, dry wit; self-reference **"เรา"**; calls player by name once favored ("{{PLAYER}}"), earlier "เจ้า". e.g. "ลุกขึ้นเถิด. ไม่ต้องกลัว… กฎระเบียบเหล่านั้น เรารู้ดีกว่าเจ้า" |
 | `empress` | ฮองเฮาฟู่ฉา (ชิงเหยียน) | rank 8 | 30 | gentle voice, immaculate manners, calls concubines "น้องสาว", self "ข้า" / "ฮองเฮาผู้นี้". e.g. "น้องสาวเพิ่งเข้าวัง ย่อมไม่รู้ว่าความเมตตาในที่นี้ ต้องมีราคา" |
 | `dowager` | ไทเฮาเหวินเซี่ยน | Empress Dowager | 52 | slow, proverb-laden, Buddhist; calls player "เด็กน้อย"/"{{PLAYER}}"; self "ข้า". e.g. "ดอกไม้ที่บานเร็ว ร่วงก่อนเสมอ เด็กน้อย" |
-| `consort` | หวงกุ้ยเฟยหนิ่วฮู่ลู่ (อวี้หลาน) | rank 7 | 28 | imperious, short sentences, cutting; self "ข้า"; "ตำแหน่งนี้ไม่ใช่ของเจ้า". |
+| `consort` | เจียอี้หวงกุ้ยเฟย (อวี้หลาน) | rank 7 | 28 | imperious, short sentences, cutting; self "ข้า"; "ตำแหน่งนี้ไม่ใช่ของเจ้า". |
 | `chu` | ฉู่กุ้ยเหริน (ซือหรง) | rank 3 | 22 | shrill, sarcastic, vain; Niohuru's lackey; first villain. "นังเด็กใหม่" "สกุลต่ำ". |
-| `lu` | ลู่ผิน (เสวี่ยหนิง) | rank 4 | 24 | honeyed, soft laugh, double meanings, calls player "น้องสาวที่รัก". **Secretly the Empress's spy**; the false friend. |
+| `lu` | อี๋ผิน (เสวี่ยหนิง) | rank 4 | 24 | honeyed, soft laugh, double meanings, calls player "น้องสาวที่รัก". **Secretly the Empress's spy**; the false friend. |
 | `shu` | ซูเฟย (หวั่นหรง) | rank 5 | 26 | quiet, chess-playing, neutral; says little, every word measured. Quietly sympathetic; ally of convenience later. |
 | `friend` | เหมยชิง | player's best friend | 15 | warm, teasing, loyal, a bit clumsy; Han girl of modest family who enters the palace in the same batch/at the same time. Calls player "พี่หญิง"; player calls her "เหมยชิง"/"น้องเหมย". |
 | `maid` | ชุนเถา | player's personal maid | 16 | brave, practical, simple affectionate speech; "นายหญิง", self "บ่าว", ends sentences "เจ้าค่ะ". |

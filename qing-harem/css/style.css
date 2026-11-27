@@ -1140,3 +1140,53 @@ body[data-screen="hub-screen"] .tip-root { top: calc(142px + var(--st)); }
   .tb-hist li { grid-template-columns: 1fr; gap: 3px; }
   .tb-pct b { font-size: 34px; }
 }
+
+/* ============================================================
+   NAMING (พระนาม · ฉายา)
+   ============================================================ */
+.field-note { display: block; margin-top: 6px; color: var(--cream-d); font-size: 12.5px; line-height: 1.5; }
+#clan-input:disabled { opacity: .75; cursor: not-allowed; }
+.modal-naming .modal-body { padding: 12px 14px 18px; }
+.nm-plate { display: flex; gap: 16px; align-items: center; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid var(--gold-dim); background: linear-gradient(180deg, rgba(217, 164, 65, .18), rgba(217, 164, 65, .04)); }
+.nm-plate.plain { border-style: dashed; background: rgba(20, 8, 12, .45); }
+.nm-hanzi { display: inline-flex; gap: 6px; flex: none; }
+.nm-hanzi b, .nm-seal b { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 8px; font-family: var(--font-zh); font-size: 46px; line-height: 1; font-weight: 900; color: #ffe9c0; background: linear-gradient(135deg, #cf3540, #8c1522); box-shadow: inset 0 0 0 2px rgba(255, 220, 160, .38), inset 0 0 0 3px rgba(80, 8, 14, .5), 0 3px 8px rgba(0, 0, 0, .55); text-shadow: 0 1px 0 rgba(60, 0, 8, .6); }
+.nm-plate.plain .nm-hanzi b { background: linear-gradient(135deg, #5a4a4e, #2a2226); color: #cdbfbf; font-size: 34px; }
+.nm-names h3 { margin: 0; font-family: var(--font-th); font-size: 24px; color: var(--gold-xl); line-height: 1.25; text-shadow: 0 2px 0 #000; overflow-wrap: anywhere; }
+.nm-zh { font-family: var(--font-zh); font-size: 17px; color: var(--cream); margin: 2px 0 4px; }
+.nm-sub { font-size: 12.5px; color: var(--cream-d); } .nm-sub b { color: var(--gold-l); }
+.nm-block { padding: 10px 12px; margin-bottom: 10px; border-radius: 10px; background: rgba(20, 8, 12, .5); border: 1px solid var(--gold-faint); }
+.nm-block.warn { border-color: rgba(230, 120, 100, .55); background: rgba(160, 40, 40, .2); }
+.nm-block h4 { margin: 0 0 6px; font-family: var(--font-th); font-size: 14px; color: var(--gold-l); letter-spacing: .03em; }
+.nm-block p { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--cream); }
+.nm-block p b { color: var(--gold-xl); }
+.nm-feng { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.nm-feng b { font-family: var(--font-th); font-size: 20px; color: var(--gold-xl); } .nm-feng b em { font-style: normal; font-family: var(--font-zh); margin-left: 6px; color: #ffd9a0; }
+.nm-feng span { color: var(--cream); font-size: 13.5px; }
+.nm-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.nm-tags i { font-style: normal; padding: 2px 9px; border-radius: 999px; font-size: 12px; color: #bfe3d6; border: 1px solid rgba(143, 200, 176, .45); background: rgba(40, 90, 70, .25); }
+.nm-extra { margin-top: 8px; font-size: 13px; color: var(--cream); } .nm-extra b { color: var(--gold-xl); }
+.nm-hist { margin-top: 8px !important; font-size: 12.5px !important; color: var(--cream-d) !important; }
+.nm-ladder { list-style: none; margin: 0 0 8px; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.nm-ladder li { display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; padding: 5px 10px; border-radius: 8px; background: rgba(0, 0, 0, .25); font-size: 13.5px; }
+.nm-ladder li.here { background: linear-gradient(90deg, rgba(217, 164, 65, .28), rgba(217, 164, 65, .06)); outline: 1px solid var(--gold-dim); }
+.nm-ladder .nl-r { color: var(--cream-d); font-size: 12.5px; } .nm-ladder b { color: var(--cream); font-family: var(--font-th); overflow-wrap: anywhere; } .nm-ladder li.feng b { color: var(--gold-xl); } .nm-ladder li.wait b { color: var(--cream-d); font-weight: 400; font-style: italic; }
+.nm-ladder em { font-style: normal; font-family: var(--font-zh); color: #ffd9a0; font-size: 14px; }
+.nm-roll { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.nm-roll li { display: flex; justify-content: space-between; gap: 10px; padding: 7px 12px; border-radius: 8px; background: rgba(20, 8, 12, .5); border: 1px solid var(--gold-faint); font-size: 13.5px; }
+.nm-roll li.mine { border-color: #4c9a7a; } .nm-roll .nr-n { color: var(--cream); font-family: var(--font-th); } .nm-roll small { margin-left: 6px; color: var(--cream-d); } .nm-roll em { font-style: normal; color: var(--gold-l); font-size: 12.5px; white-space: nowrap; }
+.tb-hist li.strip { border-color: rgba(230, 120, 100, .55); background: rgba(160, 40, 40, .18); }
+.tb-who em { font-style: normal; font-family: var(--font-zh); margin-left: 6px; color: #ffd9a0; }
+/* ceremony: naming variant */
+.ceremony.nm .nm-seal { display: inline-flex; gap: 8px; }
+.ceremony.nm .nm-seal b { width: 84px; height: 84px; font-size: 54px; }
+.ceremony.nm .nm-seal b.new { box-shadow: inset 0 0 0 2px rgba(255, 245, 200, .75), 0 0 18px rgba(255, 190, 80, .7), 0 3px 8px rgba(0, 0, 0, .55); }
+.ceremony.nm .nm-seal.stampin b { animation: stampIn .9s cubic-bezier(.2, 1.4, .4, 1) .5s both; }
+.ceremony.nm .nm-seal.broken b { background: linear-gradient(135deg, #5a4a4e, #2a2226); color: #b8a8a8; position: relative; animation: stampIn .8s ease .4s both; }
+.ceremony.nm .nm-seal.broken b::after { content: ''; position: absolute; left: 10%; right: 10%; top: 48%; height: 3px; background: #140a0d; transform: rotate(-24deg); }
+@media (max-width: 720px) {
+  .nm-plate { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .nm-hanzi b { width: 62px; height: 62px; font-size: 38px; }
+  .nm-ladder li { grid-template-columns: 72px minmax(0, 1fr); } .nm-ladder em { grid-column: 2; }
+  .ceremony.nm .nm-seal b { width: 66px; height: 66px; font-size: 42px; }
+}

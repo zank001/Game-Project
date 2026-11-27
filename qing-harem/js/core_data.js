@@ -35,7 +35,7 @@ Q.CONST = {
   startAge: 16,
   maxSeasons: 140,          // forced twilight ending (≈35 years)
   apPerSeason: 2,           // action points each season
-  favorDecay: 2,            // favor lost every season end
+  favorDecay: 3,            // favour lost each season (the tablet nights now give passive favour, so decay is 3; nights are scaled by TABLET.nightFavorScale)
   threatDecay: 2,           // natural cooling of danger
   healthRegen: 1,           // when health < 70 and not poisoned
   winterChill: 1,           // health lost each winter (ranks 0-2 only → thin clothes)
@@ -82,9 +82,9 @@ Q.CHARS = {
   emperor:  { th: 'ฮ่องเต้เฉิงผิง',        short: 'ฮ่องเต้',     zh: '承平帝',            color: '#c9971c', role: 'จักรพรรดิแห่งต้าชิง' },
   empress:  { th: 'ฮองเฮาฟู่ฉา',           short: 'ฮองเฮา',      zh: '富察·清妍',          color: '#b22d3b', role: 'ฮองเฮา มารดาแห่งแผ่นดิน' },
   dowager:  { th: 'ไทเฮาเหวินเซี่ยน',      short: 'ไทเฮา',       zh: '温宪皇太后',         color: '#6b3fa0', role: 'พระมารดาของฮ่องเต้' },
-  consort:  { th: 'หวงกุ้ยเฟยหนิ่วฮู่ลู่',  short: 'หวงกุ้ยเฟย',  zh: '钮祜禄·玉兰',        color: '#d4471f', role: 'หวงกุ้ยเฟย สนมผู้เกรียงไกร' },
+  consort:  { th: 'เจียอี้หวงกุ้ยเฟย',  short: 'หวงกุ้ยเฟย',  zh: '嘉懿皇贵妃 · 钮祜禄·玉兰',        color: '#d4471f', role: 'หวงกุ้ยเฟย สนมผู้เกรียงไกร' },
   chu:      { th: 'ฉู่กุ้ยเหริน',          short: 'ฉู่กุ้ยเหริน', zh: '楚思容',            color: '#c2487e', role: 'กุ้ยเหรินผู้ถือดี' },
-  lu:       { th: 'ลู่ผิน',                short: 'ลู่ผิน',      zh: '陆雪凝',            color: '#5f8fb8', role: 'ผินผู้อ่อนหวาน' },
+  lu:       { th: 'อี๋ผิน',                short: 'อี๋ผิน',      zh: '怡嫔 · 陆雪凝',            color: '#5f8fb8', role: 'ผินผู้อ่อนหวาน' },
   shu:      { th: 'ซูเฟย',                 short: 'ซูเฟย',       zh: '舒穆禄·婉容',        color: '#4f8a78', role: 'เฟยผู้เงียบขรึม' },
   friend:   { th: 'เหมยชิง',               short: 'เหมยชิง',     zh: '梅卿',              color: '#e07a9a', role: 'สหายร่วมคัดเลือก' },
   maid:     { th: 'ชุนเถา',                short: 'ชุนเถา',      zh: '春桃',              color: '#e8905a', role: 'สาวใช้คนสนิท' },
@@ -125,16 +125,16 @@ Q.BGS = [
 
 /* ---------- tags (action-draw pools + special pools) ---------- */
 Q.TAGS = ['garden', 'visit_empress', 'visit_dowager', 'visit_emperor', 'befriend', 'bribe',
-          'investigate', 'scheme', 'palace_affairs', 'family', 'attack', 'general', 'tablet'];
+          'investigate', 'scheme', 'palace_affairs', 'family', 'attack', 'general', 'tablet', 'naming'];
 
 /* ---------- ranks ---------- */
 Q.RANKS = [
   { i: 0, key: 'maid',        th: 'นางกำนัล',     zh: '宫女',  alt: 'ผู้เข้าคัดเลือก', stipend: 1,   hall: 'ห้องนอนรวมของนางกำนัล',        color: '#8d8d8d', note: 'ยังไม่นับเป็นสนม' },
   { i: 1, key: 'daying',      th: 'ต้าอิ้ง',       zh: '答应',  stipend: 12,  hall: 'เรือนข้างตำหนักหย่งโซ่ว',       color: '#8fa86b', note: 'ขั้นต่ำสุดของสนมวังหลัง',
     onPromote: { prestige: 4, silver: 30, favor: 5 } },
-  { i: 2, key: 'changzai',    th: 'ฉังไจ้',       zh: '常在',  stipend: 20,  hall: 'เรือนเล็กในตำหนักหย่งโซ่ว',      color: '#6fae8f', note: 'เริ่มมีหน้ามีตา',
+  { i: 2, key: 'changzai',    th: 'ฉังไจ้',       zh: '常在',  stipend: 20,  hall: 'เรือนเล็กในตำหนักหย่งโซ่ว',      color: '#6fae8f', note: 'เริ่มมีป้ายชื่อเขียวถวายฮ่องเต้',
     onPromote: { prestige: 6, silver: 40 } },
-  { i: 3, key: 'guiren',      th: 'กุ้ยเหริน',    zh: '贵人',  stipend: 32,  hall: 'ห้องหลักของเรือนตะวันออก',       color: '#59a5b0', note: 'ได้ป้ายชื่อเขียวถวายฮ่องเต้',
+  { i: 3, key: 'guiren',      th: 'กุ้ยเหริน',    zh: '贵人',  stipend: 32,  hall: 'ห้องหลักของเรือนตะวันออก',       color: '#59a5b0', note: 'มีห้องหลักของตนเอง คนในวังเริ่มเกรงใจ',
     onPromote: { prestige: 7, silver: 60 } },
   { i: 4, key: 'pin',         th: 'ผิน',          zh: '嫔',    stipend: 52,  hall: 'ตำหนักของตนเอง พร้อมบ่าวไพร่',   color: '#5b8fd0', note: 'มีตำหนักและฉายาพระราชทาน',
     onPromote: { prestige: 8, silver: 100, threat: 3 } },
@@ -511,4 +511,26 @@ Q.TABLET = {
   hist: 12,
   npc: { consort: 44, lu: 24, shu: 20, chu: 14, friend: 10 },
   trials: 400,
+  nightFavorScale: 0.5,            // positive favour inside tablet-tagged events is scaled (balance: keeps passive favour from trivialising the climb)
+};
+
+/* ---------- naming: พระนามและฉายาพระราชทาน (封号) — pools are filled by js/data/n0*_*.js ; rules in docs/DESIGN.md §12 ---------- */
+Q.NAMING = {
+  feng: [], extra: [], combos: [], clans: [], girlNames: [],
+  fengRank: 4,                     // from ผิน the Emperor bestows a fenghao
+  extraRank: 7,                    // from หวงกุ้ยเฟย the fenghao gains one extra character
+  offers: 3, chooseFavor: 38,      // the Emperor lets the player choose among 3 when favour >= chooseFavor
+  early: { minRank: 1, maxRank: 3, favor: 46, chance: 0.3, gap: 4, minSir: 2 },     // early bestowal for a much-favoured low-rank concubine
+  cold: { minRank: 4, favor: 6, seasons: 3, chance: 0.14 },                          // disfavour → the Emperor may strip the fenghao
+  regrant: { gap: 3, favor: 20, chance: 0.4 },                                       // after a strip: a NEW fenghao
+  hist: 14,
+  rankZhT: ['宮女', '答應', '常在', '貴人', '嬪', '妃', '貴妃', '皇貴妃', '皇后', '皇太后'],   // traditional rank names, joined to traditional fenghao hanzi
+  kindTh: { pin: 'ประทานฉายาตามฐานันดรผิน', early: 'ประทานฉายาเป็นพิเศษ', extra: 'ประทานอักษรเพิ่ม', regrant: 'ตั้งฉายาใหม่', strip_demote: 'ริบฉายาเพราะลดขั้น', strip_cold: 'ริบฉายา' },
+  reservedZh: ['舒', '怡', '嘉', '懿'],
+  reservedTh: ['ซู', 'อี๋', 'เจีย', 'อี้'],                                          // Thai readings of those (a held reading can never be offered to anyone)                                              // belong to NPC consorts (ซูเฟย · อี๋ผิน · เจียอี้หวงกุ้ยเฟย)
+  tagTh: { virtue: 'คุณธรรม', gentle: 'ความอ่อนโยน', beauty: 'โฉมงาม', wisdom: 'ปัญญา', art: 'ศิลป์และพรสวรรค์', harmony: 'ความสงบปรองดอง', fortune: 'ความเป็นมงคล', loyal: 'ความภักดี', strong: 'ความองอาจสง่างาม' },
+  tagWhy: { virtue: 'เพราะท่านเปี่ยมคุณธรรม', gentle: 'เพราะท่านอ่อนโยนนุ่มนวล', beauty: 'เพราะโฉมงามของท่าน', wisdom: 'เพราะท่านเฉียบแหลมมีปัญญา', art: 'เพราะท่านมีพรสวรรค์ด้านศิลป์', harmony: 'เพราะท่านทำให้ใจสงบ', fortune: 'เพราะท่านนำโชคมงคลมาให้', loyal: 'เพราะท่านภักดีซื่อตรง', strong: 'เพราะท่านสง่าองอาจกว่าใคร' },
+  boon: { prestige: 2, virtue: { virtue: 2 }, gentle: { threat: -1 }, beauty: { charm: 2 }, wisdom: { wit: 2 }, art: { talent: 2 }, harmony: { threat: -2 }, fortune: { favor: 2 }, loyal: { virtue: 1, prestige: 1 }, strong: { health: 3 } },
+  defaultClan: { noble: { th: 'กวาเอ่อร์เจีย', zh: '瓜尔佳' }, scholar: { th: 'เซิ่น', zh: '沈' }, maid: { th: 'หลิว', zh: '刘' } },
+  maidClans: ['หลิว', 'หวง', 'หม่า', 'จู', 'สือ', 'เฝิง', 'เหอ', 'เซียว', 'ต่ง', 'ถัง', 'ติ่ง', 'ฉี'],
 };

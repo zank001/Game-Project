@@ -103,12 +103,13 @@
   };
   Game.Seen = Seen;
 
+  function titleLine(st) { var s = QL.nmStyle(st); return { th: s.mode === 'name' ? QL.rankTitle(st) : s.th, zh: s.zh || Q.RANKS[st.rank].zh, mode: s.mode }; }
   var Saves = {
     KEYS: ['auto', '1', '2', '3', '4'],
     all: function () { return readJSON(Q.SAVE_KEY, {}); },
     meta: function (st) {
       var d = QL.dateInfo(st);
-      return { ts: Date.now(), name: st.name, origin: st.origin, rank: st.rank, rankTitle: QL.rankTitle(st), zh: Q.RANKS[st.rank].zh,
+      return { ts: Date.now(), name: st.name, origin: st.origin, rank: st.rank, rankTitle: titleLine(st).th, zh: titleLine(st).zh,
                t: st.t, label: d.label, year: d.year, season: d.season, age: d.age, phase: st.phase, mid: !!st.cur };
     },
     save: function (key, st) {
@@ -434,7 +435,7 @@
     var fig = $('#create-preview');
     fig.innerHTML = portrait('player', 'smile', { rank: 0, origin: k, vb: '40 0 320 430' });
     $('#create-preview-bg').innerHTML = bgSVG(k === 'maid' ? 'servants_quarters' : (k === 'noble' ? 'family_home' : 'family_home'), 0);
-    $('#preview-origin').textContent = Q.ORIGINS[k].th;
+    renderClanField();
     updatePreviewName();
   }
   function selectGift(k) {
@@ -444,6 +445,31 @@
   function updatePreviewName() {
     var v = $('#name-input').value.trim() || 'หลันซี';
     $('#preview-name').textContent = v;
+    var clan = currentClan();
+    $('#preview-origin').textContent = Q.ORIGINS[Create.origin].th + (clan ? ' · สกุล' + clan : '');
+  }
+  function currentClan() {
+    var o = Create.origin, d = Q.NAMING.defaultClan[o];
+    if (o !== 'maid') return d ? d.th : '';
+    var v = ($('#clan-input').value || '').trim();
+    return v || (d ? d.th : '');
+  }
+  function renderClanField() {
+    var o = Create.origin, inp = $('#clan-input'), d = Q.NAMING.defaultClan[o] || Q.NAMING.defaultClan.noble, chips = $('#clan-chips'), note = $('#clan-note');
+    chips.innerHTML = '';
+    if (o === 'maid') {
+      if (Create._clanFor !== 'maid') inp.value = d.th;
+      inp.disabled = false; Create._clanFor = 'maid';
+      Q.NAMING.maidClans.forEach(function (n) {
+        var b = h('button', 'chip-btn', esc(n)); b.type = 'button';
+        b.addEventListener('click', function () { inp.value = n; updatePreviewName(); snd('pick'); });
+        chips.appendChild(b);
+      });
+      note.textContent = 'นางกำนัลไร้ตระกูลหนุนหลัง แต่ก็มีแซ่สามัญ — เลือกหรือพิมพ์เองได้ (ใช้เรียกขานเมื่อได้เป็นสนม เช่น "' + (inp.value || d.th) + ' ต้าอิ้ง")';
+    } else {
+      inp.value = d.th; inp.disabled = true; Create._clanFor = o;
+      note.textContent = 'สกุลตามชาติกำเนิด' + (d.zh ? ' (' + d.zh + ')' : '') + ' — ใต้ขั้นผินท่านจะถูกเรียกว่า "' + d.th + ' ฉังไจ้" เป็นต้น';
+    }
   }
   function showCreate() {
     show('create-screen');
@@ -497,11 +523,11 @@
     var st = Game.st, d = hub.date, R = Q.RANKS[st.rank];
     $('#hub-screen').setAttribute('data-season', d.season);
     $('#hud-date').innerHTML = '<span class="hd-ico">' + d.icon + '</span><span class="hd-txt"><b>รัชศก' + esc(Q.ERA) + ' ปีที่ ' + d.year + '</b><small>' + esc(d.seasonName) + ' · อายุ ' + d.age + ' ปี</small></span>';
-    var idKey = [st.rank, st.origin, st.name].join('|');
+    var TL = titleLine(st), idKey = [st.rank, st.origin, st.name, TL.th].join('|');
     if (_topKey !== idKey || !$('#hud-id').firstChild) {
       _topKey = idKey;
       $('#hud-id').innerHTML = '<span class="hid-ava">' + portrait('player', 'neutral', { rank: st.rank, origin: st.origin, bust: true, outfit: true }) + '</span>' +
-        seal(st.rank, 'sm') + '<span class="hid-txt"><b>' + esc(st.name) + '</b><small>' + esc(hub.rankTitle) + ' · ' + esc(R.zh) + '</small></span>';
+        seal(st.rank, 'sm') + '<span class="hid-txt"><b>' + esc(st.name) + '</b><small>' + esc(TL.th) + ' · ' + esc(TL.zh) + '</small></span>';
     }
     var total = Math.max(Q.CONST.apPerSeason, hub.ap), pips = '';
     for (var i = 0; i < total; i++) pips += '<i class="pip ' + (i < hub.ap ? 'on' : '') + '"></i>';
@@ -571,7 +597,7 @@
     var expr = (st.S.health < 30 || st.F.poisoned) ? 'sad' : (st.S.favor >= 50 ? 'smile' : 'neutral');
     var wsig = (QL.ensureW(st), Object.keys(st.W.eq).map(function (k) { return st.W.eq[k]; }).join(','));
     var xs = QL.ensureX(st), xsig = xs.batches + ':' + (xs.pending ? xs.pending.ids.length : 0);
-    var key = [st.rank, st.origin, expr, st.name, st.F.has_heir ? 1 : 0, st.F.poisoned ? 1 : 0, st.F.heir_name || '', wsig, xsig].join('|');
+    var TL = titleLine(st), key = [st.rank, st.origin, expr, st.name, TL.th, st.F.has_heir ? 1 : 0, st.F.poisoned ? 1 : 0, st.F.heir_name || '', wsig, xsig].join('|');
     var chips = '<span class="hc">อายุ ' + hub.date.age + '</span>';
     if (st.F.has_heir) chips += '<span class="hc heir">👶 ' + esc(typeof st.F.heir_name === 'string' ? st.F.heir_name : 'ทายาท') + '</span>';
     if (st.F.poisoned) chips += '<span class="hc poison">☠ ถูกพิษ</span>';
@@ -583,10 +609,11 @@
       el.innerHTML = '<div class="hero-bg">' + bgSVG(st.origin !== 'maid' && st.rank === 0 ? 'family_home' : HALL_BG[st.rank], hub.date.season) + '</div><div class="hero-shade"></div>' +
         '<div class="hero-fig">' + portrait('player', expr, { rank: st.rank, origin: st.origin, vb: '30 0 340 440', outfit: true }) + '</div>' +
         '<div class="hero-info"><div class="hero-name">' + esc(st.name) + '</div>' +
-        '<div class="hero-rank">' + seal(st.rank, 'sm') + '<span><b>' + esc(hub.rankTitle) + '</b><small>' + esc(R.zh) + '</small></span></div>' +
+        '<div class="hero-rank">' + seal(st.rank, 'sm') + '<span><b>' + esc(TL.th) + '</b><small>' + esc(TL.zh) + '</small></span></div>' +
         '<div class="hero-hall">🏠 ' + esc(R.hall) + '</div><div class="hero-chips">' + chips + '</div>' +
         '<div class="hero-btns"><button type="button" class="btn btn-ghost sm btn-wardrobe">👘 ตู้เสื้อผ้า</button>' +
         '<button type="button" class="btn btn-ghost sm btn-tablet">🎴 ป้ายชื่อเขียว</button>' +
+        (st.rank >= 1 ? '<button type="button" class="btn btn-ghost sm btn-naming">🪪 พระนาม</button>' : '') +
         (xs.batches > 0 ? '<button type="button" class="btn btn-ghost sm btn-xiunu">📜 ซิ่วหนี่' + (xs.pending ? '<i class="xn-dot"></i>' : '') + '</button>' : '') + '</div></div>';
     });
   }
@@ -1075,6 +1102,7 @@
 
   function ceremony() {
     var st = Game.st, up = !!st.promoted, info = up ? st.promoted : st.demoted;
+    if (!info && st.nmCer) return nameCeremony(st.nmCer);
     if (!info) return Promise.resolve();
     if (_cer) return _cer.promise;
     var from = info.from, to = info.to, R = Q.RANKS[to], root = $('#ceremony');
@@ -1110,19 +1138,64 @@
     var btn = $('#btn-ceremony-ok'); try { btn.focus({ preventScroll: true }); } catch (e) { /* ignore */ }
     return prom;
   }
+
+  var NM_LEAD = {
+    grant: '{name} เป็นที่พอพระทัย ฮ่องเต้ทรงเลือกอักษรมงคลพระราชทานเป็นฉายา ให้ใช้เรียกขานแทนสกุลเดิม ว่า',
+    regrant: 'ฮ่องเต้ทรงพระกรุณา ตั้งฉายาแก่ {name} ขึ้นใหม่ ให้ตั้งตนและทำความดีเพื่อลบรอยเก่า ฉายาใหม่คือ',
+    extra: 'ด้วยฐานันดรสูงส่งใกล้แท่นฮองเฮา ฮ่องเต้ทรงพระราชทานอักษรเพิ่มแก่ฉายาของ {name} เป็น',
+    strip: 'ฮ่องเต้มีพระบัญชา ริบฉายาพระราชทานของ {name} คืน นับแต่นี้ให้เรียกขานตามสกุลและฐานันดรเท่านั้น'
+  };
+  function nameCeremony(nm) {
+    if (_cer) return _cer.promise;
+    var st = Game.st, root = $('#ceremony'), strip = nm.kind === 'strip';
+    root.classList.toggle('demote', strip);
+    root.classList.toggle('grand', !strip && st.rank >= 7);
+    root.classList.add('nm');
+    $('#cer-head').textContent = strip ? '圣谕 · 削去封号' : '奉天承运 皇帝诏曰';
+    var okSpan = $('#btn-ceremony-ok span'); if (okSpan) okSpan.textContent = strip ? 'น้อมรับโทษ' : 'น้อมรับพระราชทาน';
+    $('#cer-lead').textContent = (NM_LEAD[nm.kind] || NM_LEAD.grant).replace('{name}', st.name);
+    var glyphs = '';
+    if (strip) glyphs = '<span class="nm-seal broken">' + nm.zh.split('').map(function (c) { return '<b>' + esc(c) + '</b>'; }).join('') + '</span>';
+    else {
+      var ch = nm.zh.split(''), fresh = nm.kind === 'extra' ? null : null;
+      glyphs = '<span class="nm-seal stampin">' + ch.map(function (c) { return '<b class="' + (nm.z && nm.z.indexOf(c) >= 0 ? 'new' : '') + '">' + esc(c) + '</b>'; }).join('') + '</span>';
+    }
+    $('#cer-change').innerHTML = glyphs;
+    $('#cer-title').textContent = nm.title;
+    $('#cer-zh').textContent = (nm.titleZh || '') + (strip ? ' · ถูกริบ: ' + nm.th + ' (' + nm.zh + ')' : '');
+    var rw = '';
+    if (!strip) {
+      rw += '<li><u>字</u>อักษร: <b>' + esc(nm.h || nm.th) + ' (' + esc(nm.z || nm.zh) + ')</b> — ' + esc(nm.mean || '') + '</li>';
+      if (nm.why) rw += '<li><u>✦</u>เหตุที่ทรงเลือก: <b>' + esc(nm.why) + '</b></li>';
+      if (nm.hist) rw += '<li><u>📜</u>ธรรมเนียม: ' + esc(nm.hist) + '</li>';
+      if (nm.boon) Object.keys(nm.boon).forEach(function (k) { if (nm.boon[k]) rw += '<li><u>' + (k === 'silver' ? '銀' : esc(statIcon(k))) + '</u>' + esc(REWARD_LABEL[k] || statName(k)) + ' <b class="' + (k === 'threat' ? (nm.boon[k] < 0 ? 'up' : 'dn') : 'up') + '">' + sign(nm.boon[k]) + '</b></li>'; });
+    } else rw += '<li><u>🚫</u>ใครเรียกขานท่านว่า <b class="dn">' + esc(nm.th) + '</b> ถือว่าล่วงเกิน — ต้องเรียกว่า <b>' + esc(nm.title) + '</b></li>';
+    $('#cer-rewards').innerHTML = rw;
+    var d = QL.dateInfo(st);
+    $('#cer-date').textContent = 'รัชศก' + Q.ERA + ' ปีที่ ' + d.year + ' · ' + d.seasonName;
+    $('#cer-portrait').innerHTML = portrait('player', strip ? 'sad' : 'smile', { rank: st.rank, origin: st.origin, vb: '0 0 400 560', outfit: true });
+    $('#cer-sparks').innerHTML = (function () { var s = '', R2 = mk(77 + st.t); for (var i = 0; i < 28; i++) s += '<i class="spark amb" style="--x:' + f1(R2() * 100) + '%;--d:' + f1(5 + R2() * 6) + 's;--dl:-' + f1(R2() * 8) + 's;--s:' + f1(2 + R2() * 4) + 'px"></i>'; return s; })();
+    showOverlay('ceremony');
+    snd(strip ? 'fail' : 'gong');
+    var opened = Date.now(), resolveFn, prom = new Promise(function (r) { resolveFn = r; });
+    _cer = { promise: prom, opened: opened, resolve: resolveFn };
+    var btn = $('#btn-ceremony-ok'); try { btn.focus({ preventScroll: true }); } catch (e) { /* ignore */ }
+    return prom;
+  }
   function closeCeremony(fromBg) {
     if (!_cer) return;
     if (fromBg && !FAST && Date.now() - _cer.opened < 1500) return;
     if (!FAST && Date.now() - _cer.opened < 350) return;
     var c = _cer; _cer = null;
     QL.ackPromotion(Game.st);
+    $('#ceremony').classList.remove('nm');
     hideOverlay('ceremony');
     snd('page');
     c.resolve();
   }
   function maybeCeremony(run) {
     var st = Game.st;
-    if (!(st.promoted || st.demoted)) return Promise.resolve();
+    if (!(st.promoted || st.demoted || st.nmCer)) return Promise.resolve();
     return ceremony();
   }
 
@@ -1428,7 +1501,8 @@
       '<section><h4>🎲 การเลือกและโอกาส</h4><p>ตัวเลือกที่มี <b>%</b> คือการทดสอบคุณสมบัติ ยิ่งสูงยิ่งสำเร็จง่าย · ป้าย <b>銀</b> คือเงินตำลึงที่ต้องจ่าย · ภัยรอบกายสูง เหตุร้ายจะมาบ่อยขึ้น</p></section>' +
       '<section><h4>👘 ตู้เสื้อผ้า</h4><p>กดปุ่ม <b>ตู้เสื้อผ้า</b> ในหน้าหลักเพื่อเลือก <b>ชุด · เครื่องหัว · สร้อยคอ · ต่างหู · ของติดตัว</b> ได้ตามฐานะ ลองสวมก่อนซื้อได้ รับของพระราชทานเมื่อเลื่อนขั้น และได้ของขวัญจากผู้คนในวัง ของแต่ละชิ้นเพิ่มโอกาสตอนทอยเต๋า (โฉมงาม พรสวรรค์ ปัญญา) หรือส่งผลต่อศักดิ์ศรีและภัยรอบกายทุกฤดู — ชุดหรูสะดุดตาช่วยให้ถูกจดจำ แต่ก็ล่อสายตาศัตรูด้วย · สวมชุด เครื่องหัว และเครื่องประดับโทนเดียวกันครบ จะได้โบนัสชุดเซ็ต</p></section>' +
       '<section><h4>🏯 ซิ่วหนี่ — สนมรุ่นใหม่</h4><p>ทุก 3 ปีมี <b>รุ่นซิ่วหนี่</b> เข้าวัง เมื่อท่านถึงขั้น <b>เฟย</b> ท่านมีสิทธิ์พิจารณาผู้เข้าคัดเลือก: สืบประวัติ → <b>รับเข้าสังกัด</b> / <b>ปล่อยตามชะตา</b> / <b>ส่งเป็นนางกำนัลข้างกาย</b> / <b>คัดออก</b> สนมที่ท่านอุปถัมภ์อาจเป็นหูเป็นตาและกราบทูลแทนท่าน แต่บางคนทะเยอทะยานจนกลายเป็นคู่แข่ง — และบางคนคือสายสืบของคนอื่นตั้งแต่แรก ดูรายชื่อได้ที่ปุ่ม <b>📜 ซิ่วหนี่</b></p></section>' +
-      '<section><h4>🎴 ป้ายชื่อเขียว (พลิกป้าย)</h4><p>เมื่อถึงขั้น <b>ฉังไจ้</b> ท่านมีป้ายชื่อเขียวของตนเอง ทุกฤดูฮ่องเต้ทรงพลิกป้าย 1–3 ใบ โอกาสของท่านขึ้นกับ ความโปรดปราน ฐานันดร โฉมงาม พรสวรรค์ ไมตรีของขันทีจางฝู เครื่องแต่งกาย และ <b>อารมณ์ฮ่องเต้</b> — ท่านต้องแข่งกับหวงกุ้ยเฟย ลู่ผิน ซูเฟย และสนมรุ่นใหม่ ถ้าป้ายถูกพลิก ท่านจะถูกเรียกเข้าเฝ้ายามค่ำ (ได้ความโปรดปราน แต่ก็เพิ่มความอิจฉา) <b>ฝากขันที</b>ให้จัดคิวได้ แต่ฮองเฮาหรือไทเฮาก็ขีดชื่อท่านได้ถ้าท่านเสียความไว้ใจ ดูได้ที่ปุ่ม <b>🎴 ป้ายชื่อเขียว</b></p></section>' +
+      '<section><h4>🎴 ป้ายชื่อเขียว (พลิกป้าย)</h4><p>เมื่อถึงขั้น <b>ฉังไจ้</b> ท่านมีป้ายชื่อเขียวของตนเอง ทุกฤดูฮ่องเต้ทรงพลิกป้าย 1–3 ใบ โอกาสของท่านขึ้นกับ ความโปรดปราน ฐานันดร โฉมงาม พรสวรรค์ ไมตรีของขันทีจางฝู เครื่องแต่งกาย และ <b>อารมณ์ฮ่องเต้</b> — ท่านต้องแข่งกับหวงกุ้ยเฟย อี๋ผิน ซูเฟย และสนมรุ่นใหม่ ถ้าป้ายถูกพลิก ท่านจะถูกเรียกเข้าเฝ้ายามค่ำ (ได้ความโปรดปราน แต่ก็เพิ่มความอิจฉา) <b>ฝากขันที</b>ให้จัดคิวได้ แต่ฮองเฮาหรือไทเฮาก็ขีดชื่อท่านได้ถ้าท่านเสียความไว้ใจ ดูได้ที่ปุ่ม <b>🎴 ป้ายชื่อเขียว</b></p></section>' +
+      '<section><h4>🪪 พระนามและฉายา</h4><p>สนมที่ต่ำกว่าขั้น<b>ผิน</b>ถูกเรียกตาม <b>สกุล + ฐานันดร</b> เมื่อเลื่อนเป็นผิน ฮ่องเต้จะ<b>พระราชทานฉายา</b> (封号) เป็นอักษรจีนมงคลหนึ่งคำ แล้วถูกเรียกว่า <b>ฉายา + ฐานันดร</b> หากทรงโปรดปรานมากเป็นพิเศษ ก็อาจประทานฉายาก่อนถึงผิน ตั้งแต่ขั้น<b>หวงกุ้ยเฟย</b>ขึ้นไปจะได้<b>อักษรเพิ่มอีกหนึ่งคำ</b> แต่ฉายาก็ถูก<b>ริบคืน</b>ได้ (เมื่อถูกลดขั้น หรือตกต่ำจากพระเนตรนานเกินไป) และอาจได้ตั้งใหม่ภายหลัง ดูได้ที่ปุ่ม <b>🪪 พระนาม</b></p></section>' +
       '<section><h4>📜 ตอนจบ</h4><p>มีตอนจบมากมายตามวิถีที่ท่านเลือก ทั้งสุข เศร้า และสงบ ดูได้ที่ <b>จดหมายเหตุ</b> · ระบบบันทึกอัตโนมัติทุกครั้งที่กลับสู่หน้าวังหลัง</p></section>' +
       '<section><h4>⌨ ปุ่มลัด</h4><p><b>Space / Enter</b> ไปต่อ · <b>1–4</b> เลือกตัวเลือก · <b>Esc</b> เมนู</p></section>' +
       '<section class="credits"><h4>✦ เครดิต</h4><p>ลิขิตหงส์ · วังหลังต้าชิง<br>เกมกลยุทธ์ผสมวิชวลโนเวล ภาพและเสียงทั้งหมดสร้างด้วยโค้ด<br>เรื่องราวเป็นนิยายสมมติ — รัชศกเฉิงผิง ฮ่องเต้ ราชวงศ์ และตัวละครทั้งหมดไม่มีตัวตนจริง ชื่อสกุลแมนจูใช้เพื่อบรรยากาศเท่านั้น</p></section></div>';
@@ -1489,7 +1563,7 @@
         '<div class="wd-info"><b>' + esc(it.th) + '</b><div class="wd-tags">' + tags + '</div><p>' + esc(it.desc) + '</p>' + eff + '</div><div class="wd-act">' + act + '</div></div>';
     }).join('');
     var worn = Q.WARDROBE.slots.map(function (sl) { var id = st.W.eq[sl.id], it = id && Q.WARDROBE.byId[id]; return '<li><u>' + sl.icon + '</u><span>' + esc(it ? it.th : '—') + '</span></li>'; }).join('');
-    el.innerHTML = '<div class="wd"><aside class="wd-side"><div class="wd-fig">' + fig + '<div class="wd-name"><b>' + esc(st.name) + '</b><small>' + esc(QL.rankTitle(st)) + '</small></div></div>' +
+    el.innerHTML = '<div class="wd"><aside class="wd-side"><div class="wd-fig">' + fig + '<div class="wd-name"><b>' + esc(st.name) + '</b><small>' + esc(titleLine(st).th) + '</small></div></div>' +
       '<div class="wd-sum"><div class="wd-silver"><u>銀</u>' + w.silver + ' ตำลึง</div><h4>ผลของเครื่องแต่งกาย</h4><ul class="wd-eff big">' + effHtml + '</ul>' + setHtml + '<h4>ที่สวมอยู่</h4><ul class="wd-worn-list">' + worn + '</ul></div></aside>' +
       '<section class="wd-main">' + tryBar + '<div class="wd-hint">' + esc(slotId === 'robe' ? 'ชุดตามฐานะต้องสวมเสมอ ยิ่งสูงศักดิ์ยิ่งสะดุดตา — และยิ่งเป็นเป้าสายตา' : slotId === 'head' ? 'เครื่องหัวบอกฐานะและรสนิยมของท่านก่อนที่ท่านจะเอ่ยปาก' : 'เครื่องประดับชิ้นเล็กๆ ที่บางครั้งตัดสินความประทับใจแรก') + '</div>' +
       '<div class="wd-list">' + (list || '<p class="mute">ยังไม่มีสิ่งของในหมวดนี้</p>') + '</div></section></div>';
@@ -1551,7 +1625,7 @@
     }
     var origin = c.clan === 'สามัญชน' ? 'ลูกสาวสามัญชน' : 'ตระกูล' + c.clan + (c.han ? ' (ฮั่นจวิน)' : ' · ' + c.banner);
     return '<div class="xn-card ' + c.status + (c.turned ? ' turned' : '') + '"><div class="xn-ava">' + xnBust(c) + '</div><div class="xn-body">' +
-      '<div class="xn-head"><b>' + esc(c.name) + '</b><span class="xn-rk">' + esc(c.rankTh) + '</span><span class="xn-st">' + esc(c.statusTh) + '</span></div>' +
+      '<div class="xn-head"><b>' + esc(c.name) + '</b><span class="xn-rk">' + esc(c.rank ? c.title : c.rankTh) + '</span><span class="xn-st">' + esc(c.statusTh) + '</span></div>' +
       '<div class="xn-sub">' + esc(origin) + ' · อายุ ' + c.age + '</div><p class="xn-blurb">“' + esc(c.blurb) + '”</p>' +
       '<div class="xn-bars">' + xnMeter('โฉม', c.charm) + xnMeter('ปัญญา', c.wit) + xnMeter('ศิลป์', c.talent) + '</div>' + meters +
       '<div class="xn-tags">' + tags + '</div></div>' + (act ? '<div class="xn-act">' + act + '</div>' : '') + '</div>';
@@ -1624,7 +1698,7 @@
     var boost = '<div class="tb-boost"><div><b>ฝากขันทีจัดคิว</b><small>' + (i.boost ? 'ตอนนี้ฝากไว้ +' + i.boost + ' (หมดผลเมื่อสิ้นฤดู)' : 'จ่ายขันทีจางฝูให้วางป้ายของท่านไว้หน้าถาด (+' + i.boostGain + ' น้ำหนัก)') + '</small></div>' +
       '<button type="button" class="btn btn-primary sm" data-a="boost"' + (i.canBoost ? '' : ' disabled') + '><span>銀 ' + i.boostCost + '</span></button></div>' + (i.canBoost || !i.boostWhy ? '' : '<p class="xn-note">' + esc(i.boostWhy) + '</p>');
     var rows = i.rows.map(function (r) {
-      return '<li class="' + (r.id === 'me' ? 'me' : '') + '"><span class="tb-nm">' + (r.id === 'me' ? '✦ ' + esc(st.name) + ' (ท่าน)' : esc(r.name)) + (r.kind === 'girl' ? '<em>ซิ่วหนี่</em>' : '') + '</span><i style="--v:' + Math.min(100, r.pct) + '%"></i><b>' + r.pct + '%</b></li>';
+      return '<li class="' + (r.id === 'me' ? 'me' : '') + '"><span class="tb-nm">' + (r.id === 'me' ? '✦ ' + esc(r.name) + ' (ท่าน)' : esc(r.name)) + (r.kind === 'girl' ? '<em>ซิ่วหนี่</em>' : '') + '</span><i style="--v:' + Math.min(100, r.pct) + '%"></i><b>' + r.pct + '%</b></li>';
     }).join('');
     el.innerHTML = mood + blocked + '<div class="tb-me"><div class="tb-pct"><b>' + i.myPct + '%</b><small>โอกาสถูกพลิกป้ายในฤดูหน้า (ฮ่องเต้จะทรงพลิกประมาณ ' + i.picks + ' ใบ)</small></div>' +
       '<h4>ปัจจัยของท่าน</h4><ul class="tb-parts">' + parts + '</ul>' + boost + '</div>' +
@@ -1659,6 +1733,63 @@
       { id: 'hist', label: '📜 ประวัติ', render: renderTbHist } ], start: tab || 'queue' });
   }
   Game.openTablet = openTablet;
+
+
+  /* ============================================================
+     11e. NAMING (พระนาม · ฉายาพระราชทาน)
+     ============================================================ */
+  var NMK_TH = { grant: 'ประทานฉายา', early: 'ประทานฉายาพิเศษ', regrant: 'ตั้งฉายาใหม่', extra: 'ประทานอักษรเพิ่ม', strip: 'ริบฉายาคืน' };
+  function renderNmCard(el) {
+    var st = Game.st, i = QL.nmInfo(st), s = i.style, html = '';
+    var big = i.full ? i.full.zh : (i.clanZh || '');
+    html += '<div class="nm-plate' + (i.has ? '' : ' plain') + '"><div class="nm-hanzi">' + (big ? big.split('').map(function (c) { return '<b>' + esc(c) + '</b>'; }).join('') : '<b>?</b>') + '</div>' +
+      '<div class="nm-names"><h3>' + esc(s.mode === 'name' ? i.name : s.th) + '</h3><div class="nm-zh">' + esc(s.zh || '') + '</div>' +
+      '<div class="nm-sub">นามเดิม <b>' + esc(i.name) + '</b> · สกุล <b>' + esc(i.clan) + '</b>' + (i.clanZh ? ' (' + esc(i.clanZh) + ')' : '') + '</div></div></div>';
+    if (i.feng) {
+      html += '<div class="nm-block"><h4>ฉายาพระราชทาน</h4><div class="nm-feng"><b>' + esc(i.feng.th) + ' <em>' + esc(i.feng.zh) + '</em></b><span>' + esc(i.feng.mean) + '</span></div>' +
+        '<div class="nm-tags">' + i.feng.tagsTh.map(function (t) { return '<i>' + esc(t) + '</i>'; }).join('') + '</div>' +
+        (i.extra ? '<div class="nm-extra">อักษรเพิ่มแห่งฐานันดร: <b>' + esc(i.extra.th) + ' (' + esc(i.extra.zh) + ')</b> — ' + esc(i.extra.mean) + ' · ' + (i.extra.pos === 'pre' ? 'นำหน้า' : 'ต่อท้าย') + '</div>' : '') +
+        (i.feng.hist ? '<p class="nm-hist">📜 ' + esc(i.feng.hist) + '</p>' : '') + '</div>';
+    } else if (i.stripped) {
+      html += '<div class="nm-block warn"><h4>ถูกริบฉายา</h4><p>ฮ่องเต้ทรงริบฉายา' + (i.old ? ' <b>' + esc(i.old.th) + '</b> (' + esc(i.old.zh) + ')' : '') + 'คืน ตอนนี้ท่านถูกเรียกตามสกุลและฐานันดรเท่านั้น หากรักษาความโปรดปรานและความประพฤติไว้ ฮ่องเต้อาจทรงตั้งฉายาใหม่ให้ในภายหลัง</p></div>';
+    } else if (i.rank < 4) {
+      html += '<div class="nm-block"><h4>ยังไม่มีฉายา</h4><p>สนมที่ต่ำกว่าขั้นผินถูกเรียกว่า <b>สกุล + ฐานันดร</b> (เช่น ' + esc(i.clan) + ' ' + esc(i.rankTh) + ') เมื่อเลื่อนเป็น <b>ผิน</b> ฮ่องเต้จะพระราชทานฉายา — และหากทรงโปรดปรานท่านมากเป็นพิเศษ (ความโปรดปรานราว ' + i.early.favor + ' ขึ้นไป) ก็อาจประทานให้ก่อนหน้านั้นได้</p></div>';
+    } else {
+      html += '<div class="nm-block"><h4>รอพระราชทานฉายา</h4><p>ท่านเลื่อนขั้นถึงผินแล้ว ฮ่องเต้กำลังทรงเลือกอักษรมงคลให้</p></div>';
+    }
+    if (i.rank >= 7 && i.has && !i.extra) html += '<div class="nm-block"><h4>อักษรเพิ่ม</h4><p>ขั้นหวงกุ้ยเฟยขึ้นไปจะได้รับอักษรเพิ่มหนึ่งคำ</p></div>';
+    html += '<div class="nm-block"><h4>การเรียกขานตามฐานันดร</h4><ul class="nm-ladder">' + i.ladder.map(function (l) {
+      return '<li class="' + l.mode + (l.here ? ' here' : '') + '"><span class="nl-r">' + esc(l.rankTh) + '</span><b>' + esc(l.th) + '</b><em>' + esc(l.zh || '') + '</em></li>';
+    }).join('') + '</ul><p class="xn-note">ต่ำกว่าผินเรียก <b>สกุล + ยศ</b> · ตั้งแต่ผิน เรียก <b>ฉายา + ยศ</b> · ตั้งแต่หวงกุ้ยเฟย ฉายาจะมี <b>อักษรเพิ่ม</b>อีกหนึ่งคำ · ฉายาอาจถูกริบคืนและตั้งใหม่ได้</p></div>';
+    el.innerHTML = html;
+  }
+  function renderNmRoll(el) {
+    var st = Game.st, i = QL.nmInfo(st), rows = '';
+    var npcs = [['consort', 'หวงกุ้ยเฟยแห่งสกุลหนิ่วฮู่ลู่'], ['shu', ''], ['lu', ''], ['chu', '']];
+    npcs.forEach(function (n) {
+      var C = Q.CHARS[n[0]]; if (!C) return;
+      var met = Seen.d.c[n[0]] || (st.R[n[0]] || 0) !== 0; if (!met) return;
+      rows += '<li><span class="nr-n">' + esc(C.th) + '</span><em>' + esc(C.zh || '') + '</em></li>';
+    });
+    i.girls.forEach(function (g) { rows += '<li class="' + (g.mine ? 'mine' : '') + '"><span class="nr-n">' + esc(g.th) + '<small>(' + esc(g.name) + ')</small></span><em>' + (g.mode === 'feng' ? 'มีฉายา' : 'ใช้สกุล') + (g.mine ? ' · ในสังกัด' : '') + '</em></li>'; });
+    el.innerHTML = rows ? '<p class="xn-note">ทำเนียบนามสนมที่ท่านรู้จัก — ใต้ผินเรียกตามสกุล ตั้งแต่ผินขึ้นไปเรียกตามฉายา</p><ul class="nm-roll">' + rows + '</ul>' : '<p class="mute xn-empty">ยังไม่มีสนมให้บันทึกนาม</p>';
+  }
+  function renderNmHist(el) {
+    var i = QL.nmInfo(Game.st);
+    if (!i.hist.length) { el.innerHTML = '<p class="mute xn-empty">ยังไม่มีบันทึกเรื่องฉายา</p>'; return; }
+    el.innerHTML = '<ul class="tb-hist">' + i.hist.map(function (h) {
+      var k = h.kind === 'strip' ? 'strip' : (h.kind === 'extra' ? 'extra' : (h.kind === 'regrant' ? 'regrant' : (h.kind === 'early' ? 'early' : 'grant')));
+      return '<li class="' + (k === 'strip' ? 'strip' : 'me') + '"><div class="tb-when"><b>' + esc(tbWhen(h.t)) + '</b><small>' + esc(Q.RANKS[h.rank] ? Q.RANKS[h.rank].th : '') + '</small></div><div class="tb-who">' + esc(h.th) + ' <em>' + esc(h.zh || '') + '</em></div><span class="tb-flag">' + esc(NMK_TH[k]) + '</span></li>';
+    }).join('') + '</ul>';
+  }
+  function openNaming(tab) {
+    var st = Game.st; if (!st) return;
+    openModal({ title: 'พระนามและฉายา', cls: 'modal-naming', tabs: [
+      { id: 'card', label: '🪪 พระนามของท่าน', render: renderNmCard },
+      { id: 'roll', label: '📖 ทำเนียบนาม', render: renderNmRoll },
+      { id: 'hist', label: '📜 ประวัติ', render: renderNmHist } ], start: tab || 'card' });
+  }
+  Game.openNaming = openNaming;
 
   function menuTabs(inGame) {
     var t = [{ id: 'save', label: inGame ? 'บันทึก' : 'โหลดเกม', render: tabSaves }];
@@ -1710,7 +1841,7 @@
         if (st.cur) { await playEvent(run); continue; }
         var id = QL.nextPending(st);
         if (id) { if (QL.startEvent(st, id)) await playEvent(run); continue; }
-        if (st.promoted || st.demoted) { await ceremony(); if (run !== Game._run) return; continue; }
+        if (st.promoted || st.demoted || st.nmCer) { await ceremony(); if (run !== Game._run) return; continue; }
         if (st.phase === 'ended') { showEnding(); return; }
         if (!st.pendingEnding) { var dead = QL.systemEnd(st); if (dead) { st.pendingEnding = dead; continue; } }
         enterHub();
@@ -1728,7 +1859,7 @@
 
   Game.newGame = function (opts) {
     opts = opts || {};
-    var st = QL.newGame({ name: opts.name, origin: opts.origin, gift: opts.gift, seed: opts.seed });
+    var st = QL.newGame({ name: opts.name, origin: opts.origin, gift: opts.gift, seed: opts.seed, clan: opts.clan });
     startWith(st);
     return st;
   };
@@ -1776,9 +1907,10 @@
     $('#btn-start').onclick = function () {
       var nm = ($('#name-input').value || '').trim() || 'หลันซี';
       snd('ensure'); snd('chime');
-      Game.newGame({ name: nm, origin: Create.origin, gift: Create.gift });
+      Game.newGame({ name: nm, origin: Create.origin, gift: Create.gift, clan: currentClan() });
     };
     $('#name-input').addEventListener('input', updatePreviewName);
+    $('#clan-input').addEventListener('input', function () { updatePreviewName(); var n = $('#clan-note'); if (Create.origin === 'maid' && n) n.textContent = 'นางกำนัลไร้ตระกูลหนุนหลัง แต่ก็มีแซ่สามัญ — เลือกหรือพิมพ์เองได้ (ใช้เรียกขานเมื่อได้เป็นสนม เช่น "' + (currentClan()) + ' ต้าอิ้ง")'; });
     $('#name-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); $('#btn-start').click(); } });
 
     /* hub */
@@ -1788,7 +1920,8 @@
     document.addEventListener('click', function (e) {
       var b = e.target && e.target.closest ? e.target.closest('.btn-wardrobe') : null; if (b) { e.preventDefault(); openWardrobe(); return; }
       var xb = e.target && e.target.closest ? e.target.closest('.btn-xiunu') : null; if (xb) { e.preventDefault(); openXiunu(); return; }
-      var tb = e.target && e.target.closest ? e.target.closest('.btn-tablet') : null; if (tb) { e.preventDefault(); openTablet(); }
+      var tb = e.target && e.target.closest ? e.target.closest('.btn-tablet') : null; if (tb) { e.preventDefault(); openTablet(); return; }
+      var nb = e.target && e.target.closest ? e.target.closest('.btn-naming') : null; if (nb) { e.preventDefault(); openNaming(); }
     });
     $('#btn-end-season').onclick = onEndSeasonClick;
     $('#action-groups').addEventListener('click', function (e) {

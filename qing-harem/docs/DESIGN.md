@@ -183,3 +183,31 @@ Both files: pure functions, no DOM access, no globals except the exported functi
 
 ## 11. Sound contract (sound.js)
 Global `Sound` with: `muted`, `ensure()`, `blip()` (typewriter tick), `pick()`, `pop()` (gain), `fail()`, `chime()`, `gong()` (rank-up), `page()` (soft paper), `startAmbient(mood)`/`stopAmbient()` (mood: 'palace'|'tense'|'sad'|'joy'|'night' — generative pentatonic guzheng-like plucks + soft drone; very quiet; auto-pauses when `muted`; never throws if AudioContext is unavailable). All synthesized with Web Audio (no files).
+
+## 12. Naming — พระนาม · ฉายาพระราชทาน (封号 fenghao) — `Q.NAMING`, `st.N`
+**Realism rules (user-specified, Qing custom):**
+1. Rank 0 (maid / xiunü hopeful): called by personal name (`st.name`).
+2. Ranks 1–3 (ต้าอิ้ง · ฉังไจ้ · กุ้ยเหริน) and any rank with NO fenghao: **clan + space + rank** — "เซิ่น ฉังไจ้", "กวาเอ่อร์เจีย กุ้ยเหริน".
+3. From rank 4 (ผิน) up the Emperor bestows a **fenghao** (ฉายา · one Chinese character, e.g. 令 ลิ่ง): **fenghao + rank, no space** — "ลิ่งผิน", "ลิ่งเฟย", "ลิ่งกุ้ยเฟย".
+4. A **much-favoured** concubine may get the fenghao EARLY, at ranks 1–3 (favor high) — she is then "ลิ่งกุ้ยเหริน".
+5. From rank 7 (หวงกุ้ยเฟย) up the fenghao receives **one extra character** (ADDED after the original, or BEFORE it): 令 + 懿 → "ลิ่งอี้หวงกุ้ยเฟย" (令懿皇貴妃), or 嘉 + 令 → "เจียลิ่งหวงกุ้ยเฟย". Ranks 8 and 9 keep it ("ลิ่งอี้ฮองเฮา").
+6. The Emperor may **strip** the fenghao (ริบฉายาคืน — automatic on demotion below rank 4, and after long disfavour) and later **re-bestow** a NEW one (ตั้งใหม่ — a different character, often humbler: 謹 慎 恪 誠 …).
+7. Fenghao are unique among living concubines (NPCs + generated girls + the player). Reserved to NPCs: 舒 (Shu Fei), 怡 (Lu → "อี๋ผิน"), 嘉+懿 (the Niohuru Imperial Noble Consort → "เจียอี้หวงกุ้ยเฟย").
+
+**Data (`Q.NAMING`, pools live in `js/data/n0*_*.js`, loaded as plain scripts — they only assign `Q.NAMING.*`, no events):**
+```js
+Q.NAMING.feng  = [ { id:'f_ling', zh:'令', th:'ลิ่ง', mean:'ประเสริฐ งดงาม เป็นแบบอย่างที่ดี', tags:['virtue','beauty'], w:8, hist:'令妃 เว่ยเจียสื่อ…', tone:'grand' }, … ];   // single characters
+Q.NAMING.extra = [ { id:'x_yi', zh:'懿', th:'อี้', mean:'…', tags:['virtue'], pos:'suf'|'pre'|'any', w:8, hist:'令懿皇貴妃', good:['f_ling',…] }, … ];       // the one added character for rank ≥ 7
+Q.NAMING.combos = [ { feng:'令', extra:'懿', pos:'suf', th:'ลิ่งอี้', who:'(historical or plausible holder)' }, … ];                               // optional showcase pairs (hist)
+Q.NAMING.clans = [ { id:'c_niohuru', th:'หนิ่วฮู่ลู่', zh:'钮祜禄', kind:'manchu'|'mongol'|'hanjun'|'han', side:'civil'|'military'|'neutral', power:1..3, banner:'ธงขาวขลิบ', w:5, for:['noble'] }, … ];
+Q.NAMING.girlNames = [ 'เหยาหรง', … ];     // extra given names for generated xiunü (Thai only)
+```
+Tag vocabulary (exactly): `virtue gentle beauty wisdom art harmony fortune loyal strong`. `tone` (optional): `grand` (suits high rank) · `soft` · `humble` (re-bestowal after disgrace). `w` = commonness 1..10. `th` readings MUST be unique across `feng` ∪ `extra` and must not equal a clan reading or an NPC name stem (ลู่ ซู ฉู่ เหมย จาง เซี่ย รุ่ย ฟู่ฉา เหวินเซี่ยน หนิ่วฮู่ลู่ ซูมู่ลู่ เซิ่น หลิน หลี่ หวัง เฉิน โจว เกา ท่งเจีย). Run `node tools/namelint.js` to check.
+
+**State `st.N`**: `{ clan, clanZh, feng:id|null, extra:{id,pos}|null, stripped:bool, strippedAt, ever:n, changes:n, kind:''|'pin'|'early'|'extra'|'regrant'|'strip_demote'|'strip_cold', offer:[{id,pos?}], choose:bool, old:{th,zh}|null, lastT, hist:[{t,kind,th,zh,rank}], cold:n }`.
+**Style API** `QL.nmStyle(st, rank?)` → `{ th, zh, clan, feng, mode:'name'|'clan'|'feng', rankTh, rankZh }`. UI shows `th` as the title and `zh` as the hanzi line.
+
+**Placeholders in text** (`fill()`): `{{TITLE}}` current full style · `{{CLAN}}` · `{{FENG}}` current fenghao Thai (incl. extra) · `{{FENGZH}}` · `{{FENGMEAN}}` · `{{NMOLD}}` / `{{NMOLDZH}}` previous (stripped/replaced) fenghao · offers `{{NMH1..3}}` Thai reading of the NEW character · `{{NMZ1..3}}` hanzi · `{{NMM1..3}}` meaning · `{{NMT1..3}}` the full title it would produce (e.g. "ลิ่งอี้หวงกุ้ยเฟย") · `{{NMW1..3}}` a short Thai reason it suits the player (e.g. "เพราะท่านเปี่ยมคุณธรรม"). **Legacy auto-upgrade:** a rank word immediately before `{{PLAYER}}` ("กุ้ยเฟย{{PLAYER}}", "ฉังไจ้ {{PLAYER}}") is rendered as the proper style for THAT rank.
+**Cond variable `N`**: `N.has` (fenghao held) · `N.kind` (the pending moment, see above) · `N.choose` (the Emperor lets the player choose among the offers) · `N.offers` (number of offers) · `N.stripped` · `N.ever` (bestowals so far) · `N.extra` (has the extra char) · `N.changes`.
+**fx.name** (one object): `{ pick: 1..3 }` bestow offer n (default best) · `{ auto: true }` bestow offer 1 · `{ strip: true }` take the fenghao back (sets `N.old`) · `{ spare: true }` cancel a pending strip (strip_cold only) · plus optional `rep`/`note`. Bestowing triggers the engine's naming ceremony (big hanzi overlay) and tiny tag-based boons (prestige +2, a +2..3 to the stat the character stands for).
+**Naming events**: `kind:'random'` (or 'chain'), `tags:['naming']`, `cond:` on `N.kind` (e.g. `"N.kind == 'pin'"`), `weight` 10, no cooldown needed (the engine fires one per moment). Season loop: `nmOnPromote` (rank 4 → kind 'pin'; rank 7 → 'extra'), `demote` below 4 → immediate strip + 'strip_demote' narration, season-end checks (`early` 1–3 at high favour, `strip_cold` at long disfavour, `regrant` after a strip) set `N.kind` + offers; `beginSeason` plays ONE `naming` event whose cond matches (no event → engine applies the default automatically). The event MUST apply `fx.name` on every path (or the engine applies the default when the event ends).

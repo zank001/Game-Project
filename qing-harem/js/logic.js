@@ -156,13 +156,14 @@ var QL = (function () {
     if (needW && needW.indexOf('W') >= 0) e.W = wardrobeEnv(st);
     if (needW && needW.indexOf('X') >= 0) e.X = xnEnv(st);
     if (needW && needW.indexOf('T') >= 0) e.T = tabletEnv(st);
+    if (needW && needW.indexOf('N') >= 0) e.N = nmEnv(st);
     return e;
   }
-  var USES_W = /\bW\b/, USES_X = /\bX\b/, USES_T = /\bT\b/;
+  var USES_W = /\bW\b/, USES_X = /\bX\b/, USES_T = /\bT\b/, USES_N = /\bN\b/;
   function cond(expr, st) {
     if (expr === undefined || expr === null || expr === '' || expr === true) return true;
     if (expr === false) return false;
-    try { var need = (USES_W.test(expr) ? 'W' : '') + (USES_X.test(expr) ? 'X' : '') + (USES_T.test(expr) ? 'T' : ''); return !!evalAst(getAst(expr), envOf(st, need)); }
+    try { var need = (USES_W.test(expr) ? 'W' : '') + (USES_X.test(expr) ? 'X' : '') + (USES_T.test(expr) ? 'T' : '') + (USES_N.test(expr) ? 'N' : ''); return !!evalAst(getAst(expr), envOf(st, need)); }
     catch (e) { if (strict) throw e; warn('[cond]', expr, e.message); return false; }
   }
 
@@ -175,12 +176,15 @@ var QL = (function () {
   function fill(st, text) {
     if (text === undefined || text === null) return '';
     return String(text)
+      .replace(/(หวงกุ้ยเฟย|กุ้ยเฟย|กุ้ยเหริน|ต้าอิ้ง|ฉังไจ้|ผิน|เฟย|ฮองเฮา|ไทเฮา)\s?\{\{PLAYER\}\}/g, function (m, w) { return nmWordTitle(st, w); })
+      .replace(/\{\{(TITLE|CLAN|FENGZH|FENGMEAN|FENG|NMOLDZH|NMOLD)\}\}/g, function (m, k) { return nmFill(st, k === 'NMOLD' ? 'OLD' : k === 'NMOLDZH' ? 'OLDZH' : k); })
+      .replace(/\{\{NM(ZF|[HZMTWF])([123])\}\}/g, function (m, k, i) { return nmFill(st, k, i); })
       .replace(/\{\{PLAYER\}\}/g, st.name)
       .replace(/\{\{RANK\}\}/g, rankTitle(st))
       .replace(/\{\{HEIR\}\}/g, (st.F && typeof st.F.heir_name === 'string' && st.F.heir_name) || 'องค์ชาย')
       .replace(/\{\{YEAR\}\}/g, String(Math.floor(st.t / 4) + 1))
       .replace(/\{\{SEASON\}\}/g, Q.SEASONS[st.t % 4])
-      .replace(/\{\{XN(RANK|CLAN)?([123])?\}\}/g, function (m, kind, idx) { return xnFill(st, kind, idx); });
+      .replace(/\{\{XN(RANK|CLAN|T)?([123])?\}\}/g, function (m, kind, idx) { return xnFill(st, kind, idx); });
   }
   function dateInfo(st) {
     var year = Math.floor(st.t / 4) + 1, season = st.t % 4;
@@ -209,7 +213,11 @@ var QL = (function () {
     Object.keys(Q.INIT_FLAGS).forEach(function (k) { st.F[k] = Q.INIT_FLAGS[k]; });
     Object.keys(o.start.F || {}).forEach(function (k) { st.F[k] = o.start.F[k]; });
     if (opts.gift && Q.GIFTS[opts.gift]) applyFx(st, Q.GIFTS[opts.gift].fx);
-    ensureW(st); ensureX(st); ensureT(st);
+    ensureW(st); ensureX(st); ensureT(st); ensureN(st);
+    if (opts.clan && origin === 'maid') {
+      var cth = String(opts.clan).trim().slice(0, 10), hit = NM.clans.filter(function (c) { return c.th === cth; })[0];
+      if (cth) { st.N.clan = cth; st.N.clanZh = hit ? hit.zh : ''; }
+    }
     st.flash = null;
     return st;
   }
@@ -233,6 +241,7 @@ var QL = (function () {
       if (fx[k] === undefined) return;
       var d = roll(st, fx[k]);
       if (k === 'prestige' && d > 0 && C.prestigeScale) d = Math.max(1, Math.round(d * C.prestigeScale));
+      if (k === 'favor' && d > 0 && st.cur && Q.TABLET.nightFavorScale !== undefined) { var cev = EV[st.cur.ev]; if (cev && cev.tags && cev.tags.indexOf('tablet') >= 0) d = Math.max(1, Math.round(d * Q.TABLET.nightFavorScale)); }
       var old = st.S[k]; st.S[k] = clampStat(k, old + d); flashAdd(st, 'S', k, st.S[k] - old);
     });
     if (fx.rel) Object.keys(fx.rel).forEach(function (k) {
@@ -250,6 +259,7 @@ var QL = (function () {
     if (fx.give) fx.give.forEach(function (id) { giveItem(st, id); });
     if (fx.xn) applyXn(st, fx.xn);
     if (fx.tablet) applyTablet(st, fx.tablet);
+    if (fx.name) applyName(st, fx.name);
     if (fx.log) st.log.push({ t: st.t, text: fill(st, fx.log) });
     if (fx.note) { var f = st.flash || (st.flash = { S: {}, R: {}, notes: [] }); f.notes.push(fill(st, fx.note)); }
   }
@@ -522,7 +532,7 @@ var QL = (function () {
     var X = ensureX(st), g = X.focus && X.girls[X.focus];
     if (!g) return;
     ['loyalty', 'ambition', 'favor'].forEach(function (k) { if (o[k] !== undefined) g[k] = clampN(g[k] + roll(st, o[k]), 0, 100); });
-    if (o.rank) g.rank = Math.max(1, g.rank + o.rank);
+    if (o.rank) { g.rank = Math.max(1, g.rank + o.rank); nmGirlRank(st, g, null); }
     if (o.status) g.status = o.status;
     if (o.turned !== undefined) { g.turned = !!o.turned; if (!o.turned) g.faction = 'none'; }
     if (o.expose) { g.exposed = true; g.known.agent = 'yes'; g.known.arch = true; }
@@ -563,11 +573,12 @@ var QL = (function () {
   }
   function xnFill(st, kind, idx) {
     var X = st.X; if (!X) return kind ? '' : 'น้องใหม่';
-    if (idx) { var id = X.last && X.last.ids[+idx - 1]; return (id && X.girls[id]) ? X.girls[id].name : ''; }
+    if (idx) { var id = X.last && X.last.ids[+idx - 1]; return (id && X.girls[id]) ? (kind === 'T' ? nmGirlStyle(X.girls[id], st).th : X.girls[id].name) : ''; }
     var g = X.focus && X.girls[X.focus];
     if (!g) return kind ? '' : 'น้องใหม่';
     if (kind === 'RANK') return g.rank ? Q.RANKS[Math.min(9, g.rank)].th : 'ผู้เข้าคัดเลือก';
     if (kind === 'CLAN') return g.clan;
+    if (kind === 'T') return nmGirlStyle(g, st).th;
     return g.name;
   }
   function focusLook(st) { var X = st.X, g = X && X.focus && X.girls[X.focus]; return g ? g.look : null; }
@@ -585,7 +596,8 @@ var QL = (function () {
         var cap = Math.min(6, Math.max(1, st.rank - 1));
         while (g.rank < cap && g.favor >= A.rankThr[g.rank]) {
           g.rank++; g.favor -= 4;
-          if (g.status === 'sponsored' && !g.turned) notes.push(g.name + ' ในสังกัดได้เลื่อนเป็น' + Q.RANKS[g.rank].th);
+          nmGirlRank(st, g, null);
+          if (g.status === 'sponsored' && !g.turned) notes.push(nmGirlStyle(g, st).th + ' (' + g.name + ') ในสังกัดได้เลื่อนเป็น' + Q.RANKS[g.rank].th + (g.rank === NM.fengRank && g.feng ? ' และได้รับพระราชทานฉายา "' + nmIdx().feng[g.feng].th + '" (' + nmIdx().feng[g.feng].zh + ')' : ''));
         }
       }
       if (g.arch === 'schemer' || g.agent) g.ambition = clampN(g.ambition + 1.2 * rnd(st), 0, 100);
@@ -622,6 +634,7 @@ var QL = (function () {
     var amb = k.ambition !== undefined ? k.ambition : ((g.status === 'sponsored' && st.t - g.t0 >= 8) || g.turned ? bucketAmb(g.ambition) : null);
     var showLoy = g.status === 'sponsored' || g.status === 'maid' || !!k.done;
     return { id: g.id, name: g.name, clan: g.clan, banner: g.banner, side: g.side, sideTh: A.sideTh[g.side], power: g.power, age: g.age, han: g.han, blurb: g.blurb,
+      title: nmGirlStyle(g, st).th, titleZh: nmGirlStyle(g, st).zh, fengTh: g.feng && nmIdx().feng[g.feng] ? nmIdx().feng[g.feng].th : '',
       status: g.status, statusTh: A.statusTh[g.status], rank: g.rank, rankTh: g.rank ? Q.RANKS[Math.min(9, g.rank)].th : 'ผู้เข้าคัดเลือก',
       charm: g.charm, wit: g.wit, talent: g.talent, arch: knowArch ? g.arch : null, archTh: knowArch ? a.th : null, ambition: amb,
       agentKnown: k.agent === 'yes' ? 'yes' : (k.agent === 'no' ? 'no' : null), agentTh: g.agent ? A.agentTh[g.agent] : null,
@@ -691,7 +704,7 @@ var QL = (function () {
     X.order.forEach(function (gid) {
       var g = X.girls[gid];
       if (!g || !galive(g) || g.status === 'maid' || g.rank < 2) return;
-      out.push({ id: g.id, kind: 'girl', name: g.name, gid: g.id, w: Math.max(1, 4 + g.favor * 0.45 + (g.charm - 40) * 0.3 + g.rank * 1.8 + (g.turned ? 3 : 0)) });
+      out.push({ id: g.id, kind: 'girl', name: nmGirlStyle(g, st).th, gid: g.id, w: Math.max(1, 4 + g.favor * 0.45 + (g.charm - 40) * 0.3 + g.rank * 1.8 + (g.turned ? 3 : 0)) });
     });
     return out;
   }
@@ -738,7 +751,7 @@ var QL = (function () {
       if (rnd(st) < TB.empressChance) T.me = true;
     } else {
       var cands = tabletCandidates(st); mw = myTabletParts(st);
-      if (!mw.blocked) cands.push({ id: 'me', kind: 'me', name: st.name, w: mw.total });
+      if (!mw.blocked) cands.push({ id: 'me', kind: 'me', name: nmStyle(st).th, w: mw.total });
       picks = tbSample(st, cands, tbPickCount(T.mood));
       picks.forEach(function (c) {
         if (c.kind === 'me') T.me = true;
@@ -768,7 +781,7 @@ var QL = (function () {
     var T = ensureT(st), TB = Q.TABLET, mw = myTabletParts(st);
     if (st.rank >= TB.empressRank) return { empress: true, rows: [], myPct: Math.round(TB.empressChance * 100), mw: mw, picks: 0 };
     var list = tabletCandidates(st);
-    if (!mw.blocked && st.rank >= TB.minRank) list.push({ id: 'me', kind: 'me', name: st.name, w: mw.total });
+    if (!mw.blocked && st.rank >= TB.minRank) list.push({ id: 'me', kind: 'me', name: nmStyle(st).th, w: mw.total });
     var n = tbPickCount(T.mood), cnt = {}, r = { seed: (st.seed ^ Math.imul(st.t + 7, 2654435761)) | 0 }, i;
     list.forEach(function (c) { cnt[c.id] = 0; });
     for (i = 0; i < TB.trials; i++) tbSample(r, list, n).forEach(function (c) { cnt[c.id]++; });
@@ -800,6 +813,310 @@ var QL = (function () {
     return { ok: true, flash: st.flash };
   }
 
+  /* ============================================================
+     NAMING — พระนาม · ฉายาพระราชทาน (封号 fenghao). Rules + data contract: docs/DESIGN.md §12
+     ============================================================ */
+  var NM = Q.NAMING, NMX = null;
+  var RANK_WORD = { 'ต้าอิ้ง': 1, 'ฉังไจ้': 2, 'กุ้ยเหริน': 3, 'ผิน': 4, 'เฟย': 5, 'กุ้ยเฟย': 6, 'หวงกุ้ยเฟย': 7, 'ฮองเฮา': 8, 'ไทเฮา': 9 };
+  function nmIdx() {
+    var sig = NM.feng.length + ':' + NM.extra.length + ':' + NM.clans.length;
+    if (NMX && NMX.sig === sig) return NMX;
+    NMX = { sig: sig, feng: {}, extra: {}, clan: {} };
+    NM.feng.forEach(function (e) { NMX.feng[e.id] = e; });
+    NM.extra.forEach(function (e) { NMX.extra[e.id] = e; });
+    NM.clans.forEach(function (c) { NMX.clan[c.id] = c; });
+    return NMX;
+  }
+  function nmReady() { return NM.feng.length >= 6; }
+  function ensureN(st) {
+    var o = Q.ORIGINS[st.origin] ? st.origin : 'noble', created = !st.N || typeof st.N !== 'object';
+    if (created) st.N = { clan: '', clanZh: '', feng: null, extra: null, stripped: false, strippedAt: -99, ever: 0, changes: 0, kind: '', offer: [], choose: false, old: null, lastT: -99, hist: [], cold: 0, used: [] };
+    var N = st.N;
+    if (!N.clan) { var dc = NM.defaultClan[o] || NM.defaultClan.noble; N.clan = dc.th; N.clanZh = dc.zh; }
+    if (!N.hist) N.hist = []; if (!N.offer) N.offer = []; if (!N.used) N.used = [];
+    // saves/runs that reached a fenghao rank before the system existed: bestow quietly (no event) so the style API is always consistent
+    if (created && st.rank >= NM.fengRank && !N.feng && !N.stripped && !N.kind && !N.ever && nmReady() && !N.legacyTried) {
+      N.legacyTried = true;
+      nmPrepare(st, 'pin');
+      if (N.offer.length) nmBestow(st, N.offer[0], 'pin', true);
+      if (st.rank >= NM.extraRank && N.feng && !N.extra) { nmPrepare(st, 'extra'); if (N.offer.length) nmBestow(st, N.offer[0], 'extra', true); }
+      st.nmCer = null;
+    }
+    return N;
+  }
+  function nmCompose(f, x) {
+    if (!x) return { th: f.th, zh: f.zh };
+    return x.pos === 'pre' ? { th: x.e.th + f.th, zh: x.e.zh + f.zh } : { th: f.th + x.e.th, zh: f.zh + x.e.zh };
+  }
+  function nmHolding(st, rank) {            // the fenghao the player wears AT a given rank: { f, x, th, zh } or null
+    var N = ensureN(st), I = nmIdx(), f = N.feng && I.feng[N.feng];
+    if (!f) return null;
+    var x = (rank >= NM.extraRank && N.extra && I.extra[N.extra.id]) ? { e: I.extra[N.extra.id], pos: N.extra.pos } : null;
+    var c = nmCompose(f, x);
+    return { f: f, x: x, th: c.th, zh: c.zh };
+  }
+  /* the style (how she is addressed) at a rank: { th, zh, mode: 'name'|'clan'|'feng', clan, feng, fengZh } */
+  function nmStyle(st, rank) {
+    rank = (rank === undefined || rank === null) ? st.rank : rank;
+    var N = ensureN(st), rankTh = rankTitle(st, rank);
+    if (rank < 1) return { th: st.name, zh: '', mode: 'name', clan: N.clan, feng: '', fengZh: '' };
+    var h = nmHolding(st, rank);
+    if (h) return { th: h.th + rankTh, zh: h.zh + NM.rankZhT[rank], mode: 'feng', clan: N.clan, feng: h.th, fengZh: h.zh };
+    return { th: N.clan + ' ' + rankTh, zh: N.clanZh ? N.clanZh + Q.RANKS[rank].zh : '', mode: 'clan', clan: N.clan, feng: '', fengZh: '' };
+  }
+  function nmGirlStyle(g, st) {             // generated xiunü
+    var I = nmIdx(), f = g.feng && I.feng[g.feng], rankTh = g.rank ? Q.RANKS[Math.min(9, g.rank)].th : '';
+    if (!g.rank) return { th: g.name, zh: '', mode: 'name' };
+    if (f) return { th: f.th + rankTh, zh: f.zh + NM.rankZhT[Math.min(9, g.rank)], mode: 'feng', feng: f.th };
+    return { th: g.clan + ' ' + rankTh, zh: '', mode: 'clan', feng: '' };
+  }
+
+  /* ---- candidates ---- */
+  function nmTaken(st) {
+    var I = nmIdx(), X = ensureX(st), N = ensureN(st), t = { zh: {}, th: {} };
+    function mark(e) { if (e) { t.zh[e.zh] = 1; t.th[e.th] = 1; } }
+    NM.reservedZh.forEach(function (z) { t.zh[z] = 1; });
+    (NM.reservedTh || []).forEach(function (z) { t.th[z] = 1; });
+    X.order.forEach(function (id) { var g = X.girls[id]; if (g && g.feng && galive(g)) { mark(I.feng[g.feng]); if (g.extra) mark(I.extra[g.extra.id]); } });
+    (N.used || []).forEach(function (z) { t.zh[z] = 1; });
+    if (N.feng) { mark(I.feng[N.feng]); if (N.extra) mark(I.extra[N.extra.id]); }
+    return t;
+  }
+  function nmAff(st) {
+    var S = st.S, R = st.R, o = st.origin;
+    return {
+      virtue: S.virtue / 100 + (o === 'scholar' ? 0.12 : 0),
+      gentle: 0.55 * S.charm / 100 + 0.45 * S.virtue / 100,
+      beauty: S.charm / 100,
+      wisdom: S.wit / 100 + (o === 'scholar' ? 0.1 : 0),
+      art: S.talent / 100 + (o === 'scholar' ? 0.1 : 0),
+      harmony: 0.6 * (100 - S.threat) / 100 + 0.3 * S.virtue / 100,
+      fortune: 0.3 + S.favor / 100,
+      loyal: 0.35 + 0.25 * S.virtue / 100 + ((R.empress || 0) + (R.dowager || 0)) / 400,
+      strong: 0.5 * S.health / 100 + 0.4 * S.prestige / 100 + (o === 'noble' ? 0.15 : 0),
+    };
+  }
+  function nmScore(e, aff) { var s = 0; e.tags.forEach(function (t) { s += aff[t] || 0.3; }); return s / e.tags.length; }
+  function nmBestTag(e, aff) { var b = e.tags[0], bv = -1; e.tags.forEach(function (t) { if ((aff[t] || 0) > bv) { bv = aff[t] || 0; b = t; } }); return b; }
+  function nmWeighted(st, list, n) {        // list: [{e, w, pos?}] → n distinct picks (diversified by first tag)
+    var pool = list.slice(), out = [], i, tot, r;
+    while (out.length < n && pool.length) {
+      tot = 0; pool.forEach(function (c) { tot += c.w; });
+      r = rnd(st) * tot;
+      for (i = 0; i < pool.length; i++) { r -= pool[i].w; if (r <= 0) break; }
+      var pick = pool.splice(Math.min(i, pool.length - 1), 1)[0]; out.push(pick);
+      pool.forEach(function (c) { if (c.e.tags[0] === pick.e.tags[0]) c.w *= 0.35; });
+    }
+    return out;
+  }
+  function nmOffers(st, kind) {
+    var N = ensureN(st), I = nmIdx(), tk = nmTaken(st), aff = nmAff(st), list = [], n = NM.offers;
+    if (kind === 'extra') {
+      var cf = N.feng && I.feng[N.feng]; if (!cf) return [];
+      NM.extra.forEach(function (e) {
+        if (tk.zh[e.zh] || tk.th[e.th] || e.zh === cf.zh || e.th === cf.th) return;
+        var pos = e.pos === 'any' ? (rnd(st) < 0.7 ? 'suf' : 'pre') : e.pos;
+        var w = e.w * (0.4 + 1.6 * nmScore(e, aff)) * ((e.good && e.good.indexOf(cf.id) >= 0) ? 2.5 : 1);
+        list.push({ e: e, w: Math.max(0.05, w), pos: pos });
+      });
+    } else {
+      NM.feng.forEach(function (f) {
+        if (tk.zh[f.zh] || tk.th[f.th]) return;
+        var w = f.w * (0.4 + 1.6 * nmScore(f, aff));
+        if (kind === 'regrant') w *= f.tone === 'humble' ? 2.2 : (f.tone === 'grand' ? 0.5 : 1);
+        else if (f.tone === 'grand' && st.rank >= 5) w *= 1.3;
+        else if (f.tone === 'humble' && kind !== 'regrant') w *= 0.8;
+        list.push({ e: f, w: Math.max(0.05, w) });
+      });
+    }
+    var picks = nmWeighted(st, list, n);
+    picks.forEach(function (p) { p.score = nmScore(p.e, aff); });
+    picks.sort(function (a, b) { return b.score - a.score; });
+    return picks.map(function (p) { var o = { id: p.e.id }; if (kind === 'extra') o.pos = p.pos; return o; });
+  }
+  function nmPreview(st, o, kind) {          // text pieces for one offer
+    var N = ensureN(st), I = nmIdx(), aff = nmAff(st), e, comp, rank = st.rank;
+    if (kind === 'extra') { e = I.extra[o.id]; var cf = I.feng[N.feng]; comp = nmCompose(cf, { e: e, pos: o.pos }); }
+    else { e = I.feng[o.id]; comp = { th: e.th, zh: e.zh }; }
+    var rankTh = rankTitle(st, rank);
+    return { h: e.th, z: e.zh, m: e.mean, why: NM.tagWhy[nmBestTag(e, aff)] || '', f: comp.th, fz: comp.zh, t: comp.th + rankTh, tz: comp.zh + NM.rankZhT[rank], tags: e.tags, hist: e.hist || '' };
+  }
+  function nmPrepare(st, kind) {
+    var N = ensureN(st);
+    N.kind = kind; N.offer = []; N.choose = false;
+    if (kind === 'strip_demote') return;
+    if (kind === 'strip_cold') { N.pendingStrip = true; return; }
+    if (!nmReady()) { N.kind = ''; return; }
+    N.offer = nmOffers(st, kind);
+    if (!N.offer.length) { N.kind = ''; return; }
+    N.choose = st.S.favor >= NM.chooseFavor && kind !== 'regrant';
+  }
+  function nmQueueNow(st) {                  // promotion happened INSIDE an event: play the naming scene right after it
+    var ne = pickEvent(st, { tag: 'naming' });
+    if (ne) st.pending.unshift(ne.id); else nmDefault(st);
+  }
+  function nmNote(st, text) { var f = st.flash || (st.flash = { S: {}, R: {}, notes: [] }); f.notes.push(text); }
+  function nmHist(st, kind, th, zh) { var N = st.N; N.hist.push({ t: st.t, kind: kind, th: th, zh: zh, rank: st.rank }); while (N.hist.length > NM.hist) N.hist.shift(); }
+
+  /* ---- bestow / strip ---- */
+  function nmBestow(st, off, kind, quiet) {
+    var N = ensureN(st), I = nmIdx(), e;
+    if (!off) return;
+    if (kind === 'extra') {
+      e = I.extra[off.id]; var f0 = N.feng && I.feng[N.feng]; if (!e || !f0) { N.kind = ''; N.offer = []; return; }
+      N.extra = { id: e.id, pos: off.pos || 'suf' }; N.used.push(e.zh);
+    } else {
+      e = I.feng[off.id]; if (!e) { N.kind = ''; N.offer = []; return; }
+      if (N.feng) N.used.push(I.feng[N.feng].zh);
+      N.feng = e.id; N.extra = null; N.stripped = false; N.cold = 0; N.pendingStrip = false; N.used.push(e.zh);
+    }
+    N.ever++; N.lastT = st.t;
+    var oldKind = kind;
+    N.kind = ''; N.offer = [];
+    if (kind !== 'extra' && st.rank >= NM.extraRank) {          // re-bestowed while already an Imperial Noble Consort or higher → gets the extra word with it
+      nmPrepare(st, 'extra'); if (N.offer.length) nmBestow(st, N.offer[0], 'extra', true); N.kind = ''; N.offer = [];
+    }
+    var h = nmHolding(st, st.rank), s = nmStyle(st);
+    nmHist(st, kind === 'extra' ? 'extra' : (kind === 'regrant' ? 'regrant' : (kind === 'early' ? 'early' : 'grant')), h ? h.th : e.th, h ? h.zh : e.zh);
+    var tag = e.tags[0], b = NM.boon, fx = {};
+    Object.keys(b[tag] || {}).forEach(function (k) { fx[k] = b[tag][k]; });
+    fx.prestige = (fx.prestige || 0) + (b.prestige || 0);
+    if (!quiet) {
+      applyFx(st, fx);
+      st.log.push({ t: st.t, text: kind === 'extra' ? 'ได้รับพระราชทานอักษรเพิ่ม เป็น "' + h.th + '" (' + h.zh + ')' : 'ได้รับพระราชทานฉายา "' + (h ? h.th : e.th) + '" (' + (h ? h.zh : e.zh) + ')' });
+      st.nmCer = { kind: kind === 'extra' ? 'extra' : (oldKind === 'regrant' ? 'regrant' : 'grant'), th: h ? h.th : e.th, zh: h ? h.zh : e.zh, h: e.th, z: e.zh, mean: e.mean, tag: tag, title: s.th, titleZh: s.zh, why: NM.tagWhy[tag] || '', hist: e.hist || '', boon: fx };
+    }
+  }
+  function nmStrip(st, why) {
+    var N = ensureN(st), I = nmIdx(), h = nmHolding(st, st.rank) || nmHolding(st, 1);
+    if (!N.feng) { N.kind = N.kind === 'strip_cold' ? '' : N.kind; N.pendingStrip = false; return; }
+    var f = I.feng[N.feng];
+    N.old = { th: h ? h.th : f.th, zh: h ? h.zh : f.zh, why: why || 'cold' };
+    N.used.push(f.zh); if (N.extra && I.extra[N.extra.id]) N.used.push(I.extra[N.extra.id].zh);
+    N.feng = null; N.extra = null; N.stripped = true; N.strippedAt = st.t; N.cold = 0; N.pendingStrip = false;
+    if (N.kind === 'strip_cold') N.kind = '';
+    nmHist(st, 'strip', N.old.th, N.old.zh);
+    st.log.push({ t: st.t, text: 'ถูกริบฉายา "' + N.old.th + '" คืน' });
+    var s = nmStyle(st);
+    st.nmCer = { kind: 'strip', th: N.old.th, zh: N.old.zh, title: s.th, titleZh: s.zh, why: why };
+  }
+  function applyName(st, o) {
+    var N = ensureN(st);
+    if (o.strip) { nmStrip(st, o.strip === true ? 'cold' : String(o.strip)); return; }
+    if (o.spare) { N.cold = 0; N.pendingStrip = false; if (N.kind === 'strip_cold') N.kind = ''; N.lastT = st.t; return; }
+    var kind = N.kind;
+    if (!kind || kind === 'strip_demote') return;
+    if (!N.offer.length) nmPrepare(st, kind);
+    var idx = o.auto ? 0 : Math.max(0, (Number(o.pick) || 1) - 1);
+    var off = N.offer[Math.min(idx, N.offer.length - 1)];
+    if (off) nmBestow(st, off, kind, false);
+  }
+  /* what the engine does when a naming moment has no event to play (or the event ended without applying it) */
+  function nmDefault(st) {
+    var N = ensureN(st);
+    if (!N.kind) return;
+    var k = N.kind;
+    if (k === 'strip_demote') { N.kind = ''; return; }
+    if (k === 'strip_cold') { nmStrip(st, 'cold'); return; }
+    if (!N.offer.length) nmPrepare(st, k);
+    if (N.offer.length) nmBestow(st, N.offer[0], k, false); else N.kind = '';
+  }
+
+  /* ---- hooks ---- */
+  function nmOnPromote(st) {
+    var N = ensureN(st);
+    if (N.kind) return;
+    if (st.rank >= NM.fengRank && !N.feng) nmPrepare(st, N.stripped ? 'regrant' : 'pin');
+    else if (st.rank >= NM.extraRank && N.feng && !N.extra) nmPrepare(st, 'extra');
+  }
+  function nmOnDemote(st) {
+    var N = ensureN(st);
+    if (N.feng && st.rank < NM.fengRank) { nmStrip(st, 'demote'); nmPrepare(st, 'strip_demote'); }
+    else if (N.extra && st.rank < NM.extraRank) { var I = nmIdx(); N.used.push(I.extra[N.extra.id] ? I.extra[N.extra.id].zh : ''); N.extra = null; }
+    if (N.kind && N.kind !== 'strip_demote' && st.rank < 1) N.kind = '';
+  }
+  function nmTick(st) {                      // every season-end
+    var N = ensureN(st), E = NM.early, K = NM.cold, RG = NM.regrant;
+    if (st.F.finale || st.F.emperor_dead || !nmReady()) return;
+    if (N.feng && st.rank >= K.minRank && st.rank < 8) { if (st.S.favor <= K.favor) N.cold = (N.cold || 0) + 1; else N.cold = 0; }
+    if (N.kind) return;
+    if (N.feng && st.rank >= K.minRank && st.rank < 8 && N.cold >= K.seasons && rnd(st) < K.chance) { nmPrepare(st, 'strip_cold'); return; }
+    if (N.stripped && st.t - N.strippedAt >= RG.gap && st.S.favor >= RG.favor && rnd(st) < RG.chance) { nmPrepare(st, 'regrant'); return; }
+    if (!N.feng && !N.stripped && st.rank >= E.minRank && st.rank <= E.maxRank && st.sir >= E.minSir && st.t - N.lastT >= E.gap && st.S.favor >= E.favor && rnd(st) < E.chance) nmPrepare(st, 'early');
+  }
+  function nmEnv(st) {
+    var N = ensureN(st);
+    return { has: !!N.feng, kind: N.kind || '', choose: !!N.choose, offers: N.offer.length, stripped: !!N.stripped, ever: N.ever || 0, extra: !!N.extra, changes: N.changes || 0, cold: N.cold || 0 };
+  }
+  function nmFill(st, kind, idx) {
+    var N = ensureN(st);
+    if (idx) {
+      var off = N.offer[+idx - 1]; if (!off) return '';
+      var p = nmPreview(st, off, N.kind === 'extra' ? 'extra' : 'pin');
+      return kind === 'H' ? p.h : kind === 'Z' ? p.z : kind === 'M' ? p.m : kind === 'T' ? p.t : kind === 'W' ? p.why : kind === 'F' ? p.f : kind === 'ZF' ? p.fz : '';
+    }
+    var h = nmHolding(st, st.rank);
+    switch (kind) {
+      case 'TITLE': return nmStyle(st).th;
+      case 'CLAN': return N.clan;
+      case 'FENG': return h ? h.th : N.clan;
+      case 'FENGZH': return h ? h.zh : (N.clanZh || '');
+      case 'FENGMEAN': return h ? (h.x ? h.f.mean + ' · ' + h.x.e.mean : h.f.mean) : '';
+      case 'OLD': return N.old ? N.old.th : '';
+      case 'OLDZH': return N.old ? N.old.zh : '';
+    }
+    return '';
+  }
+  function nmWordTitle(st, word) { var r = RANK_WORD[word]; return r ? nmStyle(st, r).th : word + ' ' + st.name; }
+  /* UI info */
+  function nmInfo(st) {
+    var N = ensureN(st), I = nmIdx(), h = nmHolding(st, st.rank), s = nmStyle(st), ladder = [], r;
+    for (r = 1; r <= 9; r++) {
+      var sr = nmStyle(st, r), wait = (r >= NM.fengRank && !N.feng);
+      ladder.push({ rank: r, rankTh: Q.RANKS[r].th, th: wait ? 'รอพระราชทานฉายา' : sr.th, zh: wait ? '' : sr.zh, mode: wait ? 'wait' : sr.mode, here: r === st.rank, extra: r >= NM.extraRank && !!(N.extra) });
+    }
+    return {
+      name: st.name, clan: N.clan, clanZh: N.clanZh, style: s, rank: st.rank, rankTh: rankTitle(st), has: !!N.feng, stripped: !!N.stripped, old: N.old, kind: N.kind,
+      feng: h ? { th: h.f.th, zh: h.f.zh, mean: h.f.mean, tags: h.f.tags, hist: h.f.hist || '', tagsTh: h.f.tags.map(function (t) { return NM.tagTh[t]; }) } : null,
+      extra: h && h.x ? { th: h.x.e.th, zh: h.x.e.zh, mean: h.x.e.mean, pos: h.x.pos, hist: h.x.e.hist || '' } : null,
+      full: h ? { th: h.th, zh: h.zh } : null, hist: N.hist.slice().reverse(), ladder: ladder, ever: N.ever || 0,
+      early: { minRank: NM.early.minRank, maxRank: NM.early.maxRank, favor: NM.early.favor },
+      girls: nmGirlRows(st),
+    };
+  }
+  function nmGirlRows(st) {
+    var X = ensureX(st), rows = [];
+    X.order.forEach(function (id) { var g = X.girls[id]; if (g && galive(g) && g.rank >= 1) { var s = nmGirlStyle(g, st); rows.push({ id: g.id, name: g.name, th: s.th, zh: s.zh, mode: s.mode, mine: g.status === 'sponsored' }); } });
+    return rows;
+  }
+  /* generated girls: she receives a fenghao on reaching rank 4 (uniqueness against everyone alive) */
+  var GIRL_TAGS = { bright: ['gentle', 'fortune', 'harmony'], schemer: ['wisdom', 'beauty', 'strong'], artist: ['art', 'gentle', 'beauty'], highborn: ['virtue', 'strong', 'loyal'], humble: ['virtue', 'loyal', 'harmony'], beauty: ['beauty', 'gentle', 'fortune'] };
+  function nmGirlRank(st, g, notes) {
+    if (g.rank < NM.fengRank || g.feng || !nmReady()) return;
+    var I = nmIdx(), tk = nmTaken(st), want = GIRL_TAGS[g.arch] || ['virtue', 'gentle'], list = [];
+    NM.feng.forEach(function (f) {
+      if (tk.zh[f.zh] || tk.th[f.th]) return;
+      var m = 0; f.tags.forEach(function (t) { if (want.indexOf(t) >= 0) m++; });
+      list.push({ e: f, w: f.w * (0.6 + m) * (g.arch === 'humble' && f.tone === 'humble' ? 1.6 : 1) });
+    });
+    var pk = nmWeighted(st, list, 1)[0];
+    if (!pk) return;
+    g.feng = pk.e.id;
+    if (notes && (g.status === 'sponsored' || g.status === 'kept') && !g.turned) notes.push(g.name + ' ได้รับพระราชทานฉายา "' + pk.e.th + '" (' + pk.e.zh + ') — ' + pk.e.mean);
+  }
+  function nmGirlLose(st, g) { if (g && g.feng && g.rank < NM.fengRank) { /* demotion not modelled for girls; keep */ } }
+  /* validator helper: put the naming state into a shape that lets every naming event run */
+  function nmProbe(st, kind) {
+    var N = ensureN(st);
+    if (kind === 'extra' || kind === 'regrant' || kind === 'pin' || kind === 'early') {
+      if (kind === 'extra' && !N.feng) { var f = NM.feng[0]; if (f) { N.feng = f.id; N.used.push(f.zh); } }
+      if (kind === 'regrant') { N.stripped = true; N.strippedAt = st.t - 6; N.feng = null; N.extra = null; N.old = { th: 'ลิ่ง', zh: '令' }; }
+      nmPrepare(st, kind);
+    } else if (kind === 'strip_cold') { if (!N.feng && NM.feng[0]) { N.feng = NM.feng[0].id; } nmPrepare(st, 'strip_cold'); }
+    else if (kind === 'strip_demote') { N.stripped = true; N.old = { th: 'ลิ่ง', zh: '令' }; N.kind = 'strip_demote'; }
+    return N;
+  }
+
   /* ---------------- ranks ---------------- */
   function promote(st) {
     var from = st.rank; if (from >= 9) return;
@@ -811,6 +1128,8 @@ var QL = (function () {
     var gifts = grantsFor(st, st.rank, false);
     validateWardrobe(st);
     st.promoted.gifts = gifts.map(function (id) { return WI[id].th; });
+    nmOnPromote(st);
+    if (st.cur && ensureN(st).kind && ensureN(st).kind !== 'strip_demote') nmQueueNow(st);
     st.log.push({ t: st.t, text: 'เลื่อนขั้นเป็น' + r.th + ' (' + r.zh + ')' });
   }
   function demote(st, n) {
@@ -818,6 +1137,7 @@ var QL = (function () {
     st.rank = Math.max(0, st.rank - n); st.sir = 0; st.promoReady = null;
     if (st.rank < 1) { st.rank = 1; if (!st.pendingEnding) st.pendingEnding = 'end_cold_palace'; }
     validateWardrobe(st);
+    nmOnDemote(st);
     st.log.push({ t: st.t, text: 'ถูกลดขั้นเหลือ' + Q.RANKS[st.rank].th });
     st.demoted = { from: from, to: st.rank };
   }
@@ -899,6 +1219,8 @@ var QL = (function () {
     var L = [];
     if (st.promoReady && EV[st.promoReady]) { L.push(st.promoReady); }
     st.promoReady = null;
+    var Nn = ensureN(st);
+    if (Nn.kind) { var ne = pickEvent(st, { tag: 'naming', exclude: L }); if (ne) L.push(ne.id); else nmDefault(st); }
     var ch = pickChapter(st, L); if (ch) L.push(ch.id);
     var Tn = ensureT(st);
     if (Tn.meNow) {
@@ -952,6 +1274,7 @@ var QL = (function () {
     rep.healthDelta = st.S.health - h0;
     st.t++; st.sir++; st.ap = C.apPerSeason;
     xnTick(st, rep);
+    nmTick(st);
     tabletRound(st, rep);
     checkPromotion(st);
     if (!st.pendingEnding) { var se = systemEnd(st); if (se) st.pendingEnding = se; }
@@ -1055,6 +1378,7 @@ var QL = (function () {
   function finishEvent(st) {
     var ev = st.cur && EV[st.cur.ev];
     st.cur = null;
+    if (ev && ev.tags && ev.tags.indexOf('naming') >= 0 && ensureN(st).kind) nmDefault(st);   // a naming event must never leave the moment unresolved
     if (ev && ev.kind === 'ending') { st.phase = 'ended'; st.ending = ev.id; st.pending = []; st.pendingEnding = null; return; }
     if (!st.pendingEnding) { var se = systemEnd(st); if (se) st.pendingEnding = se; }
     if (!st.pendingEnding && st.rank >= 9) st.pendingEnding = 'end_taihou_gentle';   // safety net
@@ -1126,7 +1450,7 @@ var QL = (function () {
     if (nextId) { gotoNode(st, nextId); settle(st); } else finishEvent(st);
     return result;
   }
-  function ackPromotion(st) { st.promoted = null; st.demoted = null; }
+  function ackPromotion(st) { if (st.promoted || st.demoted) { st.promoted = null; st.demoted = null; } else st.nmCer = null; }
 
   /* ---------------- summary for the ending screen ---------------- */
   function summary(st) {
@@ -1134,7 +1458,7 @@ var QL = (function () {
     var meta = ev.ending || {};
     return {
       id: st.ending, type: meta.type || 'neutral', title: meta.title || ev.title || 'จบเรื่อง', hint: meta.hint || '',
-      rank: st.rank, rankTitle: rankTitle(st), zh: Q.RANKS[st.rank].zh,
+      rank: st.rank, rankTitle: rankTitle(st), zh: Q.RANKS[st.rank].zh, style: nmStyle(st),
       seasons: st.t, years: Math.floor(st.t / 4), age: C.startAge + Math.floor(st.t / 4),
       S: copy(st.S), R: copy(st.R), heir: !!st.F.has_heir, name: st.name, origin: st.origin,
     };
@@ -1150,6 +1474,7 @@ var QL = (function () {
     actions: actions, doAction: doAction, hub: hub,
     nextPending: nextPending, startEvent: startEvent, view: view, advance: advance, choose: choose, ackPromotion: ackPromotion,
     systemEnd: systemEnd, summary: summary, rnd: rnd,
+    nmStyle: nmStyle, nmInfo: nmInfo, nmGirlStyle: nmGirlStyle, nmPreview: nmPreview, nmProbe: nmProbe, nmTick: nmTick, nmDefault: nmDefault, nmPrepare: nmPrepare, applyName: applyName, ensureN: ensureN, nmOffers: nmOffers, nmIdx: nmIdx,
     tabletInfo: tabletInfo, tabletBoost: tabletBoost, ensureT: ensureT, tabletRound: tabletRound,
     xiunu: xiunu, xnInvestigate: xnInvestigate, xnDecide: xnDecide, xnGift: xnGift, xnDismiss: xnDismiss, focusLook: focusLook, ensureX: ensureX, xnProbe: xnProbe, xnQuota: xnQuota,
     wardrobe: wardrobe, wardrobeEff: wardrobeEff, equip: equip, unequip: unequip, buy: buy, give: giveItem, look: look, ensureW: ensureW, effLines: effLines,

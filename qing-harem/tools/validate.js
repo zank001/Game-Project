@@ -47,9 +47,9 @@ const KINDS = ['random', 'chapter', 'chain', 'festival', 'promo', 'ending'];
 const NODE_KEYS = ['who', 'x', 'text', 'card', 'bg', 'cast', 'fx', 'next', 'jump', 'choices', 'branch', 'promote', 'demote', 'ending'];
 const CHOICE_KEYS = ['text', 'cond', 'req', 'why', 'hint', 'cost', 'fx', 'check', 'win', 'lose', 'winFx', 'loseFx', 'next', 'jump'];
 const EV_KEYS = ['id', 'kind', 'title', 'minRank', 'maxRank', 'tags', 'season', 'weight', 'cond', 'trigger', 'prio', 'once', 'cooldown', 'bg', 'cast', 'start', 'nodes', 'ending', 'desc', 'girl', '__file'];
-const FX_KEYS = Q.STAT_KEYS.concat(['rel', 'set', 'unset', 'inc', 'queue', 'ap', 'log', 'note', 'give', 'xn', 'tablet']);
+const FX_KEYS = Q.STAT_KEYS.concat(['rel', 'set', 'unset', 'inc', 'queue', 'ap', 'log', 'note', 'give', 'xn', 'tablet', 'name']);
 const WHO = ['narrator'].concat(Object.keys(Q.CHARS).filter(k => k !== 'narrator'));
-const PLACEHOLDERS = ['PLAYER', 'RANK', 'HEIR', 'YEAR', 'SEASON', 'XN', 'XNRANK', 'XNCLAN', 'XN1', 'XN2', 'XN3'];
+const PLACEHOLDERS = ['PLAYER', 'RANK', 'HEIR', 'YEAR', 'SEASON', 'XN', 'XNRANK', 'XNCLAN', 'XN1', 'XN2', 'XN3', 'XNT', 'TITLE', 'CLAN', 'FENG', 'FENGZH', 'FENGMEAN', 'NMOLD', 'NMOLDZH'];
 const GIRL_SEL = ['any', 'ally', 'ally_court', 'sponsored', 'ambitious', 'rising', 'graduate', 'turning', 'rival_fav', 'rejected_noble', 'maid_girl', 'maid_spy'];
 const THAI = /[฀-๿]/;
 const ids = new Set(Q.events.map(e => e.id));
@@ -109,6 +109,13 @@ function checkFx(where, fx, label) {
         if (['mood', 'boost', 'strike'].indexOf(x) < 0) E(where, label + '.tablet unknown key "' + x + '"');
         else { const n = Array.isArray(v[x]) ? v[x] : [v[x]]; if (n.some(q => typeof q !== 'number')) E(where, label + '.tablet.' + x + ' must be a number' + (x === 'mood' ? ' or [min,max]' : '')); else if (n.some(q => Math.abs(q) > 40)) W(where, label + '.tablet.' + x + ' is very large'); }
       });
+    } else if (k === 'name') {
+      if (!v || typeof v !== 'object') { E(where, label + '.name must be an object'); continue; }
+      Object.keys(v).forEach(x => {
+        if (['pick', 'auto', 'strip', 'spare'].indexOf(x) < 0) E(where, label + '.name unknown key "' + x + '" (pick|auto|strip|spare)');
+        else if (x === 'pick' && ![1, 2, 3].includes(v[x])) E(where, label + '.name.pick must be 1, 2 or 3');
+        else if (x === 'strip' && !(v[x] === true || typeof v[x] === 'string')) E(where, label + '.name.strip must be true or a reason string');
+      });
     } else if (k === 'xn') {
       if (!v || typeof v !== 'object') { E(where, label + '.xn must be an object'); continue; }
       Object.keys(v).forEach(x => {
@@ -124,7 +131,7 @@ function checkText(where, text, label, max) {
   if (typeof text !== 'string' || !text.trim()) { E(where, label + ' must be a non-empty string'); return; }
   if (text.length > max * 1.6) E(where, label + ' too long (' + text.length + ' > ' + Math.round(max * 1.6) + ')');
   else if (text.length > max) W(where, label + ' long (' + text.length + ' > ' + max + ')');
-  (text.match(/\{\{[^}]*\}\}/g) || []).forEach(p => { const n = p.slice(2, -2); if (PLACEHOLDERS.indexOf(n) < 0) E(where, label + ' unknown placeholder ' + p); });
+  (text.match(/\{\{[^}]*\}\}/g) || []).forEach(p => { const n = p.slice(2, -2); if (PLACEHOLDERS.indexOf(n) < 0 && !/^(NM(ZF|[HZMTWF])[123]|XNT[123])$/.test(n)) E(where, label + ' unknown placeholder ' + p); });
   if (!THAI.test(text) && !/^[\s\W\d]*$/.test(text)) W(where, label + ' has no Thai characters');
   if (/<[a-z\/][^>]*>/i.test(text)) E(where, label + ' contains HTML — use plain text');
 }
@@ -261,6 +268,12 @@ Q.events.forEach(ev => {
     Q.REL_KEYS.forEach(k => { st.R[k] = Math.floor(rng() * 160) - 60; });
     flagNames.forEach(n => { if (rng() < 0.5) st.F[n] = true; });
     if (ev.girl || /XN|maiden|"xn"/.test(JSON.stringify(ev))) QL.xnProbe(st);
+    if (/naming/.test(JSON.stringify(ev.tags || '')) || /\bN\./.test(JSON.stringify(ev.cond || '')) || /\{\{(NM|FENG|TITLE)/.test(JSON.stringify(ev))) {
+      const ks = (JSON.stringify(ev).match(/N\.kind\s*==\s*\\?'(\w+)\\?'/g) || []).map(m => m.replace(/.*'(\w+)\\?'$/, '$1'));
+      const kinds = ks.length ? Array.from(new Set(ks)) : ['pin', 'early', 'extra', 'regrant', 'strip_cold', 'strip_demote'];
+      if (st.rank >= 4 && kinds[w % kinds.length] === 'pin') st.rank = 4;
+      QL.nmProbe(st, kinds[w % kinds.length]);
+    }
     try {
       QL.startEvent(st, ev.id);
       let steps = 0, v;
