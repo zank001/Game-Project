@@ -1,5 +1,5 @@
 /* =============================================================
-   c03_rand_c.js — general random events for rank 2 (ฉังไจ้), part C
+   c03_rand_c.js — general random events for rank 2 (ฉางไจ้), part C
    r2_theatre · r2_rare_book · r2_dye_silk · r2_storm_roof · r2_meixing_summoned · r2_allotment
    (r2_rare_book sets r2_herb_book and r2_dye_silk sets r2_dyed_silk — both echo in promo_2_3)
    ============================================================= */

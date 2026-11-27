@@ -1,5 +1,5 @@
 /* =============================================================
-   c03_rand_b.js — general random events for rank 2 (ฉังไจ้), part B
+   c03_rand_b.js — general random events for rank 2 (ฉางไจ้), part B
    r2_recitation · r2_pantry_prank · r2_maid_family · r2_poetry_circle · r2_new_maid
    ============================================================= */
 

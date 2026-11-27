@@ -99,7 +99,7 @@ Q.add([
     bg: 'study', cast: [{ c: 'emperor', pos: 'center', x: 'smile' }],
     start: 'n1',
     nodes: {
-      n1: { who: 'emperor', x: 'smile', text: 'เจ้าอดทนมาได้ถึงวันนี้ ... เราจะเลื่อนขั้นให้เจ้าเป็น "ฉังไจ้"', promote: true, next: 'n2' },
+      n1: { who: 'emperor', x: 'smile', text: 'เจ้าอดทนมาได้ถึงวันนี้ ... เราจะเลื่อนขั้นให้เจ้าเป็น "ฉางไจ้"', promote: true, next: 'n2' },
       n2: { who: 'player', text: 'หม่อมฉัน... ขอบพระทัยเพคะ', next: 'n3' },
       n3: { who: 'narrator', text: 'ในวังหลังมีคนหนึ่งใหม่ที่ถูกเขียนชื่อลงทะเบียนอีกครั้ง — และมีคนหลายคนที่ไม่ยินดีกับเรื่องนี้' },
     },

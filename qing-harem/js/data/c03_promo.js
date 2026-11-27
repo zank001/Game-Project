@@ -1,5 +1,5 @@
 /* =============================================================
-   c03_promo.js — promo_2_3 : ฉังไจ้ → กุ้ยเหริน
+   c03_promo.js — promo_2_3 : ฉางไจ้ → กุ้ยเหริน
    Two ways to earn it: soothe the Emperor's headache (music / herbs) or embroider a sutra for the Dowager.
    Failure on either way still ends in promotion (via the Empress's list) but with less glory.
    Final twist: Chu's "congratulation gift" — phoenix-patterned pillowcases (phoenix = the Empress's insignia).
@@ -75,7 +75,7 @@ Q.add([
       /* ----- the edict ----- */
       ed1: { who: 'narrator', bg: 'small_court', cast: [{ c: 'eunuch', pos: 'center', x: 'neutral' }],
         text: 'สามวันต่อมา ขันทีถือม้วนผ้าไหมสีเหลืองเดินเข้าลานเรือน คนทั้งเรือนคุกเข่าพร้อมกันเป็นแถว กลิ่นกำยานจากเตาทองเหลืองลอยผ่านชายคา', next: 'ed2' },
-      ed2: { who: 'eunuch', x: 'neutral', text: 'ฟ้าลิขิต ฮ่องเต้มีราชโองการว่า ฉังไจ้{{PLAYER}} อุปนิสัยอ่อนโยนสุภาพ จริยวัตรงดงาม ปรนนิบัติรับใช้ด้วยความอุตสาหะ เป็นที่ประจักษ์แก่ไทเฮาและฮองเฮา', next: 'ed3' },
+      ed2: { who: 'eunuch', x: 'neutral', text: 'ฟ้าลิขิต ฮ่องเต้มีราชโองการว่า ฉางไจ้{{PLAYER}} อุปนิสัยอ่อนโยนสุภาพ จริยวัตรงดงาม ปรนนิบัติรับใช้ด้วยความอุตสาหะ เป็นที่ประจักษ์แก่ไทเฮาและฮองเฮา', next: 'ed3' },
       ed3: { who: 'eunuch', x: 'smile', text: 'บัดนี้สมควรเลื่อนขึ้นเป็น "กุ้ยเหริน" ให้ย้ายไปประทับห้องหลักแห่งเรือนตะวันออก จงรักษาความดีและตั้งมั่นในหน้าที่ ขอบพระทัยแล้วรับราชโองการเถิด', promote: true, next: 'ed4' },
       ed4: { who: 'narrator', text: 'ท่านก้มกราบรับราชโองการด้วยสองมือ ผ้าไหมสีเหลืองเย็นเฉียบอยู่ในฝ่ามือ ตราประทับแดงสดราวกับยังไม่แห้ง ชุนเถากอดชายเสื้อท่านร้องไห้ไม่เป็นเสียง', next: 'r1' },
 

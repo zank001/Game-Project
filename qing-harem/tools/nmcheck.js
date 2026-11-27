@@ -37,8 +37,8 @@ function newSt(origin, seed) { const st = QL.newGame({ name: 'หลันซี
 // 2) legacy text upgrade
 {
   const st = newSt('scholar', 9); st.rank = 2;
-  ok(QL.fill(st, 'ฉังไจ้{{PLAYER}} อุปนิสัย') === 'เซิ่น ฉังไจ้ อุปนิสัย', 'legacy "ฉังไจ้{{PLAYER}}" → clan style, got ' + QL.fill(st, 'ฉังไจ้{{PLAYER}} อุปนิสัย'));
-  ok(QL.fill(st, 'ท่าน{{RANK}} {{TITLE}} {{CLAN}}') === 'ท่านฉังไจ้ เซิ่น ฉังไจ้ เซิ่น', 'title/clan placeholders: ' + QL.fill(st, 'ท่าน{{RANK}} {{TITLE}} {{CLAN}}'));
+  ok(QL.fill(st, 'ฉางไจ้{{PLAYER}} อุปนิสัย') === 'เซิ่น ฉางไจ้ อุปนิสัย', 'legacy "ฉางไจ้{{PLAYER}}" → clan style, got ' + QL.fill(st, 'ฉางไจ้{{PLAYER}} อุปนิสัย'));
+  ok(QL.fill(st, 'ท่าน{{RANK}} {{TITLE}} {{CLAN}}') === 'ท่านฉางไจ้ เซิ่น ฉางไจ้ เซิ่น', 'title/clan placeholders: ' + QL.fill(st, 'ท่าน{{RANK}} {{TITLE}} {{CLAN}}'));
 }
 // 3) full-run simulation: promotion → bestow, demotion → strip, uniqueness, early, regrant
 let early = 0, grants = 0, extras = 0, strips = 0, regrants = 0, dupBad = 0, maxKindAge = 0;

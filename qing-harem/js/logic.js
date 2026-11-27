@@ -176,7 +176,7 @@ var QL = (function () {
   function fill(st, text) {
     if (text === undefined || text === null) return '';
     return String(text)
-      .replace(/(หวงกุ้ยเฟย|กุ้ยเฟย|กุ้ยเหริน|ต้าอิ้ง|ฉังไจ้|ผิน|เฟย|ฮองเฮา|ไทเฮา)\s?\{\{PLAYER\}\}/g, function (m, w) { return nmWordTitle(st, w); })
+      .replace(/(หวงกุ้ยเฟย|กุ้ยเฟย|กุ้ยเหริน|ต้าอิ้ง|ฉางไจ้|ผิน|เฟย|ฮองเฮา|ไทเฮา)\s?\{\{PLAYER\}\}/g, function (m, w) { return nmWordTitle(st, w); })
       .replace(/\{\{(TITLE|CLAN|FENGZH|FENGMEAN|FENG|NMOLDZH|NMOLD)\}\}/g, function (m, k) { return nmFill(st, k === 'NMOLD' ? 'OLD' : k === 'NMOLDZH' ? 'OLDZH' : k); })
       .replace(/\{\{NM(ZF|[HZMTWF])([123])\}\}/g, function (m, k, i) { return nmFill(st, k, i); })
       .replace(/\{\{PLAYER\}\}/g, st.name)
@@ -831,7 +831,7 @@ var QL = (function () {
      NAMING — พระนาม · ฉายาพระราชทาน (封号 fenghao). Rules + data contract: docs/DESIGN.md §12
      ============================================================ */
   var NM = Q.NAMING, NMX = null;
-  var RANK_WORD = { 'ต้าอิ้ง': 1, 'ฉังไจ้': 2, 'กุ้ยเหริน': 3, 'ผิน': 4, 'เฟย': 5, 'กุ้ยเฟย': 6, 'หวงกุ้ยเฟย': 7, 'ฮองเฮา': 8, 'ไทเฮา': 9 };
+  var RANK_WORD = { 'ต้าอิ้ง': 1, 'ฉางไจ้': 2, 'กุ้ยเหริน': 3, 'ผิน': 4, 'เฟย': 5, 'กุ้ยเฟย': 6, 'หวงกุ้ยเฟย': 7, 'ฮองเฮา': 8, 'ไทเฮา': 9 };
   function nmIdx() {
     var sig = NM.feng.length + ':' + NM.extra.length + ':' + NM.clans.length;
     if (NMX && NMX.sig === sig) return NMX;
