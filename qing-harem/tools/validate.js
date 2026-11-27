@@ -47,7 +47,7 @@ const KINDS = ['random', 'chapter', 'chain', 'festival', 'promo', 'ending'];
 const NODE_KEYS = ['who', 'x', 'text', 'card', 'bg', 'cast', 'fx', 'next', 'jump', 'choices', 'branch', 'promote', 'demote', 'ending'];
 const CHOICE_KEYS = ['text', 'cond', 'req', 'why', 'hint', 'cost', 'fx', 'check', 'win', 'lose', 'winFx', 'loseFx', 'next', 'jump'];
 const EV_KEYS = ['id', 'kind', 'title', 'minRank', 'maxRank', 'tags', 'season', 'weight', 'cond', 'trigger', 'prio', 'once', 'cooldown', 'bg', 'cast', 'start', 'nodes', 'ending', 'desc', 'girl', '__file'];
-const FX_KEYS = Q.STAT_KEYS.concat(['rel', 'set', 'unset', 'inc', 'queue', 'ap', 'log', 'note', 'give', 'xn']);
+const FX_KEYS = Q.STAT_KEYS.concat(['rel', 'set', 'unset', 'inc', 'queue', 'ap', 'log', 'note', 'give', 'xn', 'tablet']);
 const WHO = ['narrator'].concat(Object.keys(Q.CHARS).filter(k => k !== 'narrator'));
 const PLACEHOLDERS = ['PLAYER', 'RANK', 'HEIR', 'YEAR', 'SEASON', 'XN', 'XNRANK', 'XNCLAN', 'XN1', 'XN2', 'XN3'];
 const GIRL_SEL = ['any', 'ally', 'ally_court', 'sponsored', 'ambitious', 'rising', 'graduate', 'turning', 'rival_fav', 'rejected_noble', 'maid_girl', 'maid_spy'];
@@ -103,6 +103,12 @@ function checkFx(where, fx, label) {
     } else if (k === 'give') {
       if (!Array.isArray(v)) E(where, label + '.give must be an array of wardrobe item ids');
       else v.forEach(id => { if (!(Q.WARDROBE && Q.WARDROBE.byId[id])) E(where, label + '.give unknown wardrobe item "' + id + '"'); });
+    } else if (k === 'tablet') {
+      if (!v || typeof v !== 'object') { E(where, label + '.tablet must be an object'); continue; }
+      Object.keys(v).forEach(x => {
+        if (['mood', 'boost', 'strike'].indexOf(x) < 0) E(where, label + '.tablet unknown key "' + x + '"');
+        else { const n = Array.isArray(v[x]) ? v[x] : [v[x]]; if (n.some(q => typeof q !== 'number')) E(where, label + '.tablet.' + x + ' must be a number' + (x === 'mood' ? ' or [min,max]' : '')); else if (n.some(q => Math.abs(q) > 40)) W(where, label + '.tablet.' + x + ' is very large'); }
+      });
     } else if (k === 'xn') {
       if (!v || typeof v !== 'object') { E(where, label + '.xn must be an object'); continue; }
       Object.keys(v).forEach(x => {

@@ -125,7 +125,7 @@ Q.BGS = [
 
 /* ---------- tags (action-draw pools + special pools) ---------- */
 Q.TAGS = ['garden', 'visit_empress', 'visit_dowager', 'visit_emperor', 'befriend', 'bribe',
-          'investigate', 'scheme', 'palace_affairs', 'family', 'attack', 'general'];
+          'investigate', 'scheme', 'palace_affairs', 'family', 'attack', 'general', 'tablet'];
 
 /* ---------- ranks ---------- */
 Q.RANKS = [
@@ -262,9 +262,10 @@ Q.ACTIONS = [
   { id: 'a_dowager', grp: 'court', icon: '🪷', th: 'ถวายพระพรไทเฮา', desc: 'ผูกใจไทเฮา · ผู้ตัดสินตัวจริงของวังหลัง', minRank: 2, draw: 'visit_dowager',
     lines: ['ไทเฮาตรัสน้อย แต่ท่านรู้สึกได้ว่าสายตาของพระองค์จดจำทุกถ้อยคำ', 'ท่านคัดพระสูตรถวายอยู่หนึ่งชั่วยาม ควันธูปลอยเอื่อยในห้องโถง'] },
   { id: 'a_serve', grp: 'court', icon: '🍶', th: 'ถวายน้ำชาแด่ฮ่องเต้', desc: 'ความโปรดปราน ↑↑ · เสี่ยงถูกเมิน (−20 ตำลึง)', minRank: 2, cost: { silver: 20 }, draw: 'visit_emperor',
+    fx: { tablet: { boost: 4 } },
     lines: ['ขันทีหน้าห้องทรงพระอักษรรับถาดชาไป และบอกว่า "ฝ่าบาททรงงานอยู่ ไม่รับแขก"', 'ท่านรออยู่นอกประตูนานจนชาเย็น แต่เงาของฮ่องเต้ไม่ปรากฏ'] },
-  { id: 'a_bribe', grp: 'court', icon: '💰', th: 'ติดสินบนขันทีและนางกำนัล', desc: 'ได้ข่าวและทางลัด · ขันทีเป็นมิตร (−40 ตำลึง)', minRank: 1, cost: { silver: 40 }, draw: 'bribe',
-    fx: { rel: { eunuch: [3, 6] } },
+  { id: 'a_bribe', grp: 'court', icon: '💰', th: 'ติดสินบนขันทีและนางกำนัล', desc: 'ได้ข่าวและทางลัด · ขันทีเป็นมิตร · ป้ายชื่อมีโอกาสมากขึ้น (−40 ตำลึง)', minRank: 1, cost: { silver: 40 }, draw: 'bribe',
+    fx: { rel: { eunuch: [3, 6] }, tablet: { boost: 6 } },
     lines: ['ถุงเงินเล็กๆ เปลี่ยนมือไปอย่างเงียบเชียบ ขันทีน้อยยิ้มกว้างจนตาหยี', 'ในวังหลัง เงินไม่ได้ซื้อทุกสิ่ง แต่มันซื้อ "ประตูที่เปิดอยู่" ได้เสมอ'] },
   { id: 'a_reward', grp: 'court', icon: '🎁', th: 'ปูนบำเหน็จบ่าวไพร่', desc: 'ชุนเถาจงรักภักดี · ภัยรอบกาย ↓ (−20 ตำลึง)', minRank: 1, cost: { silver: 20 },
     fx: { rel: { maid: [4, 7] }, threat: -2 },
@@ -489,4 +490,25 @@ Q.XIUNU = {
     { col: '#c0e2d4', trim: '#4f8f86', pat: 'bamboo', patCol: '#8fc2b2', fl: '#f4f0e6' }, { col: '#f2d98a', trim: '#b8862a', pat: 'cloud', patCol: '#fff0b0', fl: '#ffd870' },
     { col: '#e5708c', trim: '#8a2a52', pat: 'cloud', patCol: '#f6b4c4', fl: '#ff9ab4' }, { col: '#7ea8e2', trim: '#2f5fa8', pat: 'cloud', patCol: '#cfe0ff', fl: '#e8f0ff' },
   ],
+};
+
+
+/* =============================================================
+   TABLET (พลิกป้าย · 绿头牌) — the Emperor flips green tablets each season
+   - rank >= minRank has a tablet; rank >= empressRank has none (he visits the Empress on set days: `empressChance`)
+   - each season-end: T.mood drifts, he picks 1–3 tablets by weighted lottery among: the player, named consorts, generated xiunü girls
+   - when the player's tablet is flipped, ONE event tagged 'tablet' (kind random) plays at the next season start (the "night")
+   - Event/condition API: variable T = {mood, me (flipped this season), miss (rounds in a row not flipped), struck, boost, nights};
+     fx.tablet = { mood:n|[a,b], boost:n (next-round weight), strike:n (seasons the name is struck; negative clears) }
+   ============================================================= */
+Q.TABLET = {
+  minRank: 2, empressRank: 8, empressChance: 0.35,
+  moodStart: 55, moodMin: 5, moodMax: 95,
+  moodTh: [[30, 'หงุดหงิดพระทัย'], [45, 'เหนื่อยล้า'], [65, 'สงบพระทัย'], [80, 'อารมณ์ดี'], [101, 'เบิกบานพระทัย']],
+  picks: { base: 2, hi: 3, lo: 1 },
+  repeatPenalty: 0.7,                 // multiplier on the player's weight if she was flipped last round
+  boostCap: 16, boostCost: 60, boostGain: 8,
+  hist: 12,
+  npc: { consort: 44, lu: 24, shu: 20, chu: 14, friend: 10 },
+  trials: 400,
 };

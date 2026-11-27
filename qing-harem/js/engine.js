@@ -586,6 +586,7 @@
         '<div class="hero-rank">' + seal(st.rank, 'sm') + '<span><b>' + esc(hub.rankTitle) + '</b><small>' + esc(R.zh) + '</small></span></div>' +
         '<div class="hero-hall">🏠 ' + esc(R.hall) + '</div><div class="hero-chips">' + chips + '</div>' +
         '<div class="hero-btns"><button type="button" class="btn btn-ghost sm btn-wardrobe">👘 ตู้เสื้อผ้า</button>' +
+        '<button type="button" class="btn btn-ghost sm btn-tablet">🎴 ป้ายชื่อเขียว</button>' +
         (xs.batches > 0 ? '<button type="button" class="btn btn-ghost sm btn-xiunu">📜 ซิ่วหนี่' + (xs.pending ? '<i class="xn-dot"></i>' : '') + '</button>' : '') + '</div></div>';
     });
   }
@@ -1137,6 +1138,7 @@
     if (rep.threatDelta) line('⚠', 'ภัยรอบกาย <b class="' + (rep.threatDelta < 0 ? 'up' : 'dn') + '">' + sign(rep.threatDelta) + '</b>', rep.threatDelta < 0 ? 'up' : 'dn');
     (rep.notes || []).forEach(function (n) { line('✧', esc(n), 'note'); });
     (rep.xn || []).forEach(function (n) { line('📜', esc(n), 'note'); });
+    (rep.tablet || []).forEach(function (n) { line('🎴', esc(n), 'note'); });
     var foot = '';
     if (rep.promo) foot = '<div class="rp-foot promo">✦ ราชโองการเลื่อนขั้นกำลังมาถึง</div>';
     else if (rep.pending) foot = '<div class="rp-foot">มีเหตุการณ์รอท่านอยู่ในฤดูนี้ ' + rep.pending + ' เรื่อง</div>';
@@ -1425,6 +1427,7 @@
       '<section><h4>🎲 การเลือกและโอกาส</h4><p>ตัวเลือกที่มี <b>%</b> คือการทดสอบคุณสมบัติ ยิ่งสูงยิ่งสำเร็จง่าย · ป้าย <b>銀</b> คือเงินตำลึงที่ต้องจ่าย · ภัยรอบกายสูง เหตุร้ายจะมาบ่อยขึ้น</p></section>' +
       '<section><h4>👘 ตู้เสื้อผ้า</h4><p>กดปุ่ม <b>ตู้เสื้อผ้า</b> ในหน้าหลักเพื่อเลือก <b>ชุด · เครื่องหัว · สร้อยคอ · ต่างหู · ของติดตัว</b> ได้ตามฐานะ ลองสวมก่อนซื้อได้ รับของพระราชทานเมื่อเลื่อนขั้น และได้ของขวัญจากผู้คนในวัง ของแต่ละชิ้นเพิ่มโอกาสตอนทอยเต๋า (โฉมงาม พรสวรรค์ ปัญญา) หรือส่งผลต่อศักดิ์ศรีและภัยรอบกายทุกฤดู — ชุดหรูสะดุดตาช่วยให้ถูกจดจำ แต่ก็ล่อสายตาศัตรูด้วย · สวมชุด เครื่องหัว และเครื่องประดับโทนเดียวกันครบ จะได้โบนัสชุดเซ็ต</p></section>' +
       '<section><h4>🏯 ซิ่วหนี่ — สนมรุ่นใหม่</h4><p>ทุก 3 ปีมี <b>รุ่นซิ่วหนี่</b> เข้าวัง เมื่อท่านถึงขั้น <b>เฟย</b> ท่านมีสิทธิ์พิจารณาผู้เข้าคัดเลือก: สืบประวัติ → <b>รับเข้าสังกัด</b> / <b>ปล่อยตามชะตา</b> / <b>ส่งเป็นนางกำนัลข้างกาย</b> / <b>คัดออก</b> สนมที่ท่านอุปถัมภ์อาจเป็นหูเป็นตาและกราบทูลแทนท่าน แต่บางคนทะเยอทะยานจนกลายเป็นคู่แข่ง — และบางคนคือสายสืบของคนอื่นตั้งแต่แรก ดูรายชื่อได้ที่ปุ่ม <b>📜 ซิ่วหนี่</b></p></section>' +
+      '<section><h4>🎴 ป้ายชื่อเขียว (พลิกป้าย)</h4><p>เมื่อถึงขั้น <b>ฉังไจ้</b> ท่านมีป้ายชื่อเขียวของตนเอง ทุกฤดูฮ่องเต้ทรงพลิกป้าย 1–3 ใบ โอกาสของท่านขึ้นกับ ความโปรดปราน ฐานันดร โฉมงาม พรสวรรค์ ไมตรีของขันทีจางฝู เครื่องแต่งกาย และ <b>อารมณ์ฮ่องเต้</b> — ท่านต้องแข่งกับหวงกุ้ยเฟย ลู่ผิน ซูเฟย และสนมรุ่นใหม่ ถ้าป้ายถูกพลิก ท่านจะถูกเรียกเข้าเฝ้ายามค่ำ (ได้ความโปรดปราน แต่ก็เพิ่มความอิจฉา) <b>ฝากขันที</b>ให้จัดคิวได้ แต่ฮองเฮาหรือไทเฮาก็ขีดชื่อท่านได้ถ้าท่านเสียความไว้ใจ ดูได้ที่ปุ่ม <b>🎴 ป้ายชื่อเขียว</b></p></section>' +
       '<section><h4>📜 ตอนจบ</h4><p>มีตอนจบมากมายตามวิถีที่ท่านเลือก ทั้งสุข เศร้า และสงบ ดูได้ที่ <b>จดหมายเหตุ</b> · ระบบบันทึกอัตโนมัติทุกครั้งที่กลับสู่หน้าวังหลัง</p></section>' +
       '<section><h4>⌨ ปุ่มลัด</h4><p><b>Space / Enter</b> ไปต่อ · <b>1–4</b> เลือกตัวเลือก · <b>Esc</b> เมนู</p></section>' +
       '<section class="credits"><h4>✦ เครดิต</h4><p>ลิขิตหงส์ · วังหลังต้าชิง<br>เกมกลยุทธ์ผสมวิชวลโนเวล ภาพและเสียงทั้งหมดสร้างด้วยโค้ด<br>เรื่องราวเป็นนิยายสมมติ — รัชศกเฉิงผิง ฮ่องเต้ ราชวงศ์ และตัวละครทั้งหมดไม่มีตัวตนจริง ชื่อสกุลแมนจูใช้เพื่อบรรยากาศเท่านั้น</p></section></div>';
@@ -1597,6 +1600,65 @@
   }
   Game.openXiunu = openXiunu;
 
+
+  /* ============================================================
+     11d. TABLET (ป้ายชื่อเขียว · พลิกป้าย)
+     ============================================================ */
+  var MOOD_COL = ['#d6564a', '#d99a4a', '#8fb8a0', '#d9c04a', '#ff9ab0'];
+  function tbWhen(t) { return 'ปี ' + (Math.floor(t / 4) + 1) + ' · ' + Q.SEASONS[t % 4]; }
+  function tbMoodIdx(m) { return m < 30 ? 0 : m < 45 ? 1 : m < 65 ? 2 : m < 80 ? 3 : 4; }
+  function renderTbQueue(el) {
+    var st = Game.st, i = QL.tabletInfo(st);
+    var mi = tbMoodIdx(i.mood);
+    var mood = '<div class="tb-mood"><div class="tb-mood-top"><span>🎴 อารมณ์ของฮ่องเต้</span><b style="color:' + MOOD_COL[mi] + '">' + esc(i.moodTh) + '</b></div>' +
+      '<div class="tb-bar"><i style="--v:' + i.mood + '%;--c:' + MOOD_COL[mi] + '"></i></div>' +
+      '<div class="tb-stats"><span>ถูกเรียกเข้าเฝ้าแล้ว <b>' + i.nights + '</b> คืน</span><span>' + (!i.hist.length ? 'ยังไม่มีรอบพลิกป้าย' : i.miss ? 'ไม่ถูกพลิกป้ายติดต่อกัน <b>' + i.miss + '</b> ฤดู' : 'ฤดูล่าสุดท่านถูกเรียกเข้าเฝ้า') + '</span></div></div>';
+    if (i.locked) { el.innerHTML = mood + '<div class="tb-lock">🔒 ' + esc(i.lockedWhy) + '</div>'; return; }
+    if (i.empress) {
+      el.innerHTML = mood + '<div class="tb-me"><div class="tb-pct"><b>' + i.myPct + '%</b><small>โอกาสที่ฮ่องเต้เสด็จตำหนักขุนหนิงในฤดูหน้า</small></div><p class="xn-note">ฮองเฮาไม่มีป้ายชื่อเขียว — ฮ่องเต้เสด็จตามวาระ อารมณ์และสุขภาพของพระองค์เป็นผู้กำหนดว่าท่านจะได้ใช้เวลาด้วยกันหรือไม่</p></div>';
+      return;
+    }
+    var blocked = i.blocked ? '<div class="tb-blocked">⚠ ' + esc(i.blocked) + ' — ฤดูหน้าท่านไม่มีโอกาสถูกพลิกป้าย</div>' : '';
+    var parts = i.parts.map(function (p) { return '<li class="' + (p.v >= 0 ? 'up' : 'dn') + '"><span>' + esc(p.label) + '</span><b>' + (p.v >= 0 ? '+' : '') + p.v + '</b></li>'; }).join('');
+    var boost = '<div class="tb-boost"><div><b>ฝากขันทีจัดคิว</b><small>' + (i.boost ? 'ตอนนี้ฝากไว้ +' + i.boost + ' (หมดผลเมื่อสิ้นฤดู)' : 'จ่ายขันทีจางฝูให้วางป้ายของท่านไว้หน้าถาด (+' + i.boostGain + ' น้ำหนัก)') + '</small></div>' +
+      '<button type="button" class="btn btn-primary sm" data-a="boost"' + (i.canBoost ? '' : ' disabled') + '><span>銀 ' + i.boostCost + '</span></button></div>' + (i.canBoost || !i.boostWhy ? '' : '<p class="xn-note">' + esc(i.boostWhy) + '</p>');
+    var rows = i.rows.map(function (r) {
+      return '<li class="' + (r.id === 'me' ? 'me' : '') + '"><span class="tb-nm">' + (r.id === 'me' ? '✦ ' + esc(st.name) + ' (ท่าน)' : esc(r.name)) + (r.kind === 'girl' ? '<em>ซิ่วหนี่</em>' : '') + '</span><i style="--v:' + Math.min(100, r.pct) + '%"></i><b>' + r.pct + '%</b></li>';
+    }).join('');
+    el.innerHTML = mood + blocked + '<div class="tb-me"><div class="tb-pct"><b>' + i.myPct + '%</b><small>โอกาสถูกพลิกป้ายในฤดูหน้า (ฮ่องเต้จะทรงพลิกประมาณ ' + i.picks + ' ใบ)</small></div>' +
+      '<h4>ปัจจัยของท่าน</h4><ul class="tb-parts">' + parts + '</ul>' + boost + '</div>' +
+      '<h4 class="tb-h">คิวป้ายในวัง (ประมาณการ)</h4><ul class="tb-rows">' + rows + '</ul><p class="xn-note">ตัวเลขเป็นการจำลองจากสภาพปัจจุบัน — อารมณ์ฮ่องเต้เปลี่ยนทุกฤดู และผลจริงขึ้นกับโชคด้วย</p>';
+    var b = $('[data-a="boost"]', el);
+    if (b) b.addEventListener('click', function () {
+      if (b.disabled) return;
+      var r = QL.tabletBoost(st);
+      if (!r.ok) { toast(r.why); snd('fail'); return; }
+      snd('chime'); toast('ฝากขันทีแล้ว — ป้ายของท่านมีโอกาสมากขึ้นในฤดูหน้า');
+      try { renderHub(true, true); } catch (e) { /* ignore */ }
+      if (!st.cur && st.phase !== 'ended') Saves.save('auto', st);
+      renderTbQueue(el);
+    });
+  }
+  function renderTbHist(el) {
+    var st = Game.st, i = QL.tabletInfo(st);
+    if (!i.hist.length) { el.innerHTML = '<p class="mute xn-empty">ยังไม่มีบันทึกการพลิกป้าย — รอบแรกจะเกิดเมื่อสิ้นฤดูกาลหลังท่านถึงขั้น ' + esc(Q.RANKS[Q.TABLET.minRank].th) + '</p>'; return; }
+    el.innerHTML = '<ul class="tb-hist">' + i.hist.map(function (h) {
+      var who = h.empress ? (h.me ? 'ฮ่องเต้เสด็จตำหนักขุนหนิง' : 'ไม่ได้เสด็จตำหนักขุนหนิง')
+        : (h.picks.length ? h.picks.map(function (p) { return esc(p.name); }).join(' · ') : 'ไม่มีผู้ใดถูกพลิกป้าย');
+      return '<li class="' + (h.me ? 'me' : '') + '"><div class="tb-when"><b>' + esc(tbWhen(h.t)) + '</b><small>' + esc(moodThLocal(h.mood)) + '</small></div><div class="tb-who">' + who + '</div>' +
+        '<span class="tb-flag">' + (h.me ? '✦ ท่านถูกเรียก' : (h.blocked ? '⚠ ' + esc(h.blocked) : '—')) + '</span></li>';
+    }).join('') + '</ul>';
+  }
+  function moodThLocal(m) { var L = Q.TABLET.moodTh, k; for (k = 0; k < L.length; k++) if (m < L[k][0]) return L[k][1]; return L[L.length - 1][1]; }
+  function openTablet(tab) {
+    var st = Game.st; if (!st) return;
+    QL.ensureT(st);
+    openModal({ title: 'ป้ายชื่อเขียว · พลิกป้าย', cls: 'modal-tablet', tabs: [
+      { id: 'queue', label: '🎴 คิวป้าย', render: renderTbQueue },
+      { id: 'hist', label: '📜 ประวัติ', render: renderTbHist } ], start: tab || 'queue' });
+  }
+  Game.openTablet = openTablet;
+
   function menuTabs(inGame) {
     var t = [{ id: 'save', label: inGame ? 'บันทึก' : 'โหลดเกม', render: tabSaves }];
     if (inGame) t.push({ id: 'diary', label: 'สมุดบันทึก', render: tabDiary });
@@ -1724,7 +1786,8 @@
     $('#btn-menu').onclick = function () { openMenu(); };
     document.addEventListener('click', function (e) {
       var b = e.target && e.target.closest ? e.target.closest('.btn-wardrobe') : null; if (b) { e.preventDefault(); openWardrobe(); return; }
-      var xb = e.target && e.target.closest ? e.target.closest('.btn-xiunu') : null; if (xb) { e.preventDefault(); openXiunu(); }
+      var xb = e.target && e.target.closest ? e.target.closest('.btn-xiunu') : null; if (xb) { e.preventDefault(); openXiunu(); return; }
+      var tb = e.target && e.target.closest ? e.target.closest('.btn-tablet') : null; if (tb) { e.preventDefault(); openTablet(); }
     });
     $('#btn-end-season').onclick = onEndSeasonClick;
     $('#action-groups').addEventListener('click', function (e) {

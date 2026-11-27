@@ -153,15 +153,16 @@ var QL = (function () {
   function envOf(st, needW) {
     var e = { S: st.S, F: st.F, R: st.R, rank: st.rank, sir: st.sir, season: st.t % 4,
               year: Math.floor(st.t / 4) + 1, t: st.t, age: C.startAge + Math.floor(st.t / 4), origin: st.origin };
-    if (needW && needW !== 'X') e.W = wardrobeEnv(st);
-    if (needW === 'X' || needW === 'WX') e.X = xnEnv(st);
+    if (needW && needW.indexOf('W') >= 0) e.W = wardrobeEnv(st);
+    if (needW && needW.indexOf('X') >= 0) e.X = xnEnv(st);
+    if (needW && needW.indexOf('T') >= 0) e.T = tabletEnv(st);
     return e;
   }
-  var USES_W = /\bW\b/, USES_X = /\bX\b/;
+  var USES_W = /\bW\b/, USES_X = /\bX\b/, USES_T = /\bT\b/;
   function cond(expr, st) {
     if (expr === undefined || expr === null || expr === '' || expr === true) return true;
     if (expr === false) return false;
-    try { var uw = USES_W.test(expr), ux = USES_X.test(expr); return !!evalAst(getAst(expr), envOf(st, uw && ux ? 'WX' : ux ? 'X' : uw)); }
+    try { var need = (USES_W.test(expr) ? 'W' : '') + (USES_X.test(expr) ? 'X' : '') + (USES_T.test(expr) ? 'T' : ''); return !!evalAst(getAst(expr), envOf(st, need)); }
     catch (e) { if (strict) throw e; warn('[cond]', expr, e.message); return false; }
   }
 
@@ -208,7 +209,7 @@ var QL = (function () {
     Object.keys(Q.INIT_FLAGS).forEach(function (k) { st.F[k] = Q.INIT_FLAGS[k]; });
     Object.keys(o.start.F || {}).forEach(function (k) { st.F[k] = o.start.F[k]; });
     if (opts.gift && Q.GIFTS[opts.gift]) applyFx(st, Q.GIFTS[opts.gift].fx);
-    ensureW(st); ensureX(st);
+    ensureW(st); ensureX(st); ensureT(st);
     st.flash = null;
     return st;
   }
@@ -248,6 +249,7 @@ var QL = (function () {
     if (fx.ap) st.ap = Math.max(0, st.ap + fx.ap);
     if (fx.give) fx.give.forEach(function (id) { giveItem(st, id); });
     if (fx.xn) applyXn(st, fx.xn);
+    if (fx.tablet) applyTablet(st, fx.tablet);
     if (fx.log) st.log.push({ t: st.t, text: fill(st, fx.log) });
     if (fx.note) { var f = st.flash || (st.flash = { S: {}, R: {}, notes: [] }); f.notes.push(fill(st, fx.note)); }
   }
@@ -653,6 +655,151 @@ var QL = (function () {
     return X;
   }
 
+
+  /* ---------------- tablet (พลิกป้าย) — state, env, fx (round logic below) ---------------- */
+  function ensureT(st) {
+    if (!st.T || typeof st.T !== 'object') st.T = { mood: Q.TABLET.moodStart, hist: [], boost: 0, struck: 0, miss: 0, me: false, meNow: false, lastMe: false, boughtT: -1 };
+    var T = st.T; if (!T.hist) T.hist = [];
+    return T;
+  }
+  function moodTh(m) { var L = Q.TABLET.moodTh, i; for (i = 0; i < L.length; i++) if (m < L[i][0]) return L[i][1]; return L[L.length - 1][1]; }
+  function tabletEnv(st) {
+    var T = ensureT(st);
+    return { mood: Math.round(T.mood), me: !!T.me, miss: T.miss || 0, struck: T.struck || 0, boost: T.boost || 0, nights: Number(st.F.tb_nights) || 0 };
+  }
+  function applyTablet(st, o) {
+    var T = ensureT(st), TB = Q.TABLET;
+    if (o.mood !== undefined) T.mood = clampN(T.mood + roll(st, o.mood), TB.moodMin, TB.moodMax);
+    if (o.boost) T.boost = clampN((T.boost || 0) + o.boost, 0, TB.boostCap);
+    if (o.strike) T.struck = Math.max(0, (T.struck || 0) + o.strike);
+  }
+
+
+  /* ---------------- tablet round (พลิกป้าย) ---------------- */
+  var TB_NPC = ['consort', 'lu', 'shu', 'chu', 'friend'];
+  function tbNpcOk(st, id) {
+    var F = st.F;
+    if (id === 'consort') return !F.niohuru_down;
+    if (id === 'lu') return !F.lu_exposed;
+    if (id === 'chu') return !!F.chu_alive && !F.chu_down;
+    if (id === 'friend') return !!F.friend_alive;
+    return true;
+  }
+  function tabletCandidates(st) {
+    var out = [], TB = Q.TABLET, X = ensureX(st);
+    TB_NPC.forEach(function (id) { if (tbNpcOk(st, id)) out.push({ id: id, kind: 'npc', name: Q.CHARS[id].short, w: TB.npc[id] }); });
+    X.order.forEach(function (gid) {
+      var g = X.girls[gid];
+      if (!g || !galive(g) || g.status === 'maid' || g.rank < 2) return;
+      out.push({ id: g.id, kind: 'girl', name: g.name, gid: g.id, w: Math.max(1, 4 + g.favor * 0.45 + (g.charm - 40) * 0.3 + g.rank * 1.8 + (g.turned ? 3 : 0)) });
+    });
+    return out;
+  }
+  function myTabletParts(st) {
+    var T = ensureT(st), TB = Q.TABLET, S = st.S, R = st.R, we = wardrobeEff(st), parts = [], blocked = null;
+    function add(label, v) { parts.push({ label: label, v: Math.round(v * 10) / 10 }); }
+    var charmK = T.mood >= 65 ? 0.32 : 0.25, talentK = T.mood < 45 ? 0.28 : 0.15;
+    add('พื้นฐาน', 6);
+    add('ความโปรดปราน', S.favor * 0.45);
+    add('ฐานันดร', st.rank * 1.5);
+    add('โฉมงาม', (S.charm - 40) * charmK);
+    add('พรสวรรค์', (S.talent - 40) * talentK);
+    add('ขันทีจางฝู', R.eunuch * 0.12);
+    add('เครื่องแต่งกาย', we.chk.charm * 0.5 + (we.set ? 3 : 0));
+    if (T.boost) add('ฝากขันทีจัดคิว', T.boost);
+    if (R.empress < 0) add('ฮองเฮาไม่พอพระทัย', R.empress * 0.2);
+    if (R.dowager < 0) add('ไทเฮาไม่พอพระทัย', R.dowager * 0.15);
+    var total = 0; parts.forEach(function (p) { total += p.v; });
+    total = Math.max(1, total);
+    if (T.lastMe) { var before = total; total = before * TB.repeatPenalty; add('เพิ่งถูกเรียกเข้าเฝ้า (ฮ่องเต้โปรดความหลากหลาย)', total - before); }
+    if (T.struck > 0) blocked = 'ชื่อถูกขีดออกจากป้าย';
+    else if (S.health < 25 || st.F.poisoned) blocked = 'ป่วยหนัก — ป้ายถูกพลิกคว่ำ';
+    else if (st.rank < TB.minRank) blocked = 'ยังไม่มีป้ายชื่อ';
+    return { parts: parts, total: total, blocked: blocked };
+  }
+  function tbPickCount(mood) { var P = Q.TABLET.picks; return mood >= 70 ? P.hi : mood < 35 ? P.lo : P.base; }
+  function tbSample(rng, list, n) {
+    var pool = list.slice(), out = [], i, tot, r;
+    while (out.length < n && pool.length) {
+      tot = 0; pool.forEach(function (c) { tot += c.w; });
+      r = rnd(rng) * tot;
+      for (i = 0; i < pool.length; i++) { r -= pool[i].w; if (r <= 0) break; }
+      out.push(pool.splice(Math.min(i, pool.length - 1), 1)[0]);
+    }
+    return out;
+  }
+  function tabletRound(st, rep) {
+    var T = ensureT(st), TB = Q.TABLET, X = ensureX(st), notes = [], picks = [], mw = null;
+    T.me = false; T.meNow = false;
+    if (st.F.emperor_dead || st.F.finale || st.rank < TB.minRank) { if (rep) rep.tablet = notes; return; }
+    T.mood = clampN(T.mood + ri(st, -8, 8) + Math.round((50 - T.mood) * 0.15), TB.moodMin, TB.moodMax);
+    if (T.struck > 0) T.struck--;
+    if (st.rank >= TB.empressRank) {
+      if (rnd(st) < TB.empressChance) T.me = true;
+    } else {
+      var cands = tabletCandidates(st); mw = myTabletParts(st);
+      if (!mw.blocked) cands.push({ id: 'me', kind: 'me', name: st.name, w: mw.total });
+      picks = tbSample(st, cands, tbPickCount(T.mood));
+      picks.forEach(function (c) {
+        if (c.kind === 'me') T.me = true;
+        else if (c.kind === 'girl') { var g = X.girls[c.gid]; g.favor = clampN(g.favor + ri(st, 3, 6), 0, 100); }
+      });
+    }
+    T.boost = 0;
+    if (!T.me && T.struck <= 0 && st.rank < TB.empressRank && (st.R.empress <= -25 || (st.R.dowager <= -25 && !st.F.dowager_dead)) && rnd(st) < 0.45) {
+      T.struck = 2;
+      if (EV['tb_o_struck']) st.queue.push({ id: 'tb_o_struck', due: st.t });
+      notes.push('ฮองเฮาหรือไทเฮาสั่งขีดชื่อของท่านออกจากป้ายชั่วคราว');
+    }
+    T.lastMe = T.me; T.miss = T.me ? 0 : (T.miss || 0) + 1;
+    if (T.me) { st.F.tb_nights = (Number(st.F.tb_nights) || 0) + 1; T.meNow = true; }
+    var names = picks.filter(function (c) { return c.kind !== 'me'; }).map(function (c) { return c.name; });
+    if (st.rank >= TB.empressRank) notes.push(T.me ? 'ฮ่องเต้เสด็จตำหนักขุนหนิงตามวาระ' : 'ฤดูนี้ฮ่องเต้ไม่ได้เสด็จตำหนักขุนหนิง');
+    else {
+      notes.push('อารมณ์ฮ่องเต้: ' + moodTh(T.mood) + (names.length ? ' · ทรงพลิกป้ายของ ' + names.join(', ') : ''));
+      notes.push(T.me ? 'ป้ายของท่านถูกพลิก — ท่านจะถูกเรียกเข้าเฝ้า' : 'ป้ายของท่านไม่ถูกพลิกในฤดูนี้' + (mw && mw.blocked ? ' (' + mw.blocked + ')' : ''));
+    }
+    T.hist.push({ t: st.t, mood: Math.round(T.mood), me: T.me, empress: st.rank >= TB.empressRank, blocked: mw && mw.blocked || null,
+                  picks: picks.filter(function (c) { return c.kind !== 'me'; }).map(function (c) { return { id: c.id, name: c.name, kind: c.kind }; }) });
+    while (T.hist.length > TB.hist) T.hist.shift();
+    if (rep) rep.tablet = notes;
+  }
+  function tabletOdds(st) {
+    var T = ensureT(st), TB = Q.TABLET, mw = myTabletParts(st);
+    if (st.rank >= TB.empressRank) return { empress: true, rows: [], myPct: Math.round(TB.empressChance * 100), mw: mw, picks: 0 };
+    var list = tabletCandidates(st);
+    if (!mw.blocked && st.rank >= TB.minRank) list.push({ id: 'me', kind: 'me', name: st.name, w: mw.total });
+    var n = tbPickCount(T.mood), cnt = {}, r = { seed: (st.seed ^ Math.imul(st.t + 7, 2654435761)) | 0 }, i;
+    list.forEach(function (c) { cnt[c.id] = 0; });
+    for (i = 0; i < TB.trials; i++) tbSample(r, list, n).forEach(function (c) { cnt[c.id]++; });
+    var rows = list.map(function (c) { return { id: c.id, name: c.name, kind: c.kind, pct: Math.round(cnt[c.id] / TB.trials * 100), w: Math.round(c.w) }; })
+      .sort(function (a, b) { return b.pct - a.pct; });
+    var me = rows.filter(function (x) { return x.id === 'me'; })[0];
+    return { empress: false, rows: rows, myPct: me ? me.pct : 0, mw: mw, picks: n };
+  }
+  function tabletInfo(st) {
+    var T = ensureT(st), TB = Q.TABLET, o = tabletOdds(st), locked = st.rank < TB.minRank;
+    var canBoost = !locked && !o.empress && !T.struck && T.boughtT !== st.t && (T.boost || 0) < TB.boostCap && st.S.silver >= TB.boostCost;
+    return {
+      locked: locked, lockedWhy: locked ? 'ต้าอิ้งยังไม่มีป้ายชื่อ — เมื่อเลื่อนเป็น' + Q.RANKS[TB.minRank].th + ' ท่านจะมีป้ายชื่อเขียวของตนเอง' : null,
+      empress: o.empress, mood: Math.round(T.mood), moodTh: moodTh(T.mood), picks: o.picks, rows: o.rows, myPct: o.myPct,
+      parts: o.mw.parts, total: Math.round(o.mw.total * 10) / 10, blocked: o.mw.blocked, boost: T.boost || 0, boostCost: TB.boostCost, boostGain: TB.boostGain,
+      canBoost: canBoost, boostWhy: T.boughtT === st.t ? 'ฝากขันทีไว้แล้วในฤดูนี้' : (T.boost || 0) >= TB.boostCap ? 'ฝากเต็มเพดานแล้ว' : T.struck ? 'ชื่อถูกขีดอยู่' : st.S.silver < TB.boostCost ? 'เงินตำลึงไม่พอ' : null,
+      hist: T.hist.slice().reverse(), miss: T.miss || 0, nights: Number(st.F.tb_nights) || 0, struck: T.struck || 0, silver: st.S.silver,
+    };
+  }
+  function tabletBoost(st) {
+    var T = ensureT(st), TB = Q.TABLET;
+    if (st.rank < TB.minRank || st.rank >= TB.empressRank) return { ok: false, why: 'ใช้ไม่ได้ในขั้นนี้' };
+    if (T.struck > 0) return { ok: false, why: 'ชื่อของท่านถูกขีดอยู่ การฝากขันทีไม่ช่วยอะไร' };
+    if (T.boughtT === st.t) return { ok: false, why: 'ฝากขันทีไว้แล้วในฤดูนี้' };
+    if ((T.boost || 0) >= TB.boostCap) return { ok: false, why: 'ฝากเต็มเพดานแล้ว' };
+    if (st.S.silver < TB.boostCost) return { ok: false, why: 'เงินตำลึงไม่พอ' };
+    st.flash = null; applyFx(st, { silver: -TB.boostCost, rel: { eunuch: 2 } });
+    T.boost = Math.min(TB.boostCap, (T.boost || 0) + TB.boostGain); T.boughtT = st.t;
+    return { ok: true, flash: st.flash };
+  }
+
   /* ---------------- ranks ---------------- */
   function promote(st) {
     var from = st.rank; if (from >= 9) return;
@@ -753,6 +900,13 @@ var QL = (function () {
     if (st.promoReady && EV[st.promoReady]) { L.push(st.promoReady); }
     st.promoReady = null;
     var ch = pickChapter(st, L); if (ch) L.push(ch.id);
+    var Tn = ensureT(st);
+    if (Tn.meNow) {
+      Tn.meNow = false;
+      var te = pickEvent(st, { tag: 'tablet', exclude: L });
+      if (te) L.push(te.id);
+      else { applyFx(st, { favor: 4, threat: 1 }); st.flash = null; st.log.push({ t: st.t, text: 'ท่านถูกเรียกเข้าเฝ้ายามค่ำ' }); }
+    }
     var keep = [];
     st.queue.forEach(function (q) { if (q.due <= st.t) { if (EV[q.id] && L.indexOf(q.id) < 0) L.push(q.id); } else keep.push(q); });
     st.queue = keep;
@@ -798,6 +952,7 @@ var QL = (function () {
     rep.healthDelta = st.S.health - h0;
     st.t++; st.sir++; st.ap = C.apPerSeason;
     xnTick(st, rep);
+    tabletRound(st, rep);
     checkPromotion(st);
     if (!st.pendingEnding) { var se = systemEnd(st); if (se) st.pendingEnding = se; }
     beginSeason(st);
@@ -995,6 +1150,7 @@ var QL = (function () {
     actions: actions, doAction: doAction, hub: hub,
     nextPending: nextPending, startEvent: startEvent, view: view, advance: advance, choose: choose, ackPromotion: ackPromotion,
     systemEnd: systemEnd, summary: summary, rnd: rnd,
+    tabletInfo: tabletInfo, tabletBoost: tabletBoost, ensureT: ensureT, tabletRound: tabletRound,
     xiunu: xiunu, xnInvestigate: xnInvestigate, xnDecide: xnDecide, xnGift: xnGift, xnDismiss: xnDismiss, focusLook: focusLook, ensureX: ensureX, xnProbe: xnProbe, xnQuota: xnQuota,
     wardrobe: wardrobe, wardrobeEff: wardrobeEff, equip: equip, unequip: unequip, buy: buy, give: giveItem, look: look, ensureW: ensureW, effLines: effLines,
     event: function (id) { return EV[id]; }, action: function (id) { return ACT[id]; },
