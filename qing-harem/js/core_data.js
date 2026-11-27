@@ -80,12 +80,12 @@ Q.CHARS = {
   narrator: { th: '',                      color: '#8a7a6a' },
   player:   { th: '{{PLAYER}}',            color: '#c2456b', role: 'ตัวเอก' },
   emperor:  { th: 'ฮ่องเต้เฉิงผิง',        short: 'ฮ่องเต้',     zh: '承平帝',            color: '#c9971c', role: 'จักรพรรดิแห่งต้าชิง' },
-  empress:  { th: 'ฮองเฮาฟู่ฉา',           short: 'ฮองเฮา',      zh: '富察·清妍',          color: '#b22d3b', role: 'ฮองเฮา มารดาแห่งแผ่นดิน' },
+  empress:  { th: 'ฮองเฮาฟู่ฉา',           short: 'ฮองเฮา',      zh: '皇后 · 富察·清妍',          color: '#b22d3b', role: 'ฮองเฮา มารดาแห่งแผ่นดิน' },
   dowager:  { th: 'ไทเฮาเหวินเซี่ยน',      short: 'ไทเฮา',       zh: '温宪皇太后',         color: '#6b3fa0', role: 'พระมารดาของฮ่องเต้' },
   consort:  { th: 'เจียอี้หวงกุ้ยเฟย',  short: 'หวงกุ้ยเฟย',  zh: '嘉懿皇贵妃 · 钮祜禄·玉兰',        color: '#d4471f', role: 'หวงกุ้ยเฟย สนมผู้เกรียงไกร' },
-  chu:      { th: 'ฉู่กุ้ยเหริน',          short: 'ฉู่กุ้ยเหริน', zh: '楚思容',            color: '#c2487e', role: 'กุ้ยเหรินผู้ถือดี' },
+  chu:      { th: 'ฉู่กุ้ยเหริน',          short: 'ฉู่กุ้ยเหริน', zh: '楚贵人 · 楚思容',            color: '#c2487e', role: 'กุ้ยเหรินผู้ถือดี' },
   lu:       { th: 'อี๋ผิน',                short: 'อี๋ผิน',      zh: '怡嫔 · 陆雪凝',            color: '#5f8fb8', role: 'ผินผู้อ่อนหวาน' },
-  shu:      { th: 'ซูเฟย',                 short: 'ซูเฟย',       zh: '舒穆禄·婉容',        color: '#4f8a78', role: 'เฟยผู้เงียบขรึม' },
+  shu:      { th: 'ซูเฟย',                 short: 'ซูเฟย',       zh: '舒妃 · 舒穆禄·婉容',        color: '#4f8a78', role: 'เฟยผู้เงียบขรึม' },
   friend:   { th: 'เหมยชิง',               short: 'เหมยชิง',     zh: '梅卿',              color: '#e07a9a', role: 'สหายร่วมคัดเลือก' },
   maid:     { th: 'ชุนเถา',                short: 'ชุนเถา',      zh: '春桃',              color: '#e8905a', role: 'สาวใช้คนสนิท' },
   eunuch:   { th: 'ขันทีจางฝู',            short: 'ขันทีจาง',    zh: '张福',              color: '#7a6a58', role: 'ขันทีผู้ติดตามฮ่องเต้' },
@@ -511,7 +511,7 @@ Q.TABLET = {
   hist: 12,
   npc: { consort: 44, lu: 24, shu: 20, chu: 14, friend: 10 },
   trials: 400,
-  nightFavorScale: 0.5,            // positive favour inside tablet-tagged events is scaled (balance: keeps passive favour from trivialising the climb)
+  nightFavorScale: 0.6,            // positive favour inside tablet-tagged events is scaled (balance: keeps passive favour from trivialising the climb)
 };
 
 /* ---------- naming: พระนามและฉายาพระราชทาน (封号) — pools are filled by js/data/n0*_*.js ; rules in docs/DESIGN.md §12 ---------- */
@@ -533,4 +533,22 @@ Q.NAMING = {
   boon: { prestige: 2, virtue: { virtue: 2 }, gentle: { threat: -1 }, beauty: { charm: 2 }, wisdom: { wit: 2 }, art: { talent: 2 }, harmony: { threat: -2 }, fortune: { favor: 2 }, loyal: { virtue: 1, prestige: 1 }, strong: { health: 3 } },
   defaultClan: { noble: { th: 'กวาเอ่อร์เจีย', zh: '瓜尔佳' }, scholar: { th: 'เซิ่น', zh: '沈' }, maid: { th: 'หลิว', zh: '刘' } },
   maidClans: ['หลิว', 'หวง', 'หม่า', 'จู', 'สือ', 'เฝิง', 'เหอ', 'เซียว', 'ต่ง', 'ถัง', 'ติ่ง', 'ฉี'],
+};
+
+/* ---------- roster: ทำเนียบวังหลัง (everyone in the harem, with ages) ---------- */
+Q.ROSTER = {
+  // age = age in year 1 (docs/BIBLE.md §4); the roster adds the years that have passed
+  npc: {
+    emperor:  { age: 27 },
+    dowager:  { age: 52 },
+    empress:  { age: 30, rank: 8, clan: 'ฟู่ฉา', clanZh: '富察', given: 'ชิงเหยียน', givenZh: '清妍' },
+    consort:  { age: 28, rank: 7, clan: 'หนิ่วฮู่ลู่', clanZh: '钮祜禄', given: 'อวี้หลาน', givenZh: '玉兰' },
+    shu:      { age: 26, rank: 5, clan: 'ซูมู่ลู่', clanZh: '舒穆禄', given: 'หวั่นหรง', givenZh: '婉容' },
+    lu:       { age: 24, rank: 4, clan: 'ลู่', clanZh: '陆', given: 'เสวี่ยหนิง', givenZh: '雪凝' },
+    chu:      { age: 22, rank: 3, clan: 'ฉู่', clanZh: '楚', given: 'ซือหรง', givenZh: '思容' },
+    friend:   { age: 15 }, maid: { age: 16 }, eunuch: { age: 40 }, doctor: { age: 26 }, prince: { age: 25 }, mama: { age: 55 },
+  },
+  // background concubines who fill the ladder: [rank, how many, min age, max age]
+  bgPlan: [[6, 1, 31, 40], [5, 2, 27, 36], [4, 3, 24, 33], [3, 3, 20, 28], [2, 3, 18, 25], [1, 3, 17, 22]],
+  bgWeight: { base: 0.8, perRank: 0.5 },     // their (small) weight in the tablet lottery
 };

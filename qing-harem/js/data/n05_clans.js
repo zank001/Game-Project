@@ -13,21 +13,21 @@
 
    READINGS (Thai-subtitle style, same hand as the existing game data): 乌 → อู๋ (matches the game's อู๋ซูหลี่) · 鄂 → เอ๋อ (matches ตงเอ๋อ) ·
             尔 → เอ่อร์ (กวาเอ่อร์เจีย) · 赫 → เหอ (เหอเสอหลี่) · 那拉 → น่าลา · 觉罗 → เจวี๋ยหลัว · 佳 → เจีย · 沁 → ชิ่น (kept apart from ฉิน = Mama Qin).
-   Only the four-tone marks that Thai readers expect are written (1st/2nd tone unmarked, except where unmarked would collide with a different clan).
+   Tone marks: 4th tone ่/้; 1st tone unmarked; 2nd tone unmarked after high-class or ห-led initials (หลิน ถัง ฉี เหนียน) but marked ๋ after mid-class initials (อู๋ เจี๋ย ต๋า ไป๋ กั๋ว อิ๋ง).
 
    DELIBERATELY ABSENT (they are the surnames of named NPCs, a generated girl with the same clan would read as a relative or a clone):
             陆 ลู่ (Lu Pin) · 楚 ฉู่ (Chu Guiren) · 谢 เซี่ย (Dr Xie) · 秦 ฉิน (Mama Qin) · 梅 เหมย (Meixing) · 苏/舒 ซู (Shu Fei, ซูมู่ลู่ is Manchu and is kept) ·
-            夏 เซี่ย · 章 จาง (= 张) · 易 อี้ · 文 เหวิน (Dowager's เหวินเซี่ยน) · 爱新觉罗 (the imperial house itself).
+            夏 เซี่ย · 章 จาง (= 张) · 易 อี้ · 文 เหวิน (Dowager's เหวินเซี่ยน) · 爱新觉罗 (the imperial house itself) · bare 觉罗 (status label of the imperial collateral branches, not a hala; the commoner 伊尔根觉罗 has 5 hanzi, over the lint's 1..4).
    NOTE zh: the lint/engine allow 1..4 hanzi, so Borjigit is written in its four-character Qing form 博尔济锦 (Borjigin) instead of 博尔济吉特.
    NOTE 阿鲁特: Qing registers put the Aluteh in the Mongol Plain Blue Banner, but the game already lists it as a Manchu clan (Q.XIUNU.manchu), so it stays 'manchu'.
    NOTE Han-banner (hanjun) surnames are kept distinct from the Han list (a Thai reading may appear only once), so e.g. 杨 范 洪 孟 孔 孙 曹 田 live in hanjun and not in han.
    NOTE collision rule (DESIGN §12): no clan reading equals a fenghao/extra reading of n01-n04. Surnames whose natural reading is already a fenghao were left out
         (郑=正 钱=謙 韩=涵 袁=元 钟=忠 方=芳 康=康 邱=秋 龙=隆 常=常 龚=恭 严=妍 叶=燁 程=誠 俞=瑜 薛 宁=寧 郎=朗 姚=瑤) or respelled (洪 ฮง, 佟 ท่ง, 田 เทียน).
-        The single exception is the REQUIRED maid clan 何 เหอ, whose reading equals fenghao 和 เหอ (n03): a different hanzi with the same sound; a clan name is
-        only used below ผิน (or before a fenghao is bestowed), so no woman wears both at once. Flagged for the integrator. */
+        The one clash (maid clan 何 เหอ vs fenghao 和 เหอ of n03) was RESOLVED by the integrator: fenghao 和 was removed from n03, so 何 เหอ stays unique.
+        Integrator additions: 魏佳 เว่ยเจีย (the real hala of 令妃, Han 魏 raised into the banners) · 金佳 จินเจีย · 兆佳 เจ้าเจีย (all real Manchu hala). */
 
 Q.NAMING.clans.push(
-  /* ═══ MANCHU 满洲 (38) ═══ */
+  /* ═══ MANCHU 满洲 (37) ═══ */
   { id: 'c_niohuru', th: 'หนิ่วฮู่ลู่', zh: '钮祜禄', kind: 'manchu', side: 'military', power: 3, banner: 'ธงเหลืองขลิบ', w: 7 },
   { id: 'c_gualgiya', th: 'กวาเอ่อร์เจีย', zh: '瓜尔佳', kind: 'manchu', side: 'military', power: 2, banner: 'ธงเหลืองขลิบ', w: 10, for: ['noble'] },
   { id: 'c_fuca', th: 'ฟู่ฉา', zh: '富察', kind: 'manchu', side: 'civil', power: 3, banner: 'ธงเหลืองขลิบ', w: 7 },
@@ -41,13 +41,11 @@ Q.NAMING.clans.push(
   { id: 'c_yehe_nara', th: 'เย่เหอน่าลา', zh: '叶赫那拉', kind: 'manchu', side: 'civil', power: 2, banner: 'ธงน้ำเงินขลิบ', w: 6 },
   { id: 'c_hada_nara', th: 'ฮาต๋าน่าลา', zh: '哈达那拉', kind: 'manchu', side: 'neutral', power: 1, banner: 'ธงขาวขลิบ', w: 3 },
   { id: 'c_tatara', th: 'ทาท่าล่า', zh: '他塔喇', kind: 'manchu', side: 'neutral', power: 1, banner: 'ธงแดงขลิบ', w: 4, for: ['noble'] },
-  { id: 'c_gioro', th: 'เจวี๋ยหลัว', zh: '觉罗', kind: 'manchu', side: 'neutral', power: 2, banner: 'ธงน้ำเงิน', w: 3 },
   { id: 'c_xilin_gioro', th: 'ซีหลินเจวี๋ยหลัว', zh: '西林觉罗', kind: 'manchu', side: 'civil', power: 2, banner: 'ธงน้ำเงิน', w: 3 },
   { id: 'c_magiya', th: 'หม่าเจีย', zh: '马佳', kind: 'manchu', side: 'civil', power: 2, banner: 'ธงเหลืองขลิบ', w: 5, for: ['noble'] },
   { id: 'c_fimo', th: 'เฟ่ยโม่', zh: '费莫', kind: 'manchu', side: 'military', power: 1, banner: 'ธงแดง', w: 4, for: ['noble'] },
   { id: 'c_janggiya', th: 'จางเจีย', zh: '章佳', kind: 'manchu', side: 'civil', power: 2, banner: 'ธงขาว', w: 5, for: ['noble'] },
   { id: 'c_sochoro', th: 'ซั่วฉั่วหลัว', zh: '索绰罗', kind: 'manchu', side: 'civil', power: 1, banner: 'ธงเหลือง', w: 4, for: ['noble'] },
-  { id: 'c_dunggo', th: 'ต้งเอ๋อ', zh: '栋鄂', kind: 'manchu', side: 'neutral', power: 1, banner: 'ธงขาว', w: 3 },
   { id: 'c_usuri', th: 'อู๋ซูหลี่', zh: '乌苏里', kind: 'manchu', side: 'military', power: 2, banner: 'ธงแดง', w: 4 },
   { id: 'c_alute', th: 'อาลู่เทอ', zh: '阿鲁特', kind: 'manchu', side: 'neutral', power: 1, banner: 'ธงน้ำเงิน', w: 3 },
   { id: 'c_uya', th: 'อู๋หย่า', zh: '乌雅', kind: 'manchu', side: 'neutral', power: 2, banner: 'ธงเหลือง', w: 4, for: ['noble'] },
@@ -62,17 +60,17 @@ Q.NAMING.clans.push(
   { id: 'c_gualca', th: 'กวาเอ่อร์ฉา', zh: '瓜尔察', kind: 'manchu', side: 'military', power: 1, banner: 'ธงเหลือง', w: 3 },
   { id: 'c_saji_fuca', th: 'ซาจี้ฟู่ฉา', zh: '沙济富察', kind: 'manchu', side: 'neutral', power: 1, banner: 'ธงเหลืองขลิบ', w: 2 },
   { id: 'c_neyen_fuca', th: 'เน่ออินฟู่ฉา', zh: '讷殷富察', kind: 'manchu', side: 'neutral', power: 1, banner: 'ธงขาว', w: 2 },
-  { id: 'c_totoke', th: 'ทัวเท่อเค่อ', zh: '托忒克', kind: 'manchu', side: 'civil', power: 1, banner: 'ธงขาว', w: 2 },
-  { id: 'c_baergesi', th: 'ไป้เอ่อร์เก๋อซือ', zh: '拜尔葛斯', kind: 'manchu', side: 'neutral', power: 1, banner: 'ธงเหลือง', w: 2 },
   { id: 'c_gobulo', th: 'กั๋วปู้หลัว', zh: '郭布罗', kind: 'manchu', side: 'neutral', power: 2, banner: 'ธงขาว', w: 3 },
-  { id: 'c_yanja', th: 'เหยียนจา', zh: '颜扎', kind: 'manchu', side: 'civil', power: 1, banner: 'ธงเหลือง', w: 2 },
+  { id: 'c_yanja', th: 'หยานจา', zh: '颜扎', kind: 'manchu', side: 'civil', power: 1, banner: 'ธงเหลือง', w: 2 },
+  { id: 'c_weigiya', th: 'เว่ยเจีย', zh: '魏佳', kind: 'manchu', side: 'neutral', power: 1, banner: 'ธงเหลืองขลิบ', w: 3 },
+  { id: 'c_jingiya', th: 'จินเจีย', zh: '金佳', kind: 'manchu', side: 'civil', power: 1, banner: 'ธงเหลืองขลิบ', w: 3 },
+  { id: 'c_jaogiya', th: 'เจ้าเจีย', zh: '兆佳', kind: 'manchu', side: 'civil', power: 2, banner: 'ธงเหลือง', w: 3 },
 
-  /* ═══ MONGOL 蒙古 (10) ═══ */
+  /* ═══ MONGOL 蒙古 (9) ═══ */
   { id: 'c_borjigin', th: 'ป๋อเอ่อร์จี้จิ่น', zh: '博尔济锦', kind: 'mongol', side: 'neutral', power: 3, banner: 'ธงเหลืองขลิบ', w: 6 },
   { id: 'c_ucigeri', th: 'อู๋ฉีเก๋อหลี่', zh: '乌齐格里', kind: 'mongol', side: 'civil', power: 2, banner: 'ธงแดง', w: 2 },
-  { id: 'c_badai', th: 'ปาไต้', zh: '巴岱', kind: 'mongol', side: 'military', power: 1, banner: 'ธงน้ำเงินขลิบ', w: 2 },
   { id: 'c_uriankhai', th: 'อู๋เหลียงไห่', zh: '乌梁海', kind: 'mongol', side: 'military', power: 1, banner: 'ธงขาว', w: 2 },
-  { id: 'c_jarud', th: 'จาหลู่เท่อ', zh: '札鲁特', kind: 'mongol', side: 'military', power: 2, banner: 'ธงขาวขลิบ', w: 3 },
+  { id: 'c_jarud', th: 'จาลู่เทอ', zh: '札鲁特', kind: 'mongol', side: 'military', power: 2, banner: 'ธงขาวขลิบ', w: 3 },
   { id: 'c_khorchin', th: 'เคอเอ่อร์ชิ่น', zh: '科尔沁', kind: 'mongol', side: 'neutral', power: 2, banner: 'ธงเหลือง', w: 4 },
   { id: 'c_kharachin', th: 'คาล่าชิ่น', zh: '喀喇沁', kind: 'mongol', side: 'military', power: 1, banner: 'ธงแดงขลิบ', w: 2 },
   { id: 'c_chahar', th: 'ฉาฮาเอ่อร์', zh: '察哈尔', kind: 'mongol', side: 'military', power: 2, banner: 'ธงขาว', w: 2 },
@@ -231,7 +229,7 @@ Q.NAMING.girlNames.push(
   'เหมยเซียง',  // 梅香
   'เหมยเสวี่ย', // 梅雪
   'เสวี่ยฉิง',  // 雪晴
-  'เสวี่ยอิง',  // 雪莹
+  'เสวี่ยอิ๋ง',  // 雪莹
   'เสวี่ยเวย',  // 雪薇
   'ชุนเสวี่ย',  // 春雪
   'มู่เสวี่ย',  // 暮雪
@@ -276,7 +274,7 @@ Q.NAMING.girlNames.push(
   'ชุนเยี่ยน',  // 春燕
   'ชุนซี',      // 春熙
   'ชุนฮุย',     // 春晖
-  'ชุนอิง',     // 春盈
+  'ชุนอิ๋ง',     // 春盈
   'ตงชิง',      // 冬青
   'ซีชุน',      // 惜春
   /* 灵 · 瑶 · 婷 */
@@ -320,7 +318,7 @@ Q.NAMING.girlNames.push(
   'เยี่ยนหรู',  // 燕如
   'อิงเกอ',     // 莺歌
   'เซิงเกอ',    // 笙歌
-  'หลิวอิง',    // 流萤
+  'หลิวอิ๋ง',    // 流萤
   /* smoke · mist · dusk */
   'เยียนหราน',  // 嫣然
   'ซีเหยียน',   // 夕颜

@@ -213,7 +213,7 @@ var QL = (function () {
     Object.keys(Q.INIT_FLAGS).forEach(function (k) { st.F[k] = Q.INIT_FLAGS[k]; });
     Object.keys(o.start.F || {}).forEach(function (k) { st.F[k] = o.start.F[k]; });
     if (opts.gift && Q.GIFTS[opts.gift]) applyFx(st, Q.GIFTS[opts.gift].fx);
-    ensureW(st); ensureX(st); ensureT(st); ensureN(st);
+    ensureW(st); ensureX(st); ensureT(st); ensureN(st); ensureB(st);
     if (opts.clan && origin === 'maid') {
       var cth = String(opts.clan).trim().slice(0, 10), hit = NM.clans.filter(function (c) { return c.th === cth; })[0];
       if (cth) { st.N.clan = cth; st.N.clanZh = hit ? hit.zh : ''; }
@@ -249,8 +249,8 @@ var QL = (function () {
       st.R[k] = nv; flashAdd(st, 'R', k, nv - old);
     });
     if (fx.set) {
-      if (Array.isArray(fx.set)) fx.set.forEach(function (n) { st.F[n] = true; });
-      else Object.keys(fx.set).forEach(function (n) { st.F[n] = fx.set[n]; });
+      if (Array.isArray(fx.set)) fx.set.forEach(function (n) { if (n === 'has_heir' && !st.F.has_heir && st.F.heir_t === undefined) st.F.heir_t = st.t; st.F[n] = true; });
+      else Object.keys(fx.set).forEach(function (n) { if (n === 'has_heir' && fx.set[n] && !st.F.has_heir && st.F.heir_t === undefined) st.F.heir_t = st.t; st.F[n] = fx.set[n]; });
     }
     if (fx.unset) fx.unset.forEach(function (n) { delete st.F[n]; });
     if (fx.inc) Object.keys(fx.inc).forEach(function (n) { st.F[n] = (Number(st.F[n]) || 0) + fx.inc[n]; });
@@ -454,7 +454,7 @@ var QL = (function () {
     var used = {}; X.order.forEach(function (id) { used[X.girls[id].name] = 1; });
     var allNames = A.names.concat(NM.girlNames || []);
     var pool = allNames.filter(function (n) { return !used[n]; }); if (!pool.length) pool = allNames;
-    var g = { id: 'x' + (++X.seq), name: pickOf(st, pool), clan: clan.th, side: clan.side, power: clan.power, han: han, banner: clan.banner || pickOf(st, A.banners),
+    var g = { id: 'x' + (++X.seq), name: pickOf(st, pool), clan: clan.th, clanZh: clan.zh || '', side: clan.side, power: clan.power, han: han, banner: clan.banner || pickOf(st, A.banners),
       age: ri(st, 15, 17), arch: key, t0: st.t, batch: X.batches, charm: rr(st, arch.charm), wit: rr(st, arch.wit), talent: rr(st, arch.talent),
       ambition: rr(st, arch.ambition), loyalty: rr(st, arch.loyalty), favor: 0, rank: 0, status: 'pending', agent: null, faction: 'none',
       turned: false, known: {}, blurb: pickOf(st, arch.blurbs), look: null };
@@ -715,6 +715,7 @@ var QL = (function () {
   function tabletCandidates(st) {
     var out = [], TB = Q.TABLET, X = ensureX(st);
     TB_NPC.forEach(function (id) { if (tbNpcOk(st, id)) out.push({ id: id, kind: 'npc', name: Q.CHARS[id].short, w: TB.npc[id] }); });
+    ensureB(st).list.forEach(function (b) { out.push({ id: b.id, kind: 'bg', name: nmGirlStyle(b, st).th, w: Q.ROSTER.bgWeight.base + Q.ROSTER.bgWeight.perRank * b.rank }); });
     X.order.forEach(function (gid) {
       var g = X.girls[gid];
       if (!g || !galive(g) || g.status === 'maid' || g.rank < 2) return;
@@ -882,7 +883,7 @@ var QL = (function () {
     var I = nmIdx(), f = g.feng && I.feng[g.feng], rankTh = g.rank ? Q.RANKS[Math.min(9, g.rank)].th : '';
     if (!g.rank) return { th: g.name, zh: '', mode: 'name' };
     if (f) return { th: f.th + rankTh, zh: f.zh + NM.rankZhT[Math.min(9, g.rank)], mode: 'feng', feng: f.th };
-    return { th: g.clan + ' ' + rankTh, zh: '', mode: 'clan', feng: '' };
+    return { th: g.clan + ' ' + rankTh, zh: g.clanZh ? g.clanZh + Q.RANKS[Math.min(9, g.rank)].zh : '', mode: 'clan', feng: '' };
   }
 
   /* ---- candidates ---- */
@@ -892,6 +893,7 @@ var QL = (function () {
     NM.reservedZh.forEach(function (z) { t.zh[z] = 1; });
     (NM.reservedTh || []).forEach(function (z) { t.th[z] = 1; });
     X.order.forEach(function (id) { var g = X.girls[id]; if (g && g.feng && galive(g)) { mark(I.feng[g.feng]); if (g.extra) mark(I.extra[g.extra.id]); } });
+    if (st.B && st.B.list) st.B.list.forEach(function (b) { if (b.feng) mark(I.feng[b.feng]); });
     (N.used || []).forEach(function (z) { t.zh[z] = 1; });
     if (N.feng) { mark(I.feng[N.feng]); if (N.extra) mark(I.extra[N.extra.id]); }
     return t;
@@ -1105,18 +1107,22 @@ var QL = (function () {
   }
   /* generated girls: she receives a fenghao on reaching rank 4 (uniqueness against everyone alive) */
   var GIRL_TAGS = { bright: ['gentle', 'fortune', 'harmony'], schemer: ['wisdom', 'beauty', 'strong'], artist: ['art', 'gentle', 'beauty'], highborn: ['virtue', 'strong', 'loyal'], humble: ['virtue', 'loyal', 'harmony'], beauty: ['beauty', 'gentle', 'fortune'] };
-  function nmGirlRank(st, g, notes) {
-    if (g.rank < NM.fengRank || g.feng || !nmReady()) return;
-    var I = nmIdx(), tk = nmTaken(st), want = GIRL_TAGS[g.arch] || ['virtue', 'gentle'], list = [];
+  function nmPickFengFor(st, arch) {
+    var tk = nmTaken(st), want = GIRL_TAGS[arch] || ['virtue', 'gentle'], list = [];
     NM.feng.forEach(function (f) {
       if (tk.zh[f.zh] || tk.th[f.th]) return;
       var m = 0; f.tags.forEach(function (t) { if (want.indexOf(t) >= 0) m++; });
-      list.push({ e: f, w: f.w * (0.6 + m) * (g.arch === 'humble' && f.tone === 'humble' ? 1.6 : 1) });
+      list.push({ e: f, w: f.w * (0.6 + m) * (arch === 'humble' && f.tone === 'humble' ? 1.6 : 1) });
     });
     var pk = nmWeighted(st, list, 1)[0];
-    if (!pk) return;
-    g.feng = pk.e.id;
-    if (notes && (g.status === 'sponsored' || g.status === 'kept') && !g.turned) notes.push(g.name + ' ได้รับพระราชทานฉายา "' + pk.e.th + '" (' + pk.e.zh + ') — ' + pk.e.mean);
+    return pk ? pk.e : null;
+  }
+  function nmGirlRank(st, g, notes) {
+    if (g.rank < NM.fengRank || g.feng || !nmReady()) return;
+    var e = nmPickFengFor(st, g.arch);
+    if (!e) return;
+    g.feng = e.id;
+    if (notes && (g.status === 'sponsored' || g.status === 'kept') && !g.turned) notes.push(g.name + ' ได้รับพระราชทานฉายา "' + e.th + '" (' + e.zh + ') — ' + e.mean);
   }
   function nmGirlLose(st, g) { if (g && g.feng && g.rank < NM.fengRank) { /* demotion not modelled for girls; keep */ } }
   /* validator helper: put the naming state into a shape that lets every naming event run */
@@ -1129,6 +1135,97 @@ var QL = (function () {
     } else if (kind === 'strip_cold') { if (!N.feng && NM.feng[0]) { N.feng = NM.feng[0].id; } nmPrepare(st, 'strip_cold'); }
     else if (kind === 'strip_demote') { N.stripped = true; N.old = { th: 'ลิ่ง', zh: '令' }; N.kind = 'strip_demote'; }
     return N;
+  }
+
+
+  /* ============================================================
+     ROSTER — ทำเนียบวังหลัง: everyone in the harem, with ages (docs/DESIGN.md §13)
+     ============================================================ */
+  function ensureB(st) {
+    if (st.B && Array.isArray(st.B.list)) return st.B;
+    st.B = { list: [], seq: 0 };
+    genBackground(st, st.B);
+    return st.B;
+  }
+  function genBackground(st, B) {
+    var A = Q.XIUNU, keys = Object.keys(A.archetypes).filter(function (k) { return k !== 'humble'; }), used = {};
+    var allNames = A.names.concat(NM.girlNames || []);
+    ensureX(st).order.forEach(function (id) { used[ensureX(st).girls[id].name] = 1; });
+    Q.ROSTER.bgPlan.forEach(function (p) {
+      for (var i = 0; i < p[1]; i++) {
+        var key = pickOf(st, keys), arch = A.archetypes[key], han = rnd(st) < 0.4;
+        var clan = nmClanFor(st, key, han) || pickOf(st, han ? A.han : A.manchu);
+        var pool = allNames.filter(function (n) { return !used[n]; }); if (!pool.length) pool = allNames;
+        var nm = pickOf(st, pool); used[nm] = 1;
+        var b = { id: 'b' + (++B.seq), name: nm, clan: clan.th, clanZh: clan.zh || '', banner: clan.banner || (han ? '' : pickOf(st, A.banners)), han: han, power: clan.power || 1,
+                  rank: p[0], age: ri(st, p[2], p[3]), arch: key, look: genLook(st, arch, han), feng: null, status: 'kept' };
+        B.list.push(b);
+      }
+    });
+    B.list.forEach(function (b) { if (b.rank >= NM.fengRank && nmReady()) { var e = nmPickFengFor(st, b.arch); if (e) b.feng = e.id; } });
+  }
+  function bgAge(st, b) { return b.age + Math.floor(st.t / 4); }
+  function myAge(st) { return C.startAge + Math.floor(st.t / 4); }
+  function heirAge(st) {
+    if (!st.F.has_heir) return null;
+    var t0 = st.F.heir_t; if (t0 === undefined || t0 === null) return null;
+    return Math.max(0, Math.floor((st.t - t0) / 4));
+  }
+  var NPC_ROW = { emperor: 'ฮ่องเต้', dowager: 'ไทเฮา', empress: 'ฮองเฮา', consort: 'หวงกุ้ยเฟย', shu: 'เฟย', lu: 'ผิน', chu: 'กุ้ยเหริน' };
+  function npcState(st, id) {              // → { gone, statusTh, tone }
+    var F = st.F, R = st.R, rel = R[id] || 0, tone = rel >= 25 ? 'ally' : (rel <= -25 ? 'foe' : 'neutral'), s = '';
+    if (id === 'emperor') return F.emperor_dead ? { gone: true, statusTh: 'สวรรคตแล้ว', tone: 'gone' } : { statusTh: 'ฮ่องเต้เฉิงผิง', tone: 'royal' };
+    if (id === 'dowager') return F.dowager_dead ? { gone: true, statusTh: 'สิ้นพระชนม์แล้ว', tone: 'gone' } : { statusTh: 'พระมารดาของฮ่องเต้', tone: tone };
+    if (id === 'empress') { if (st.rank >= 8) return { statusTh: 'อดีตฮองเฮา', tone: 'gone', former: true }; return F.empress_down ? { statusTh: 'ถูกถอดจากตำแหน่ง', tone: 'gone' } : F.empress_controlled ? { statusTh: 'อยู่ใต้อำนาจของท่าน', tone: 'ally' } : { statusTh: 'ครองตราหงส์', tone: tone }; }
+    if (id === 'consort') return F.niohuru_down ? { statusTh: 'ตกจากอำนาจแล้ว', tone: 'gone' } : F.niohuru_ally ? { statusTh: 'เป็นพันธมิตรของท่าน', tone: 'ally' } : { statusTh: 'สนมผู้เกรียงไกร', tone: tone };
+    if (id === 'chu') return F.chu_alive === false ? { gone: true, statusTh: 'ล่วงลับแล้ว', tone: 'gone' } : F.chu_down ? { statusTh: 'ตกต่ำแล้ว', tone: 'gone' } : { statusTh: 'ถือดี', tone: tone };
+    if (id === 'lu') return F.lu_exposed ? { statusTh: 'ถูกเปิดโปงแล้ว', tone: 'gone' } : F.lu_trusted ? { statusTh: 'ท่านไว้ใจนาง', tone: 'ally' } : { statusTh: 'อ่อนหวานนอบน้อม', tone: tone };
+    if (id === 'shu') return { statusTh: 'เงียบขรึม', tone: tone };
+    if (id === 'friend') return F.friend_alive === false ? { gone: true, statusTh: 'จากไปแล้ว', tone: 'gone' } : { statusTh: 'สหายร่วมคัดเลือก', tone: 'ally' };
+    if (id === 'maid') return F.maid_alive === false ? { gone: true, statusTh: 'จากไปแล้ว', tone: 'gone' } : { statusTh: 'สาวใช้คนสนิท', tone: 'ally' };
+    if (id === 'eunuch') return { statusTh: 'ขันทีข้างฮ่องเต้', tone: tone };
+    if (id === 'doctor') return { statusTh: F.love_doctor ? 'ผู้ผูกใจกับท่าน' : 'หมอหลวง', tone: F.love_doctor ? 'ally' : tone };
+    if (id === 'prince') return { statusTh: 'น้องชายต่างมารดาของฮ่องเต้', tone: tone };
+    if (id === 'mama') return { statusTh: 'นางกำนัลอาวุโส', tone: 'neutral' };
+    return { statusTh: '', tone: 'neutral' };
+  }
+  function roster(st) {
+    var RS = Q.ROSTER, yr = Math.floor(st.t / 4), X = ensureX(st), B = ensureB(st), N = ensureN(st), me = nmStyle(st);
+    var consorts = [], court = [], hopeful = [], around = [];
+    function npcRow(id, kind) {
+      var C = Q.CHARS[id], M = RS.npc[id], s = npcState(st, id), rank = M.rank || 0;
+      var line = M.clan ? 'สกุล' + M.clan + (M.clanZh ? ' (' + M.clanZh + ')' : '') + (M.given ? ' · ชื่อ ' + M.given + (M.givenZh ? ' ' + M.givenZh : '') : '') : (C.role || '');
+      return { id: id, kind: kind, av: { ch: id, rank: rank || undefined }, title: C.th, zh: C.zh || '', name: C.short || C.th, age: s.gone ? null : M.age + yr, ageBase: M.age + yr,
+               rank: rank, rankTh: s.former ? 'อดีตฮองเฮา' : (rank ? Q.RANKS[rank].th : ''), line: line, statusTh: s.statusTh, tone: s.tone, gone: !!s.gone, rel: (st.R[id] !== undefined && Q.REL_KEYS.indexOf(id) >= 0) ? st.R[id] : null };
+    }
+    court.push(npcRow('emperor', 'npc')); court.push(npcRow('dowager', 'npc'));
+    ['empress', 'consort', 'shu', 'lu', 'chu'].forEach(function (id) { consorts.push(npcRow(id, 'npc')); });
+    // me
+    consorts.push({ id: 'me', kind: 'me', av: { ch: 'player', rank: st.rank, origin: st.origin }, title: me.mode === 'name' ? st.name : me.th, zh: me.zh, name: st.name, age: myAge(st), rank: st.rank,
+      rankTh: st.rank ? Q.RANKS[st.rank].th : rankTitle(st), line: 'สกุล' + N.clan + (N.clanZh ? ' (' + N.clanZh + ')' : '') + ' · ' + (Q.ORIGINS[st.origin] ? Q.ORIGINS[st.origin].th : ''), statusTh: 'ท่าน', tone: 'me', me: true, rel: null });
+    // generated young concubines and background consorts
+    function gRow(g, kind) {
+      var s = nmGirlStyle(g, st), a = kind === 'bg' ? bgAge(st, g) : g.age;
+      var origin = g.clan === 'สามัญชน' ? 'ลูกสาวสามัญชน' : 'สกุล' + g.clan + (g.clanZh ? ' (' + g.clanZh + ')' : '') + (g.banner ? ' · ' + g.banner : (g.han ? ' · ฮั่นจวิน' : ''));
+      var st2 = kind === 'bg' ? { th: 'สนมในวัง', tone: 'neutral' } : (g.status === 'sponsored' ? { th: 'ในสังกัดของท่าน', tone: 'ally' } : g.status === 'maid' ? { th: 'นางกำนัลข้างกายท่าน', tone: 'ally' } : g.status === 'pending' ? { th: 'ผู้เข้าคัดเลือก', tone: 'neutral' } : { th: g.turned ? 'เป็นปฏิปักษ์ต่อท่าน' : 'สนมหน้าใหม่', tone: g.turned ? 'foe' : 'neutral' });
+      return { id: g.id, kind: kind, av: { look: g.look }, title: s.th, zh: s.zh, name: g.name, age: a, rank: g.rank, rankTh: g.rank ? Q.RANKS[Math.min(9, g.rank)].th : 'ผู้เข้าคัดเลือก', line: origin,
+               statusTh: st2.th, tone: st2.tone, mine: g.status === 'sponsored', gone: false, rel: null };
+    }
+    B.list.forEach(function (b) { consorts.push(gRow(b, 'bg')); });
+    X.order.forEach(function (id) {
+      var g = X.girls[id]; if (!g) return;
+      if (g.status === 'pending') hopeful.push(gRow(g, 'girl'));
+      else if (g.status === 'maid') around.push(gRow(g, 'girl'));
+      else if (g.status === 'kept' || g.status === 'sponsored') consorts.push(gRow(g, 'girl'));
+    });
+    ['friend', 'maid', 'eunuch', 'doctor', 'prince', 'mama'].forEach(function (id) { around.push(npcRow(id, 'npc')); });
+    var ha = heirAge(st);
+    if (st.F.has_heir) around.push({ id: 'heir', kind: 'heir', av: { ch: 'child' }, title: (typeof st.F.heir_name === 'string' && st.F.heir_name) || 'องค์ชายน้อย', zh: '', name: '', age: ha, ageText: ha === null ? null : (ha < 1 ? 'ยังไม่ครบขวบ' : null), rank: 0, rankTh: 'ทายาท', line: 'โอรสของท่าน', statusTh: 'ทายาท', tone: 'ally', gone: false, rel: null });
+    consorts.sort(function (a, b) { return (b.rank - a.rank) || ((a.kind === 'me' ? -1 : 0) - (b.kind === 'me' ? -1 : 0)) || ((a.kind === 'npc' ? -1 : 0) - (b.kind === 'npc' ? -1 : 0)) || ((b.age || 0) - (a.age || 0)); });
+    var byRank = [], cur = null;
+    consorts.forEach(function (r) { var key = r.rank; if (!cur || cur.rank !== key) { cur = { rank: key, rankTh: key ? Q.RANKS[Math.min(9, key)].th : 'ผู้เข้าคัดเลือก', rows: [] }; byRank.push(cur); } cur.rows.push(r); });
+    return { year: yr + 1, court: court, consorts: byRank, hopeful: hopeful, around: around,
+             counts: { consorts: consorts.length, alive: consorts.filter(function (r) { return !r.gone; }).length, hopeful: hopeful.length, around: around.length, total: consorts.length + court.length + hopeful.length + around.length } };
   }
 
   /* ---------------- ranks ---------------- */
@@ -1507,7 +1604,7 @@ var QL = (function () {
     actions: actions, doAction: doAction, hub: hub,
     nextPending: nextPending, startEvent: startEvent, view: view, advance: advance, choose: choose, ackPromotion: ackPromotion,
     systemEnd: systemEnd, summary: summary, rnd: rnd,
-    nmStyle: nmStyle, nmInfo: nmInfo, nmGirlStyle: nmGirlStyle, nmPreview: nmPreview, nmProbe: nmProbe, nmTick: nmTick, nmDefault: nmDefault, nmPrepare: nmPrepare, applyName: applyName, ensureN: ensureN, nmOffers: nmOffers, nmIdx: nmIdx,
+    roster: roster, ensureB: ensureB, nmStyle: nmStyle, nmInfo: nmInfo, nmGirlStyle: nmGirlStyle, nmPreview: nmPreview, nmProbe: nmProbe, nmTick: nmTick, nmDefault: nmDefault, nmPrepare: nmPrepare, applyName: applyName, ensureN: ensureN, nmOffers: nmOffers, nmIdx: nmIdx,
     tabletInfo: tabletInfo, tabletBoost: tabletBoost, ensureT: ensureT, tabletRound: tabletRound,
     xiunu: xiunu, xnInvestigate: xnInvestigate, xnDecide: xnDecide, xnGift: xnGift, xnDismiss: xnDismiss, focusLook: focusLook, ensureX: ensureX, xnProbe: xnProbe, xnQuota: xnQuota,
     wardrobe: wardrobe, wardrobeEff: wardrobeEff, equip: equip, unequip: unequip, buy: buy, give: giveItem, look: look, ensureW: ensureW, effLines: effLines,

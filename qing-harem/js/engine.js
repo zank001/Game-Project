@@ -612,8 +612,9 @@
         '<div class="hero-rank">' + seal(st.rank, 'sm') + '<span><b>' + esc(TL.th) + '</b><small>' + esc(TL.zh) + '</small></span></div>' +
         '<div class="hero-hall">🏠 ' + esc(R.hall) + '</div><div class="hero-chips">' + chips + '</div>' +
         '<div class="hero-btns"><button type="button" class="btn btn-ghost sm btn-wardrobe">👘 ตู้เสื้อผ้า</button>' +
-        '<button type="button" class="btn btn-ghost sm btn-tablet">🎴 ป้ายชื่อเขียว</button>' +
+        '<button type="button" class="btn btn-ghost sm btn-tablet">🎴 ป้ายเขียว</button>' +
         (st.rank >= 1 ? '<button type="button" class="btn btn-ghost sm btn-naming">🪪 พระนาม</button>' : '') +
+        '<button type="button" class="btn btn-ghost sm btn-roster">👥 ทำเนียบ</button>' +
         (xs.batches > 0 ? '<button type="button" class="btn btn-ghost sm btn-xiunu">📜 ซิ่วหนี่' + (xs.pending ? '<i class="xn-dot"></i>' : '') + '</button>' : '') + '</div></div>';
     });
   }
@@ -1507,6 +1508,7 @@
       '<section><h4>👘 ตู้เสื้อผ้า</h4><p>กดปุ่ม <b>ตู้เสื้อผ้า</b> ในหน้าหลักเพื่อเลือก <b>ชุด · เครื่องหัว · สร้อยคอ · ต่างหู · ของติดตัว</b> ได้ตามฐานะ ลองสวมก่อนซื้อได้ รับของพระราชทานเมื่อเลื่อนขั้น และได้ของขวัญจากผู้คนในวัง ของแต่ละชิ้นเพิ่มโอกาสตอนทอยเต๋า (โฉมงาม พรสวรรค์ ปัญญา) หรือส่งผลต่อศักดิ์ศรีและภัยรอบกายทุกฤดู — ชุดหรูสะดุดตาช่วยให้ถูกจดจำ แต่ก็ล่อสายตาศัตรูด้วย · สวมชุด เครื่องหัว และเครื่องประดับโทนเดียวกันครบ จะได้โบนัสชุดเซ็ต</p></section>' +
       '<section><h4>🏯 ซิ่วหนี่ — สนมรุ่นใหม่</h4><p>ทุก 3 ปีมี <b>รุ่นซิ่วหนี่</b> เข้าวัง เมื่อท่านถึงขั้น <b>เฟย</b> ท่านมีสิทธิ์พิจารณาผู้เข้าคัดเลือก: สืบประวัติ → <b>รับเข้าสังกัด</b> / <b>ปล่อยตามชะตา</b> / <b>ส่งเป็นนางกำนัลข้างกาย</b> / <b>คัดออก</b> สนมที่ท่านอุปถัมภ์อาจเป็นหูเป็นตาและกราบทูลแทนท่าน แต่บางคนทะเยอทะยานจนกลายเป็นคู่แข่ง — และบางคนคือสายสืบของคนอื่นตั้งแต่แรก ดูรายชื่อได้ที่ปุ่ม <b>📜 ซิ่วหนี่</b></p></section>' +
       '<section><h4>🎴 ป้ายชื่อเขียว (พลิกป้าย)</h4><p>เมื่อถึงขั้น <b>ฉางไจ้</b> ท่านมีป้ายชื่อเขียวของตนเอง ทุกฤดูฮ่องเต้ทรงพลิกป้าย 1–3 ใบ โอกาสของท่านขึ้นกับ ความโปรดปราน ฐานันดร โฉมงาม พรสวรรค์ ไมตรีของขันทีจางฝู เครื่องแต่งกาย และ <b>อารมณ์ฮ่องเต้</b> — ท่านต้องแข่งกับหวงกุ้ยเฟย อี๋ผิน ซูเฟย และสนมรุ่นใหม่ ถ้าป้ายถูกพลิก ท่านจะถูกเรียกเข้าเฝ้ายามค่ำ (ได้ความโปรดปราน แต่ก็เพิ่มความอิจฉา) <b>ฝากขันที</b>ให้จัดคิวได้ แต่ฮองเฮาหรือไทเฮาก็ขีดชื่อท่านได้ถ้าท่านเสียความไว้ใจ ดูได้ที่ปุ่ม <b>🎴 ป้ายชื่อเขียว</b></p></section>' +
+      '<section><h4>👥 ทำเนียบวังหลัง</h4><p>ปุ่ม <b>👥 ทำเนียบ</b> แสดงผู้คนในวังหลังครบทุกคน เรียงตามฐานันดร ตั้งแต่ฮองเฮาลงมาถึงต้าอิ้ง พร้อม<b>อายุ</b> ชื่อตามฐานันดร (สกุลหรือฉายา) สกุลและธง ใครเป็นมิตรหรือศัตรู รวมถึงผู้เข้าคัดเลือก และผู้คนรอบกายอย่างสหาย สาวใช้ ขันที หมอหลวง อายุเพิ่มขึ้นทุกปี</p></section>' +
       '<section><h4>🪪 พระนามและฉายา</h4><p>สนมที่ต่ำกว่าขั้น<b>ผิน</b>ถูกเรียกตาม <b>สกุล + ฐานันดร</b> เมื่อเลื่อนเป็นผิน ฮ่องเต้จะ<b>พระราชทานฉายา</b> (封号) เป็นอักษรจีนมงคลหนึ่งคำ แล้วถูกเรียกว่า <b>ฉายา + ฐานันดร</b> หากทรงโปรดปรานมากเป็นพิเศษ ก็อาจประทานฉายาก่อนถึงผิน ตั้งแต่ขั้น<b>หวงกุ้ยเฟย</b>ขึ้นไปจะได้<b>อักษรเพิ่มอีกหนึ่งคำ</b> แต่ฉายาก็ถูก<b>ริบคืน</b>ได้ (เมื่อถูกลดขั้น หรือตกต่ำจากพระเนตรนานเกินไป) และอาจได้ตั้งใหม่ภายหลัง ดูได้ที่ปุ่ม <b>🪪 พระนาม</b></p></section>' +
       '<section><h4>📜 ตอนจบ</h4><p>มีตอนจบมากมายตามวิถีที่ท่านเลือก ทั้งสุข เศร้า และสงบ ดูได้ที่ <b>จดหมายเหตุ</b> · ระบบบันทึกอัตโนมัติทุกครั้งที่กลับสู่หน้าวังหลัง</p></section>' +
       '<section><h4>⌨ ปุ่มลัด</h4><p><b>Space / Enter</b> ไปต่อ · <b>1–4</b> เลือกตัวเลือก · <b>Esc</b> เมนู</p></section>' +
@@ -1740,6 +1742,48 @@
   Game.openTablet = openTablet;
 
 
+
+  /* ============================================================
+     11f. ROSTER (ทำเนียบวังหลัง) — everyone in the harem, with ages
+     ============================================================ */
+  function rsAvatar(r) {
+    var a = r.av || {};
+    if (a.look) return portrait('maiden', 'neutral', { rank: 1, origin: 'noble', bust: true, outfit: a.look });
+    if (a.ch === 'player') return portrait('player', 'neutral', { rank: a.rank, origin: a.origin, bust: true, outfit: true });
+    return portrait(a.ch, 'neutral', { rank: a.rank, origin: 'noble', bust: true });
+  }
+  function rsRow(r) {
+    var age = r.age === null || r.age === undefined ? (r.ageText || '—') : 'อายุ ' + r.age + ' ปี';
+    var hearts = (r.rel !== null && r.rel !== undefined && !r.gone) ? '<span class="rs-hearts">' + heartsHTML(r.rel) + '</span>' : '';
+    return '<li class="rs-row ' + (r.tone || '') + (r.me ? ' me' : '') + (r.gone ? ' gone' : '') + '"><span class="rs-ava">' + rsAvatar(r) + '</span>' +
+      '<span class="rs-main"><b>' + esc(r.title) + '</b>' + (r.zh ? '<em>' + esc(r.zh) + '</em>' : '') +
+      (r.name && String(r.title).indexOf(r.name) < 0 ? '<small class="rs-nm">' + esc(r.name) + '</small>' : '') +
+      '<small>' + esc(r.line || '') + '</small></span>' +
+      '<span class="rs-side"><i class="rs-age">' + esc(age) + '</i><u>' + esc(r.statusTh || '') + '</u>' + hearts + '</span></li>';
+  }
+  function renderRsHarem(el) {
+    var st = Game.st, R = QL.roster(st), html = '';
+    html += '<div class="rs-sum"><span>รัชศก' + esc(Q.ERA) + ' ปีที่ <b>' + R.year + '</b></span><span>สนมในวังหลัง <b>' + R.counts.consorts + '</b> นาง</span>' +
+      (R.counts.hopeful ? '<span>ผู้เข้าคัดเลือก <b>' + R.counts.hopeful + '</b></span>' : '') + '<span>ท่านอายุ <b>' + (R.consorts.reduce(function (a, g) { var m = g.rows.filter(function (x) { return x.me; })[0]; return m ? m.age : a; }, '?')) + '</b> ปี</span></div>';
+    html += '<h4 class="rs-h"><span>👑</span> ราชสำนัก</h4><ul class="rs-list">' + R.court.map(rsRow).join('') + '</ul>';
+    R.consorts.forEach(function (g) {
+      html += '<h4 class="rs-h">' + (g.rank ? seal(g.rank, 'sm') : '') + '<span>' + esc(g.rankTh) + '</span><small>' + g.rows.length + ' นาง</small></h4><ul class="rs-list">' + g.rows.map(rsRow).join('') + '</ul>';
+    });
+    if (R.hopeful.length) html += '<h4 class="rs-h"><span>📜</span> ผู้เข้าคัดเลือกรอพิจารณา <small>' + R.hopeful.length + ' นาง</small></h4><ul class="rs-list">' + R.hopeful.map(rsRow).join('') + '</ul>';
+    el.innerHTML = html;
+  }
+  function renderRsAround(el) {
+    var R = QL.roster(Game.st);
+    el.innerHTML = '<p class="xn-note">ผู้คนที่อยู่ใกล้ตัวท่านในวัง — มิตร ผู้รับใช้ และผู้ที่มีส่วนในชะตาของท่าน</p><ul class="rs-list">' + R.around.map(rsRow).join('') + '</ul>';
+  }
+  function openRoster(tab) {
+    if (!Game.st) return;
+    openModal({ title: 'ทำเนียบวังหลัง', cls: 'modal-roster', tabs: [
+      { id: 'harem', label: '👥 สนมในวัง', render: renderRsHarem },
+      { id: 'around', label: '🤝 ผู้คนรอบกาย', render: renderRsAround } ], start: tab || 'harem' });
+  }
+  Game.openRoster = openRoster;
+
   /* ============================================================
      11e. NAMING (พระนาม · ฉายาพระราชทาน)
      ============================================================ */
@@ -1791,7 +1835,6 @@
     var st = Game.st; if (!st) return;
     openModal({ title: 'พระนามและฉายา', cls: 'modal-naming', tabs: [
       { id: 'card', label: '🪪 พระนามของท่าน', render: renderNmCard },
-      { id: 'roll', label: '📖 ทำเนียบนาม', render: renderNmRoll },
       { id: 'hist', label: '📜 ประวัติ', render: renderNmHist } ], start: tab || 'card' });
   }
   Game.openNaming = openNaming;
@@ -1926,7 +1969,8 @@
       var b = e.target && e.target.closest ? e.target.closest('.btn-wardrobe') : null; if (b) { e.preventDefault(); openWardrobe(); return; }
       var xb = e.target && e.target.closest ? e.target.closest('.btn-xiunu') : null; if (xb) { e.preventDefault(); openXiunu(); return; }
       var tb = e.target && e.target.closest ? e.target.closest('.btn-tablet') : null; if (tb) { e.preventDefault(); openTablet(); return; }
-      var nb = e.target && e.target.closest ? e.target.closest('.btn-naming') : null; if (nb) { e.preventDefault(); openNaming(); }
+      var nb = e.target && e.target.closest ? e.target.closest('.btn-naming') : null; if (nb) { e.preventDefault(); openNaming(); return; }
+      var rb = e.target && e.target.closest ? e.target.closest('.btn-roster') : null; if (rb) { e.preventDefault(); openRoster(); }
     });
     $('#btn-end-season').onclick = onEndSeasonClick;
     $('#action-groups').addEventListener('click', function (e) {
