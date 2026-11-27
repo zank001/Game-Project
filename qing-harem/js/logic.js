@@ -429,6 +429,19 @@ var QL = (function () {
     if (g.arch === 'highborn') { var pref = g.side === 'military' ? 'consort' : g.side === 'civil' ? 'empress' : null; if (pref && opts.indexOf(pref) >= 0) return pref; }
     return opts.length ? pickOf(st, opts) : null;
   }
+  /* clan for a generated girl from the big pool (Q.NAMING.clans) — null when the pool is not loaded */
+  function nmClanFor(st, key, han) {
+    var P = Q.NAMING.clans; if (!P || P.length < 20) return null;
+    var list = P.filter(function (c) {
+      if (key === 'highborn') return (c.kind === 'manchu' || c.kind === 'mongol') && c.power >= 2;
+      return han ? (c.kind === 'han' || c.kind === 'hanjun') : (c.kind === 'manchu' || c.kind === 'mongol');
+    });
+    if (!list.length) return null;
+    var tot = 0; list.forEach(function (c) { tot += c.w || 1; });
+    var r = rnd(st) * tot, i;
+    for (i = 0; i < list.length; i++) { r -= (list[i].w || 1); if (r <= 0) break; }
+    return list[Math.min(i, list.length - 1)];
+  }
   function genGirl(st, X) {
     var A = Q.XIUNU, keys = Object.keys(A.archetypes), tot = 0, key = keys[0], i;
     keys.forEach(function (k) { tot += A.archetypes[k].weight; });
@@ -437,10 +450,11 @@ var QL = (function () {
     var arch = A.archetypes[key];
     var han = (key === 'bright' || key === 'artist' || key === 'humble') ? rnd(st) < 0.65 : rnd(st) < 0.35;
     var clan = key === 'humble' ? { th: 'สามัญชน', side: 'neutral', power: 0 }
-      : key === 'highborn' ? pickOf(st, A.manchu.filter(function (c) { return c.power >= 2; })) : pickOf(st, han ? A.han : A.manchu);
+      : (nmClanFor(st, key, han) || (key === 'highborn' ? pickOf(st, A.manchu.filter(function (c) { return c.power >= 2; })) : pickOf(st, han ? A.han : A.manchu)));
     var used = {}; X.order.forEach(function (id) { used[X.girls[id].name] = 1; });
-    var pool = A.names.filter(function (n) { return !used[n]; }); if (!pool.length) pool = A.names;
-    var g = { id: 'x' + (++X.seq), name: pickOf(st, pool), clan: clan.th, side: clan.side, power: clan.power, han: han, banner: pickOf(st, A.banners),
+    var allNames = A.names.concat(NM.girlNames || []);
+    var pool = allNames.filter(function (n) { return !used[n]; }); if (!pool.length) pool = allNames;
+    var g = { id: 'x' + (++X.seq), name: pickOf(st, pool), clan: clan.th, side: clan.side, power: clan.power, han: han, banner: clan.banner || pickOf(st, A.banners),
       age: ri(st, 15, 17), arch: key, t0: st.t, batch: X.batches, charm: rr(st, arch.charm), wit: rr(st, arch.wit), talent: rr(st, arch.talent),
       ambition: rr(st, arch.ambition), loyalty: rr(st, arch.loyalty), favor: 0, rank: 0, status: 'pending', agent: null, faction: 'none',
       turned: false, known: {}, blurb: pickOf(st, arch.blurbs), look: null };

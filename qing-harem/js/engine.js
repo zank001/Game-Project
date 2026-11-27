@@ -1167,7 +1167,7 @@
     if (!strip) {
       rw += '<li><u>字</u>อักษร: <b>' + esc(nm.h || nm.th) + ' (' + esc(nm.z || nm.zh) + ')</b> — ' + esc(nm.mean || '') + '</li>';
       if (nm.why) rw += '<li><u>✦</u>เหตุที่ทรงเลือก: <b>' + esc(nm.why) + '</b></li>';
-      if (nm.hist) rw += '<li><u>📜</u>ธรรมเนียม: ' + esc(nm.hist) + '</li>';
+      if (nm.hist) rw += '<li><u>📜</u>ในประวัติศาสตร์: ' + esc(nm.hist) + '</li>';
       if (nm.boon) Object.keys(nm.boon).forEach(function (k) { if (nm.boon[k]) rw += '<li><u>' + (k === 'silver' ? '銀' : esc(statIcon(k))) + '</u>' + esc(REWARD_LABEL[k] || statName(k)) + ' <b class="' + (k === 'threat' ? (nm.boon[k] < 0 ? 'up' : 'dn') : 'up') + '">' + sign(nm.boon[k]) + '</b></li>'; });
     } else rw += '<li><u>🚫</u>ใครเรียกขานท่านว่า <b class="dn">' + esc(nm.th) + '</b> ถือว่าล่วงเกิน — ต้องเรียกว่า <b>' + esc(nm.title) + '</b></li>';
     $('#cer-rewards').innerHTML = rw;
@@ -1295,7 +1295,7 @@
     var scr = $('#ending-screen'); scr.className = 'screen active end-' + T.cls;
     $('#end-badge').innerHTML = '<span class="eb-glyph seal-like">' + T.glyph + '</span><span class="eb-label">' + esc(T.label) + '</span>';
     $('#end-title').textContent = sum.title;
-    $('#end-sub').innerHTML = seal(sum.rank, 'sm') + '<span>' + esc(sum.name) + ' · ' + esc(sum.rankTitle) + ' (' + esc(sum.zh) + ')</span>';
+    $('#end-sub').innerHTML = seal(sum.rank, 'sm') + '<span>' + esc(sum.name) + ' · ' + esc(sum.style && sum.style.mode !== 'name' ? sum.style.th : sum.rankTitle) + ' (' + esc((sum.style && sum.style.zh) || sum.zh) + ')</span>';
     var epi = sum.hint ? '<p class="epi-hint">“' + esc(sum.hint) + '”</p>' : '';
     if (st.origin === 'maid' && (sum.type === 'true') && sum.rank >= 8) epi += '<p class="epi-maid">จากโรงซักผ้าหลวง สู่บัลลังก์หงส์ — ไม่มีใครในวังลืมเรื่องนี้</p>';
     $('#end-epi').innerHTML = epi;
@@ -1309,7 +1309,7 @@
     function names(list) { return list.slice(0, 3).map(function (p) { return esc(charShort(p[0])); }).join(' · '); }
     var rows = '<div class="es"><u>⌛</u><span>เวลาที่ผ่านไป</span><b>' + sum.years + ' ปี (' + sum.seasons + ' ฤดู)</b></div>' +
       '<div class="es"><u>🎂</u><span>อายุ</span><b>' + sum.age + ' ปี</b></div>' +
-      '<div class="es"><u>♛</u><span>ฐานันดรสุดท้าย</span><b>' + esc(sum.rankTitle) + '</b></div>' +
+      '<div class="es"><u>♛</u><span>ฐานันดรสุดท้าย</span><b>' + esc(sum.style && sum.style.mode !== 'name' ? sum.style.th : sum.rankTitle) + '</b></div>' +
       '<div class="es"><u>👶</u><span>ทายาท</span><b>' + (sum.heir ? esc(typeof st.F.heir_name === 'string' ? st.F.heir_name : 'มี') : 'ไม่มี') + '</b></div>';
     ['favor', 'prestige', 'wit', 'charm', 'talent', 'virtue'].forEach(function (k) {
       var m = Q.STAT_META[k];

@@ -63,6 +63,11 @@ Read `docs/DESIGN.md` (technical contract) too.
 - `maid` นางกำนัลชั้นต่ำ — an orphan in the Laundry Bureau. She begins at rank 0 and plays a few seasons at the very bottom; the prologue ends when she is noticed and raised to ต้าอิ้ง. Her special reward: a unique epilogue line in true endings ("from the laundry to the phoenix throne").
 - For ALL origins: เหมยชิง exists (friend) and ชุนเถา becomes the player's maid when she reaches rank 1 (for maid-origin, Chuntao is a younger girl from the laundry who attaches herself to the player).
 
+### Naming conventions (พระนาม · ฉายา) — see DESIGN §12 and docs/NAMING.md
+- Below ผิน a consort is "สกุล + ยศ" (เซิ่น ฉังไจ้ · กวาเอ่อร์เจีย กุ้ยเหริน · หนิ่วฮู่ลู่ …). From ผิน she wears a one-character **ฉายา** (封號) given by the Emperor: "อี๋ผิน" (怡), "ซูเฟย" (舒). From หวงกุ้ยเฟย the fenghao gains one extra character: the Niohuru consort is **เจียอี้หวงกุ้ยเฟย** (嘉懿皇貴妃, clan หนิ่วฮู่ลู่ — the clan name stays the name of her FACTION: "ตระกูล/ตำหนักหนิ่วฮู่ลู่").
+- NPC names: Lu is **อี๋ผิน** (clan Lu, given name เสวี่ยหนิง); Chu is "ฉู่กุ้ยเหริน" (clan + rank, below ผิน); Empress "ฮองเฮาฟู่ฉา" and Dowager "ไทเฮาเหวินเซี่ยน" keep clan/posthumous style by court custom.
+- The player: `{{TITLE}}` is her current styled address, `{{CLAN}}` her clan, `{{FENG}}` her fenghao. Servants address her by RANK ("ท่านต้าอิ้ง", "นายหญิง"), the Emperor by title or fenghao, rivals by clan + rank while she is below ผิน.
+
 ## 5. Arc outline by rank (what the story IS)
 Each rank N (1–8) has an **arc** (2–3 chained chapters, ending by setting `F.arcN_done`) and a **promotion event** `promo_N_(N+1)` (the ceremony + a final twist) fired automatically once the gate is met.
 Rank 0 → 1 is the **prologue** (unit c01). Authors may *show* flavor, but the **decisions** in an arc belong to the unit that owns it.
